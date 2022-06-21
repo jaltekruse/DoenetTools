@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import './homepage.css';
 import Button from '../../../_reactComponents/PanelHeaderComponents/Button';
 import DoenetDriveCard from '../../../_reactComponents/Drive/DoenetDriveCard';
+import Editor from '../../../prosemirror/core/Editor';
+
 
 
 const Headings = styled.h1`
