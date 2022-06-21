@@ -5,8 +5,8 @@ import { EditorState } from 'prosemirror-state'
 import { APIProvider } from '../APIProvider'
 import { EditorViewProvider } from '../EditorViewProvider'
 
-import { ISaveCollabStepsParams } from '@pm-react-example/shared'
-import { ECollabAction, ICollabUsersChangedAction, ICollabEditAction } from '@pm-react-example/shared/collab-socket'
+import { ISaveCollabStepsParams } from '../../../shared'
+import { ECollabAction, ICollabUsersChangedAction, ICollabEditAction } from '../../../shared/collab-socket'
 
 import { replaceDocument, setCollab } from './replaceDocument'
 
