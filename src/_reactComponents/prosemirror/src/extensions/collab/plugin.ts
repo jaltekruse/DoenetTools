@@ -1,5 +1,6 @@
 import { Plugin } from 'prosemirror-state';
-import { ProviderFactory } from '@atlaskit/editor-common';
+var ProviderFactory = {}
+//import { ProviderFactory } from '@atlaskit/editor-common';
 import { Dispatch } from '../../event-dispatcher';
 import { initialize } from './events/initialize';
 import { PrivateCollabEditOptions, ProviderCallback } from './types';

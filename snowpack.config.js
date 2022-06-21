@@ -6,6 +6,10 @@ module.exports = {
     '@Toast': './src/Tools/_framework/Toast',
     'solid-svg': '@fortawesome/free-solid-svg-icons',
     'react-spring': '@react-spring/web',
+    '@context': './src/_reactComponents/prosemirror/src/context' ,
+    '@core': './src/_reactComponents/prosemirror/src/core' ,
+     '@extensions': './src/_reactComponents/prosemirror/src/extensions' ,
+     '@react': './src/_reactComponents/prosemirror/src/react' ,
   },
   mount: {
     'src/Viewer': '/viewer',
