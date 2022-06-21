@@ -24,7 +24,6 @@ module.exports = {
     'src/_sharedRecoil': '/_sharedRecoil',
     'src/_utils': '/_utils',
     'src/Core': '/core',
-    'src/prosemirror': '/prosemirror',
   },
   plugins: [
     '@snowpack/plugin-react-refresh',
