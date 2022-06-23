@@ -44,6 +44,7 @@
     "@lezer/common": "^0.15.10",
     "@lezer/lr": "^0.15.5",
     "@lezer/xml": "^0.15.1",
+    "@pm-react-example/full-v2": "file:../prosemirror-react-typescript-example/full-v2",
     "@prettier/plugin-php": "^0.18.2",
     "@react-spring/web": "^9.2.4",
     "@use-gesture/react": "^10.2.12",
