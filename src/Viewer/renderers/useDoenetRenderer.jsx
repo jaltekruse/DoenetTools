@@ -1,7 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { atomFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 // import { serializedComponentsReviver } from '../../Core/utils/serializedStateProcessing';
-import { renderersloadComponent } from '../PageViewer';
+//import { renderersloadComponent } from '../PageViewer';
+
+
+export async function renderersloadComponent(promises, rendererClassNames) {
+
+  var rendererClasses = {};
+  for (let [index, promise] of promises.entries()) {
+    try {
+      let module = await promise;
+      rendererClasses[rendererClassNames[index]] = module.default;
+    } catch (error) {
+      console.log(error)
+      throw Error(`Error: loading ${rendererClassNames[index]} failed.`)
+    }
+
+  }
+  return rendererClasses;
+
+}
 
 export const rendererState = atomFamily({
   key: 'rendererState',
