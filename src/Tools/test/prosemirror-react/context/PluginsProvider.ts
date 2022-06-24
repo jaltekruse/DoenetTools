@@ -1,4 +1,5 @@
-import { PluginKey, EventDispatcher } from '@core'
+import { EventDispatcher } from '../core/utils/EventDispatcher.ts'
+import { PluginKey } from '../core/index.ts'
 
 interface PluginState {
   [key: string]: any

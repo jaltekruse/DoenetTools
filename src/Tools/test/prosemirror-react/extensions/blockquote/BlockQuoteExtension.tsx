@@ -4,7 +4,7 @@ import { Extension, IExtensionSchema } from '../Extension'
 import { blockquote } from './nodes/blockquote'
 import { blockQuotePluginFactory } from './pm-plugins/main'
 import { blockquotePluginKey, getPluginState } from './pm-plugins/state'
-import { keymapPlugin } from './pm-plugins/keymap'
+import { keymapPlugin } from './pm-plugins/keymap.ts'
 
 export interface BlockQuoteExtensionProps {}
 export const blockQuoteSchema: IExtensionSchema = {

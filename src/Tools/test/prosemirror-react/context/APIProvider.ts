@@ -3,7 +3,7 @@ import { Socket } from 'socket.io-client'
 
 var EditorSocketAction = {}
 
-var EditorSocketActionType = string
+var EditorSocketActionType = ""
 
 interface APIProps {
   API_URL: string

@@ -1,5 +1,5 @@
-import { browser } from '../utils/browser';
-import { Command } from '../types/command';
+import { browser } from '../utils/browser.ts';
+import { Command } from '../types/command.ts';
 
 export const toggleBold = makeKeyMapWithCommon('Bold', 'Mod-b');
 export const toggleItalic = makeKeyMapWithCommon('Italic', 'Mod-i');
@@ -184,18 +184,3 @@ export function findKeyMapForBrowser(keyMap: Keymap): string | undefined {
   }
   return;
 }
-
-export {
-  DOWN,
-  HEADING_KEYS,
-  KEY_0,
-  KEY_1,
-  KEY_2,
-  KEY_3,
-  KEY_4,
-  KEY_5,
-  KEY_6,
-  LEFT,
-  RIGHT,
-  UP,
-} from './consts';
