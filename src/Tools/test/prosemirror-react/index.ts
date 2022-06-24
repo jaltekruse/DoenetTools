@@ -6,7 +6,6 @@ export {
   PluginsProvider,
   AnalyticsProvider,
   APIProvider,
-  CollabProvider,
 } from '@context'
 export type { EditorContext, IProviders } from '@context'
 
@@ -18,8 +17,6 @@ export {
   BaseExtension,
   BlockQuote,
   BlockQuoteExtension,
-  Collab,
-  CollabExtension,
   Extension,
   createSchema,
   createDefaultSchema,
