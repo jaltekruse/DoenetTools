@@ -1,5 +1,5 @@
 import { EditorState } from 'prosemirror-state'
-import { PluginKey } from '@core'
+import { PluginKey } from '../../../core/pm/plugin.ts'
 import { CommandDispatch } from '@core'
 
 export interface BaseState {

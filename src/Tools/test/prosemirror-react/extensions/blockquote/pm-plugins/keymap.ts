@@ -1,9 +1,9 @@
 import { keymap } from 'prosemirror-keymap'
 import { Plugin } from 'prosemirror-state'
-import { keymaps } from '@core'
+import { bindKeymapWithCommand, toggleBlockQuote } from '../../../core/keymaps'
 import { createNewBlockQuote } from '../commands'
 
-const { bindKeymapWithCommand, toggleBlockQuote } = keymaps
+//const { bindKeymapWithCommand, toggleBlockQuote } = keymaps
 
 export function keymapPlugin(): Plugin {
   const keymapObj = {}
