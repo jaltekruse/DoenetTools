@@ -14,11 +14,28 @@ import { preprocessMathInverseDefinition } from './utils/math';
 import { returnDefaultGetArrayKeysFromVarName } from './utils/stateVariables';
 import { nanoid } from 'nanoid';
 import { cidFromText } from './utils/cid';
-import { removeFunctionsMathExpressionClass } from './CoreWorker';
+//import { removeFunctionsMathExpressionClass } from './CoreWorker';
 import createComponentInfoObjects from './utils/componentInfoObjects';
 import { get as idb_get, set as idb_set } from 'idb-keyval';
 import { toastType } from '../Tools/_framework/ToastTypes';
 import axios from 'axios';
+
+function removeFunctionsMathExpressionClass(value) {
+  if (value instanceof me.class) {
+    value = value.tree;
+  } else if (typeof value === "function") {
+    value = undefined;
+  } else if (Array.isArray(value)) {
+    value = value.map(x => removeFunctionsMathExpressionClass(x))
+  } else if (typeof value === "object" && value !== null) {
+    let valueCopy = {}
+    for (let key in value) {
+      valueCopy[key] = removeFunctionsMathExpressionClass(value[key]);
+    }
+    value = valueCopy;
+  }
+  return value;
+}
 
 // string to componentClass: this.componentInfoObjects.allComponentClasses["string"]
 // componentClass to string: componentClass.componentType
@@ -169,7 +186,7 @@ export default class Core {
     // rendererState the current state of each renderer, keyed by componentName
     this.rendererState = {};
 
-    // rendererVariablesByComponentType is a description 
+    // rendererVariablesByComponentType is a description
     // of the which variables are sent to the renderers,
     // keyed by componentType
     this.rendererVariablesByComponentType = {};
@@ -2024,7 +2041,7 @@ export default class Core {
     // Have three composites involved:
     // 1. the shadowing composite (component, the one we're trying to expand)
     // 2. the shadowed composite
-    // 3. the composite mediating the shadowing 
+    // 3. the composite mediating the shadowing
     //    (of which shadowing composite is the replacement)
     let uniqueIdentifiersUsed = component.replacementsWorkspace.uniqueIdentifiersUsed = [];
 
@@ -2082,7 +2099,7 @@ export default class Core {
       // We set originalNamesAreConsistent to true if we can be sure
       // that we won't create any duplicate names.
       // If the component begin shadowed has a newNamespace,
-      // or we get a new namespace from the composite mediating the shadow, 
+      // or we get a new namespace from the composite mediating the shadow,
       // that will, in most cases, be enough to prevent name collisions.
       // The one edge case is when the composite mediating the shadow also assigns names,
       // in which case the assigned names could collide with the original names,
@@ -2571,7 +2588,7 @@ export default class Core {
 
           // parentValue would be undefined if fallBackToParentStateVariable wasn't specified
           // parentValue would be null if the parentValue state variables
-          // did not exist or its value was null 
+          // did not exist or its value was null
           let haveParentValue = dependencyValues.parentValue !== undefined
             && dependencyValues.parentValue !== null;
           if (haveParentValue && !usedDefault.parentValue) {
@@ -2835,7 +2852,7 @@ export default class Core {
 
     }
 
-    // attributes depend 
+    // attributes depend
     // - first on attributes from component attribute components, if they exist
     // - then on targetComponent (if not copying a prop and attribute exists in targetComponent)
 
@@ -2968,7 +2985,7 @@ export default class Core {
 
             // parentValue would be undefined if fallBackToParentStateVariable wasn't specified
             // parentValue would be null if the parentValue state variables
-            // did not exist or its value was null 
+            // did not exist or its value was null
             let haveParentValue = dependencyValues.parentValue !== undefined
               && dependencyValues.parentValue !== null;
             if (haveParentValue && !usedDefault.parentValue) {
@@ -3993,7 +4010,7 @@ export default class Core {
 
         if (nDimensionsInArrayKey < stateVarObj.nDimensions) {
           // if dimensions from arrayKey is less than number of dimensions
-          // then attempt to get additional dimensions from 
+          // then attempt to get additional dimensions from
           // array indices of value
 
           function setArrayValuesPiece(desiredValue, arrayValuesPiece, arraySizePiece) {
@@ -4782,7 +4799,7 @@ export default class Core {
 
 
     // If array size state variable has already been created,
-    // either it was created due to being shadowed 
+    // either it was created due to being shadowed
     // or from an additional state variable defined.
     // If it is shadowing target array size state variable,
     // make it mark the array's arraySize as stale on markStale
@@ -5737,7 +5754,7 @@ export default class Core {
       for (let prefix of arrayEntryPrefixesLongestToShortest) {
         if (lowerCaseVarName.substring(0, prefix.length) === prefix.toLowerCase()) {
           // TODO: the varEnding is still a case-senstitive match
-          // Should we require that getArrayKeysFromVarName have 
+          // Should we require that getArrayKeysFromVarName have
           // a case-insensitive mode?
           let arrayVariableName = stateVarInfo.arrayEntryPrefixes[prefix].arrayVariableName;
           let arrayStateVarDescription = stateVarInfo.stateVariableDescriptions[arrayVariableName];
@@ -9034,7 +9051,7 @@ export default class Core {
           });
 
         } else {
-          // For setting essential value, we keep the values for all 
+          // For setting essential value, we keep the values for all
           // shadowed components in sync.
           // We find the original component and the recurse on all the components
           // that shadow it
@@ -9096,7 +9113,7 @@ export default class Core {
               }
 
 
-              // For primitive children, we keep the values for all 
+              // For primitive children, we keep the values for all
               // shadowed parents in sync.
               // We find the original parent and the recurse on all the parents
               // that shadow it
@@ -9693,7 +9710,7 @@ export default class Core {
   //   // that means that we have call this.submitAllAnswers and we still have
   //   // some answers that haven't been submitted
   //   // In this case, we will decrement this.answersToSubmitCounter
-  //   // If this.answersToSubmitCounter newly becomes zero, 
+  //   // If this.answersToSubmitCounter newly becomes zero,
   //   // then we know that we have submitted the last one answer
   //   if (this.answersToSubmitCounter > 0) {
   //     this.answersToSubmitCounter -= 1;
@@ -9704,7 +9721,7 @@ export default class Core {
   // }
 
   // addComponents({ serializedComponents, parent }) {
-  //   //Check if 
+  //   //Check if
   //   //Child logic is violated
   //   //Parent exists
   //   //Check composites in serializedComponents??
