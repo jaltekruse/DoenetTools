@@ -906,7 +906,7 @@ export default function PageViewer(props) {
 
 
 
-export async function renderersloadComponent(promises, rendererClassNames) {
+async function renderersloadComponent(promises, rendererClassNames) {
 
   var rendererClasses = {};
   for (let [index, promise] of promises.entries()) {

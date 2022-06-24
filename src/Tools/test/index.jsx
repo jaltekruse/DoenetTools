@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import DoenetTest from './DoenetTest.jsx';
-import {RecoilRoot} from 'recoil';
+//import DoenetTest from './DoenetTest.jsx';
+//import {RecoilRoot} from 'recoil';
  import {schema} from "prosemirror-schema-basic"
  import {EditorState} from "prosemirror-state"
  import {EditorView} from "prosemirror-view"
@@ -32,8 +32,6 @@ import {Editor} from '@core'
 
 
 ReactDOM.render(
-  <RecoilRoot>
-    <Editor/>
-  </RecoilRoot>,
+    <Editor />,
   document.getElementById('root'),
 );
