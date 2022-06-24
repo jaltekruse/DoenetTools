@@ -11,7 +11,9 @@ import {RecoilRoot} from 'recoil';
  import {Schema, DOMParser} from "prosemirror-model"
  import {addListNodes} from "prosemirror-schema-list"
  import {exampleSetup} from "prosemirror-example-setup"
- 
+import {Editor} from '@core'
+
+/*
  // Mix the nodes from prosemirror-schema-list into the basic schema to
  // create a schema with list support.
  const mySchema = new Schema({
@@ -21,18 +23,17 @@ import {RecoilRoot} from 'recoil';
  
  window.view = new EditorView(document.getElementById('root'), {
    state: EditorState.create({
-     doc: DOMParser.fromSchema(mySchema).parse("" /*document.querySelector("#content")*/),
+     doc: DOMParser.fromSchema(mySchema).parse(""), //document.querySelector("#content")),
      plugins: exampleSetup({schema: mySchema})
    })
  });
+ */
  
 
 
-/*
 ReactDOM.render(
   <RecoilRoot>
-    <DoenetTest />
+    <Editor/>
   </RecoilRoot>,
   document.getElementById('root'),
 );
-*/
