@@ -27,7 +27,7 @@ export function EditorSimple() {
 
 export function Editor(props: EditorProps) {
   const ctx = useEditorContext()
-  const { viewProvider, extensionProvider, analyticsProvider, collabProvider, portalProvider } = ctx
+  const { viewProvider, extensionProvider, analyticsProvider, portalProvider } = ctx
   const editorViewRef = useRef(null)
   const [canDispatchTransactions, setCanDispatchTransactions] = useState(true)
 
@@ -112,9 +112,6 @@ export function Editor(props: EditorProps) {
   function afterTrHooks(newState: EditorState) {
     if (props.onDocumentEdit) {
       props.onDocumentEdit(newState)
-    }
-    if (collabProvider.isCollaborating) {
-      collabProvider.sendSteps(newState)
     }
   }
 

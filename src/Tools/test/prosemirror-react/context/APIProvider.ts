@@ -1,5 +1,9 @@
 import { Socket } from 'socket.io-client'
-import { EditorSocketAction, EditorSocketActionType } from '@pm-react-example/shared/collab-socket'
+//import { EditorSocketAction, EditorSocketActionType } from '@pm-react-example/shared/collab-socket'
+
+var EditorSocketAction = {}
+
+var EditorSocketActionType = string
 
 interface APIProps {
   API_URL: string

@@ -13,6 +13,10 @@ export default defineConfig({
         { find: '@Tool', replacement: 'src/Tools/_framework/Tool' },
         { find: '@Toast', replacement: 'src/Tools/_framework/Toast' },
         { find: 'solid-svg', replacement: '@fortawesome/free-solid-svg-icons' },
+        { find: '@context', replacement: 'src/Tools/test/prosemirror-react/context' },
+        { find: '@core', replacement: 'src/Tools/test/prosemirror-react/core' },
+        { find: '@extensions', replacement: 'src/Tools/test/prosemirror-react/extensions' },
+        { find: '@react', replacement: 'src/Tools/test/prosemirror-react/react' },
       ],
     }),
     nodeResolve({
