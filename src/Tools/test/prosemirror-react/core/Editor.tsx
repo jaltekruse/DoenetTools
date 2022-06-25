@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { DirectEditorProps, EditorView } from 'prosemirror-view'
 import { EditorState, Transaction } from 'prosemirror-state'
+import {schema} from "prosemirror-schema-basic"
 
 import { useEditorContext } from '@context'
 import { useSsrLayoutEffect } from '@react'
@@ -47,7 +48,7 @@ export function Editor(props: EditorProps) {
 
   function createEditorState() {
     return EditorState.create({
-      schema: extensionProvider.createSchema(),
+      schema: schema,
       plugins: extensionProvider.createPlugins(),
     })
   }
