@@ -8,6 +8,7 @@ export const createReactExtension = <T,>(Ext: new(ctx: EditorContext, props: T) 
   const { extensionProvider } = ctx
   const extension = useMemo(() => new Ext(ctx, props), [])
   useLayoutEffect(() => {
+    console.log("13412341234");
     extensionProvider.register(extension)
     return () => {
       extensionProvider.unregister(extension)

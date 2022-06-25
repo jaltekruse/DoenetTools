@@ -5,6 +5,7 @@ import type { BaseExtensionProps } from './base'
 import { BlockQuoteExtension, blockQuoteSchema } from './blockquote'
 import type { BlockQuoteExtensionProps } from './blockquote'
 
+console.log("ASDFASZFSADFASDFASDFASDF");
 export const Base = createReactExtension<BaseExtensionProps>(BaseExtension)
 export const BlockQuote = createReactExtension<BlockQuoteExtensionProps>(BlockQuoteExtension)
 

@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
  import {Schema, DOMParser} from "prosemirror-model"
  import {addListNodes} from "prosemirror-schema-list"
  import {exampleSetup} from "prosemirror-example-setup"
-import {Editor} from '@core'
+import {Editor} from "./editor"
 
 /*
  // Mix the nodes from prosemirror-schema-list into the basic schema to

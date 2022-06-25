@@ -13,6 +13,7 @@ export class ExtensionProvider {
   }
 
   createSchema() {
+    console.log(this.extensions.values());
     return createSchema(Array.from(this.extensions.values()))
   }
 
