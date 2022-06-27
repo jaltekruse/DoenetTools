@@ -15,7 +15,9 @@
         "@context": ["./src/Tools/test/prosemirror-react/context"] ,
         "@core": ["./src/Tools/test/prosemirror-react/core"] ,
         "@extensions": ["./src/Tools/test/prosemirror-react/extensions"] ,
-        "@react": ["./src/Tools/test/prosemirror-react/react"] 
+        "@react": ["./src/Tools/test/prosemirror-react/react"],
+        "@pm-react-example/shared": ["src/Tools/test/shared" ],
+        "@pm-react-example/full-v2": ["src/Tools/test/prosemirror-react"]
     },
     /* noEmit - Snowpack builds (emits) files, not tsc. */
     "noEmit": true,
@@ -26,6 +28,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "importsNotUsedAsValues": "preserve"
+    "importsNotUsedAsValues": "preserve",
+    "experimentalDecorators": true
   }
 }
