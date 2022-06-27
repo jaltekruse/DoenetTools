@@ -1,3 +1,29 @@
+
+import * as React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'mobx-react'
+
+import { Stores } from './example-app/src/stores'
+import { confMobx } from './example-app/src/stores/mobxConf'
+
+import { Routes } from './example-app/src/routes'
+import { Toaster } from './example-app/src/components/Toaster'
+
+import './example-app/src/index.css'
+
+export const stores = new Stores()
+
+confMobx()
+
+render(
+  <Provider {...stores}>
+    <Routes />
+    <Toaster />
+  </Provider>,
+  document.getElementById('root')
+)
+
+/*
 import React from 'react';
 import ReactDOM from 'react-dom';
 //import DoenetTest from './DoenetTest.jsx';
@@ -27,7 +53,6 @@ import {Editor} from '@core'
      plugins: exampleSetup({schema: mySchema})
    })
  });
- */
  
 
 
@@ -35,3 +60,4 @@ ReactDOM.render(
     <Editor />,
   document.getElementById('root'),
 );
+ */

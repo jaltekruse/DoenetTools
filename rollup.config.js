@@ -17,6 +17,8 @@ export default defineConfig({
         { find: '@core', replacement: 'src/Tools/test/prosemirror-react/core' },
         { find: '@extensions', replacement: 'src/Tools/test/prosemirror-react/extensions' },
         { find: '@react', replacement: 'src/Tools/test/prosemirror-react/react' },
+        { find: '@pm-react-example/shared', replacement: 'src/Tools/test/shared' },
+        { find: '@pm-react-example/full-v2', replacement: 'src/Tools/test/prosemirror-react' },
       ],
     }),
     nodeResolve({

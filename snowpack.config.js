@@ -10,6 +10,8 @@ module.exports = {
     '@core': './src/Tools/test/prosemirror-react/core' ,
     '@extensions': './src/Tools/test/prosemirror-react/extensions' ,
     '@react': './src/Tools/test/prosemirror-react/react' ,
+    '@pm-react-example/shared': './src/Tools/test/shared',
+    '@pm-react-example/full-v2': './src/Tools/test/prosemirror-react'
   },
   mount: {
     'src/Viewer': '/viewer',
