@@ -6,10 +6,11 @@ require_once "db_connection.php";
 error_reporting(E_ERROR | E_PARSE);
 
 
-$settings->key = $ini_array['key'];
 use \Firebase\JWT\JWT;
 require_once "vendor/autoload.php";
 
+$settings = new \stdClass;
+$settings->key = new \Firebase\JWT\Key($ini_array['key'], 'HS256');
 
 $settings->jwt =  mysqli_real_escape_string($conn,$_COOKIE["JWT"]);
 $settings->jwt_array = array();
