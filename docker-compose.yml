@@ -32,7 +32,7 @@ services:
     restart: always
 
   php:
-    image: lyanthropos/doenet_test:php-dev
+    image: lyanthropos/doenet_php:2.0-alpha
     volumes:
       - ./src/Api:/usr/local/apache2/htdocs/api
       - ./src/Media:/usr/local/apache2/htdocs/media
@@ -51,6 +51,16 @@ services:
       - ./doenet_docker/volumes/db_init:/docker-entrypoint-initdb.d
     networks:
       - dev_net
+    restart: always
+
+  mysql8:
+    image: mysql:8.0.31
+    ports:
+      - 3307:3306
+    networks:
+      - dev_net
+    environment:
+      - MYSQL_ROOT_PASSWORD=helloworld
     restart: always
   # for realtime testing
   # rtnode:
