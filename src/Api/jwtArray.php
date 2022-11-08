@@ -2,10 +2,10 @@
 include "db_connection.php"; //DELETE
 error_reporting(E_ERROR | E_PARSE);
 
-$key = $ini_array['key'];
 use \Firebase\JWT\JWT;
 require_once "vendor/autoload.php";
 
+$key = new \Firebase\JWT\Key($ini_array['key'], 'HS256');
 
 $jwt =  mysqli_real_escape_string($conn,$_COOKIE["JWT"]);
 $jwt_array = array();
