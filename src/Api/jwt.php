@@ -10,7 +10,7 @@ include 'db_connection.php';
 use \Firebase\JWT\JWT;
 // require_once "/var/www/html/vendor/autoload.php";
 require_once "vendor/autoload.php";
-$key = new \Firebase\JWT\Key($ini_array['key'], 'HS256');
+$key = $ini_array['key'];
 
 $emailaddress = mysqli_real_escape_string($conn, $_REQUEST['emailaddress']);
 $nineCode = mysqli_real_escape_string($conn, $_REQUEST['nineCode']);
@@ -53,7 +53,7 @@ if ($row['minutes'] > 10) {
             'deviceName' => $deviceName,
             // "expires" => $expirationTime
         ];
-        $jwt = JWT::encode($payload, $key, 'HS256');
+        $jwt = JWT::encode($payload, $key);
 
         $sql = "UPDATE user_device
         SET signedIn = '1'
