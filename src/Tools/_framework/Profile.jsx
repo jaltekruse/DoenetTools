@@ -24,6 +24,7 @@ margin-left: ${(props) => props.margin == false ? '75px' : '5px'};
 margin-top: 4px
 `;
 
+// TODO - maybe collapse with atom of same name in Logo.jsx
 export const profileToolViewStashAtom = atom({
   key: "profileToolViewStashAtom",
   default:{},

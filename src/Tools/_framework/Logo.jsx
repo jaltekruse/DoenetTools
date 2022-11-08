@@ -29,6 +29,7 @@ const LogoButton = styled.button`
   }
 `;
 
+// TODO - maybe collapse with atom of same name in Profile.jsx
 export const profileToolViewStashAtom = atom({
   key: "profileToolViewStashAtom",
   default:{},

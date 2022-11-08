@@ -52,7 +52,7 @@ $result = $conn->query($sql);
 use \Firebase\JWT\JWT;
 // require_once "/var/www/html/vendor/autoload.php";
 require_once "../api/vendor/autoload.php";
-$key = $ini_array['key'];
+$key = new \Firebase\JWT\Key($ini_array['key'], 'HS256');
 
 $expirationTime = 2147483647;
 
@@ -62,7 +62,7 @@ $payload = [
     'deviceName' => $deviceName,
     // "expires" => $expirationTime
 ];
-$jwt = JWT::encode($payload, $key);
+$jwt = JWT::encode($payload, $key, 'HS256');
 
 // $sql = "UPDATE user_device
 // SET signedIn = '1'

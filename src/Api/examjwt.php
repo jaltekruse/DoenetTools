@@ -5,7 +5,7 @@ include 'db_connection.php';
 use \Firebase\JWT\JWT;
 // require_once "/var/www/html/vendor/autoload.php";
 require_once "vendor/autoload.php";
-$key = $ini_array['key'];
+$key = new \Firebase\JWT\Key($ini_array['key'], 'HS256');
 
 $code = mysqli_real_escape_string($conn, $_REQUEST['code']);
 $doenetId = mysqli_real_escape_string($conn, $_REQUEST['doenetId']);
