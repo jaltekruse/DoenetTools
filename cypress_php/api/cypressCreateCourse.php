@@ -24,15 +24,26 @@ if ($studentUserId == ''){
   $studentUserId = 'cyStudentUserId';
 }
 
-
 $sql = "
-INSERT INTO course
-SET courseId='$courseId',
-label='Cypress Generated',
-image='picture1.jpg',
-defaultRoleId = 'studentRoleId'
+SELECT courseId
+FROM course 
+WHERE courseId = '$courseId'
 ";
-$result = $conn->query($sql); 
+$result = $conn->query($sql);
+
+//Don't create another if it already exists 
+if ($result->num_rows == 0) {
+
+    $sql = "
+    INSERT INTO course
+    SET courseId='$courseId',
+    label='Cypress Generated',
+    image='picture1.jpg',
+    defaultRoleId = 'studentRoleId'
+    ";
+    $result = $conn->query($sql); 
+}
+
 
 $result = $conn->query(
   //Owner
@@ -73,7 +84,7 @@ FROM course_user
 WHERE userId = '$userId'
 AND courseId = '$courseId'
 ";
-$result = $conn->query($sql); 
+$result = $conn->query($sql);
 
 //Don't create another if it already exists 
 if ($result->num_rows == 0) {
