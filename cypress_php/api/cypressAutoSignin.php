@@ -52,14 +52,14 @@ $result = $conn->query($sql);
 use \Firebase\JWT\JWT;
 // require_once "/var/www/html/vendor/autoload.php";
 require_once "../api/vendor/autoload.php";
-$key = new \Firebase\JWT\Key($ini_array['key'], 'HS256');
+$key = $ini_array['key'];
 
 $expirationTime = 2147483647;
 
 $payload = [
     // "email" => $emailaddress,
     'userId' => $userId,
-    'deviceName' => $deviceName,
+    'deviceName' => 'cypress',
     // "expires" => $expirationTime
 ];
 $jwt = JWT::encode($payload, $key, 'HS256');

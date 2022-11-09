@@ -5,7 +5,7 @@ include 'db_connection.php';
 use \Firebase\JWT\JWT;
 // require_once "/var/www/html/vendor/autoload.php";
 require_once "vendor/autoload.php";
-$key = new \Firebase\JWT\Key($ini_array['key'], 'HS256');
+$key = $ini_array['key'];
 
 $code = mysqli_real_escape_string($conn, $_REQUEST['code']);
 $doenetId = mysqli_real_escape_string($conn, $_REQUEST['doenetId']);
@@ -43,7 +43,7 @@ $payload = [
     'doenetId' => $doenetId,
     'examPasscode' => $code,
 ];
-$jwt = JWT::encode($payload, $key);
+$jwt = JWT::encode($payload, $key, 'HS256');
 
 $value = $jwt;
 
