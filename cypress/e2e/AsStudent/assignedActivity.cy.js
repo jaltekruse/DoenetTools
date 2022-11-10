@@ -89,6 +89,7 @@ describe('Assigned Activity Tests', function () {
     // Update the activity as the owner
     cy.get('[data-test="AssignmentSettingsMenu Menu"]').click();
     cy.get('[data-test="Due Date Checkbox"]').click();
+    // this is flaky if the test is run around the time the minute changes on the system clock
     cy.get('[data-test="Due Date"]').should('have.value', formatDateWithYear(dueDate) + ' ' + formatTime(dueDate));
     cy.get('[data-test="Assigned Date Checkbox"]').click();
     cy.get('[data-test="Assign Activity"]').click();

@@ -23,12 +23,9 @@ if ($courseId == "") {
 	$success = false;
 	$message = "Internal Error: missing courseId";
 }
-echo 'success?' . $success;
 
 if ($success){
-	echo "success";
 	$permissions = permissionsAndSettingsForOneCourseFunction( $conn, $userId, $courseId );
-	print_r($permissions);
 
 function nullishCoalesce(&$value, $default) {
 	return isset($value) ? $value : $default;

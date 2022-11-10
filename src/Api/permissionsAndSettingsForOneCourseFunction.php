@@ -37,9 +37,7 @@ function permissionsAndSettingsForOneCourseFunction($conn, $userId, $courseId)
     ORDER BY c.id DESC
     ";
 
-    echo $sql;
     $result = $conn->query($sql);
-    print_r($result);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
 
