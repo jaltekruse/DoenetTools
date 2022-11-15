@@ -120,13 +120,16 @@ if ($success) {
             $credit_for_assignment = $row['credit'];
         }
 
-        // Get credit for attempt from user_assignment_attempt
-        $result = $conn->query(
+        $sql = 
             "SELECT credit
             FROM user_assignment_attempt
             WHERE userId = '$studentUserId'
               AND doenetId = '$doenetId'
-              AND attemptNumber = '$attemptNumber'"
+              AND attemptNumber = '$attemptNumber'";
+
+        // Get credit for attempt from user_assignment_attempt
+        $result = $conn->query(
+            $sql
         );
 
         if ($result->num_rows < 1) {

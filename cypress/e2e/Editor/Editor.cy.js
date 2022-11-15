@@ -219,6 +219,11 @@ it('Assign two-page activity',()=>{
   cy.reload();
 
   cy.get('#page2\\/_section1_title').should('have.text', 'Section 2')
+  // TODO - this is flaky, I wonder if there is some condition in which we save page state immediately
+  // instead of waiting a minute
+  // I thought for instance that only the save to the server would be delayed a minute
+  // and the save to indexedDB would happen immediately
+  // is this in effect testing the speed of an IndexedDB save and assuming it is slow?
   cy.get('#page2\\/_p2').should('not.contain.text', '1')
 
   cy.get('[data-test="Final Score"]').should('have.text', '10')

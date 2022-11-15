@@ -570,6 +570,8 @@ export default function ActivityViewer(props) {
       try {
         resp = await axios.get('/api/loadActivityState.php', payload);
 
+        console.log("Loaded acitivty state");
+        console.log(resp);
         if (!resp.data.success) {
           if (props.flags.allowLoadState) {
             if (props.setIsInErrorState) {
@@ -585,6 +587,7 @@ export default function ActivityViewer(props) {
         }
       } catch (e) {
 
+        console.log(e);
         if (props.flags.allowLoadState) {
           if (props.setIsInErrorState) {
             props.setIsInErrorState(true)
@@ -628,7 +631,14 @@ export default function ActivityViewer(props) {
       } else {
 
         // get initial state and info
-
+        // TODO JASON
+        // this seems to indicate we don't have page state, so we are assuming this is the first time this is being loaded?
+        // I am running into a cypress test failure in Editor.cy.js where the call to /api/initAssignmentAttempt.php'
+        // is failing saying we already have an attempt for this user/assignment combo
+        // current thought is that this code is conflating page state with anything being saved in the server, even
+        // that we know we more aggressively save attempt/score data than page state
+        // and also curiously the test I'm pretty sure tries to assert that quickly refreshing makes the page state not
+        // be preserved (although that assertion has been flaky for me as I mentioned in the test file where I commented it out)
         loadedFromInitialState = true;
 
         // start at page 1
