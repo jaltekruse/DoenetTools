@@ -4,6 +4,7 @@ function permissionsAndSettingsForOneCourseFunction($conn, $userId, $courseId)
 {
     //TODO: is this safe?
     $sql = "SELECT
+    c.courseId, 
     c.label,
     c.isPublic,
     c.image,
@@ -39,33 +40,7 @@ function permissionsAndSettingsForOneCourseFunction($conn, $userId, $courseId)
 
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-
-        $permissionsAndSettings = [
-            'courseId' => $row['courseId'],
-            'label' => $row['label'],
-            'isPublic' => $row['isPublic'],
-            'image' => $row['image'],
-            'color' => $row['color'],
-            'defaultRoleId' => $row['defaultRoleId'],
-            'roleId' => $row['roleId'],
-            'roleLabel' => $row['roleLabel'],
-            'isIncludedInGradebook' => $row['isIncludedInGradebook'],
-            'canViewContentSource' => $row['canViewContentSource'],
-            'canEditContent' => $row['canEditContent'],
-            'canPublishContent' => $row['canPublishContent'],
-            'canViewUnassignedContent' => $row['canViewUnassignedContent'],
-            'canProctor' => $row['canProctor'],
-            'canViewAndModifyGrades' => $row['canViewAndModifyGrades'],
-            'canViewActivitySettings' => $row['canViewActivitySettings'],
-            'canModifyActivitySettings' => $row['canModifyActivitySettings'],
-            'canModifyCourseSettings' => $row['canModifyCourseSettings'],
-            'canViewUsers' => $row['canViewUsers'],
-            'canManageUsers' => $row['canManageUsers'],
-            'isAdmin' => $row['isAdmin'],
-            'dataAccessPermission' => $row['dataAccessPermission'],
-            'isOwner' => $row['isOwner'],
-        ];
+        $permissionsAndSettings = $result->fetch_assoc();
     } else {
         return false;
     }
