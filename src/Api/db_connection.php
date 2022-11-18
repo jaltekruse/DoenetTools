@@ -44,12 +44,16 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:3000') {
 
 $conn = new mysqli();
 
-
 // Note: use MYSQLI_CLIENT_FOUND_ROWS
 // so that can check rows_affected to determine if UPDATE queries match any records
 // even if they didn't change any records
 if (!$conn->real_connect($dbhost, $username, $password, $database, 3306, null, MYSQLI_CLIENT_FOUND_ROWS)) {
     die('Database Connection failed: ' . mysqli_connect_error());
 }
+
+// as of 8.1 the mysqli calls to query() will throw PHP exceptions on failure
+// this restores the old behavior
+// https://www.php.net/manual/en/mysqli-driver.report-mode.php
+mysqli_report(MYSQLI_REPORT_OFF);
 
 ?>
