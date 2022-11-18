@@ -160,14 +160,14 @@ if ($success) {
     }
 }
 
-// set response code - 200 OK
-http_response_code(200);
-
-// make it json format
-echo json_encode([
+$response_arr = array(
     'success' => $success,
     'message' => $message,
     'userData' => $userData,
-]);
+);
+
+http_response_code($response_arr['success'] ? 200 : 400);
+echo json_encode($response_arr);
+
 $conn->close();
 ?>

@@ -9,6 +9,7 @@ include "db_connection.php";
 
 $_POST = json_decode(file_get_contents("php://input"),true);
 $number_content = count($_POST["contentSeeds"]["contentId"]);
+$any_db_error_occurred = FALSE;
 
 for ($i = 0; $i < $number_content; $i++){
   $doenetId = mysqli_real_escape_string($conn,$_POST["contentSeeds"]["doenetId"][$i]);
@@ -18,10 +19,8 @@ for ($i = 0; $i < $number_content; $i++){
   ";
   echo $sql;
   $result = $conn->query($sql); 
-  if ($result === TRUE) {
-    // set response code - 200 OK
-    http_response_code(200);
-  }else {
+  if ($result === FALSE) {
+    $any_db_error_occurred = TRUE;
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 
@@ -31,10 +30,8 @@ for ($i = 0; $i < $number_content; $i++){
   ";
   echo $sql;
   $result = $conn->query($sql); 
-  if ($result === TRUE) {
-    // set response code - 200 OK
-    http_response_code(200);
-  }else {
+  if ($result === FALSE) {
+    $any_db_error_occurred = TRUE;
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 }
@@ -52,10 +49,8 @@ for ($i = 0; $i < $number_seeds; $i++){
     ";
     $result = $conn->query($sql);
 
-  if ($result === TRUE) {
-      // set response code - 200 OK
-      http_response_code(200);
-  }else {
+  if ($result === FALSE) {
+      $any_db_error_occurred = TRUE;
       echo "Error: " . $sql . "<br>" . $conn->error;
   }
 
@@ -70,14 +65,13 @@ for ($i = 0; $i < $number_seeds; $i++){
     $result = $conn->query($sql);
   }
 
-  if ($result === TRUE) {
-      // set response code - 200 OK
-      http_response_code(200);
-  }else {
+  if ($result === FALSE) {
+    $any_db_error_occurred = TRUE;
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 }
 
+http_response_code($any_db_error_occurred ? 500 : 200);
 
 $conn->close();
 

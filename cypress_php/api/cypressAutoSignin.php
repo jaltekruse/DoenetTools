@@ -104,7 +104,7 @@ $response_arr = array(
   "success" => $success
   );
 
-http_response_code(200);
+http_response_code($response_arr['success'] ? 200 : 400);
 
 echo json_encode($response_arr);
 
