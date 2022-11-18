@@ -124,7 +124,9 @@ describe('Gradebook tests', function () {
       cy.get('#page3\\/ans textarea').type(`${text}{enter}`, { force: true })
 
       cy.get('#page3\\/ans2 .mjx-mrow').should('contain.text', text);
-
+      // wait for the page state to be stored in IndexedDB
+      // the debounce for this save is 1 second, give it a little extra time to make sure it saves
+      cy.wait(5000);
 
     })
 
