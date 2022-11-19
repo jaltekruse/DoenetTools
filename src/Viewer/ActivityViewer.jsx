@@ -567,66 +567,7 @@ export default function ActivityViewer(props) {
 
       let resp;
 
-      try {
-        resp = await axios.get('/api/loadActivityState.php', payload);
-
-        if (!resp.data.success) {
-          if (props.flags.allowLoadState) {
-            if (props.setIsInErrorState) {
-              props.setIsInErrorState(true)
-            }
-            setErrMsg(`Error loading activity state: ${resp.data.message}`);
-            return;
-          } else {
-            // ignore this error if didn't allow loading of page state
-
-          }
-
-        }
-      } catch (e) {
-
-        if (props.flags.allowLoadState) {
-          if (props.setIsInErrorState) {
-            props.setIsInErrorState(true)
-          }
-          setErrMsg(`Error loading activity state: ${e.message}`);
-          return;
-        } else {
-          // ignore this error if didn't allow loading of page state
-
-        }
-
-
-      }
-
-      if (resp.data.loadedState) {
-
-        let newActivityInfo = JSON.parse(resp.data.activityInfo);
-        let activityState = JSON.parse(resp.data.activityState);
-
-        // activityState is just currentPage
-        // if hash doesn't already specify a page, set page from activityState
-        if (!hash?.match(/^#page(\d+)/)) {
-          setCurrentPage(activityState.currentPage);
-          setRecoilCurrentPage(activityState.currentPage);
-        }
-
-        // activityInfo is orderWithCids, variantsByPage, itemWeights, and numberOfVariants
-        newVariantIndex = resp.data.variantIndex;
-        setVariantIndex(newVariantIndex);
-        setNPages(newActivityInfo.orderWithCids.length);
-        setOrder(newActivityInfo.orderWithCids);
-        setVariantsByPage(newActivityInfo.variantsByPage);
-        setItemWeights(newActivityInfo.itemWeights);
-        newItemWeights = newActivityInfo.itemWeights;
-        previousComponentTypeCountsByPage.current = newActivityInfo.previousComponentTypeCounts || [];
-
-
-        activityInfo.current = newActivityInfo;
-        activityInfoString.current = JSON.stringify(activityInfo.current);
-
-      } else {
-
+      const onError = async () => {
         // get initial state and info
 
         loadedFromInitialState = true;
@@ -659,13 +600,75 @@ export default function ActivityViewer(props) {
 
         activityInfo.current = results.activityInfo;
         activityInfoString.current = JSON.stringify(activityInfo.current);
+      };
+
+      try {
+        resp = await axios.get('/api/loadActivityState.php', payload);
+
+        if (!resp.data.success) {
+          if (props.flags.allowLoadState) {
+            if (props.setIsInErrorState) {
+              props.setIsInErrorState(true)
+            }
+            setErrMsg(`Error loading activity state: ${resp.data.message}`);
+            return;
+          } else {
+            // ignore this error if didn't allow loading of page state
+
+          }
+
+        } else {
+          if (resp.data.loadedState) {
+
+            let newActivityInfo = JSON.parse(resp.data.activityInfo);
+            let activityState = JSON.parse(resp.data.activityState);
+
+            // activityState is just currentPage
+            // if hash doesn't already specify a page, set page from activityState
+            if (!hash?.match(/^#page(\d+)/)) {
+              setCurrentPage(activityState.currentPage);
+              setRecoilCurrentPage(activityState.currentPage);
+            }
+
+            // activityInfo is orderWithCids, variantsByPage, itemWeights, and numberOfVariants
+            newVariantIndex = resp.data.variantIndex;
+            setVariantIndex(newVariantIndex);
+            setNPages(newActivityInfo.orderWithCids.length);
+            setOrder(newActivityInfo.orderWithCids);
+            setVariantsByPage(newActivityInfo.variantsByPage);
+            setItemWeights(newActivityInfo.itemWeights);
+            newItemWeights = newActivityInfo.itemWeights;
+            previousComponentTypeCountsByPage.current = newActivityInfo.previousComponentTypeCounts || [];
+
+
+            activityInfo.current = newActivityInfo;
+            activityInfoString.current = JSON.stringify(activityInfo.current);
+
+          } else {
+            onError();
+          }
+
+        }
+      } catch (e) {
+
+        onError();
+        /*
+        if (props.flags.allowLoadState) {
+          if (props.setIsInErrorState) {
+            props.setIsInErrorState(true)
+          }
+          setErrMsg(`Error loading activity state: ${e.message}`);
+          return;
+        } else {
+          // ignore this error if didn't allow loading of page state
+
+        }
+        */
+
 
       }
 
-
     }
-
-
     return { newItemWeights, newVariantIndex, loadedFromInitialState };
 
   }
