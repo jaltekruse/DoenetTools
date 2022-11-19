@@ -10,7 +10,6 @@ include "db_connection.php";
 // Content
 $_POST = json_decode(file_get_contents("php://input"),true);
 $number_content = count($_POST["contentSeeds"]["contentId"]);
-$any_db_error_occurred = FALSE;
 
 for ($i = 0; $i < $number_content; $i++){
   $doenetId = mysqli_real_escape_string($conn,$_POST["contentSeeds"]["doenetId"][$i]);
@@ -25,8 +24,10 @@ for ($i = 0; $i < $number_content; $i++){
   ('$doenetId','$title','$doenetML',NOW(),NOW(),'$contentId')
   ";
   $result = $conn->query($sql); 
-  if ($result === FALSE) {
-    $any_db_error_occurred = TRUE;
+  if ($result === TRUE) {
+    // set response code - 200 OK
+    http_response_code(200);
+  }else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 
@@ -37,8 +38,10 @@ for ($i = 0; $i < $number_content; $i++){
   ('devuser','$doenetId')
   ";
   $result = $conn->query($sql); 
-  if ($result === FALSE) {
-    $any_db_error_occurred = TRUE;
+  if ($result === TRUE) {
+    // set response code - 200 OK
+    http_response_code(200);
+  }else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 
@@ -49,8 +52,10 @@ for ($i = 0; $i < $number_content; $i++){
   ('$doenetML','$doenetId','$title','$contentId',NOW(),1)
   ";
   $result = $conn->query($sql); 
-  if ($result === FALSE) {
-    $any_db_error_occurred = TRUE;
+  if ($result === TRUE) {
+    // set response code - 200 OK
+    http_response_code(200);
+  }else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 }
@@ -74,8 +79,10 @@ for ($i = 0; $i < $number_folders; $i++){
   ('$folderId','$title','$parentId' ,NOW(), '$isRepo', '$isPublic')
   ";
   $result = $conn->query($sql);
-  if ($result === FALSE) {
-    $any_db_error_occurred = TRUE;
+  if ($result === TRUE) {
+    // set response code - 200 OK
+    http_response_code(200);
+  }else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 
@@ -112,8 +119,9 @@ for ($i = 0; $i < $numberUrls; $i++){
   ('$urlId','$title','$url', '', NOW(), false)
   ";
   $result = $conn->query($sql); 
-  if ($result === FALSE) {
-    $any_db_error_occurred = TRUE;
+  if ($result === TRUE) {
+    http_response_code(200);
+  }else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 
@@ -124,13 +132,14 @@ for ($i = 0; $i < $numberUrls; $i++){
     ('devuser','$urlId')
   ";
   $result = $conn->query($sql); 
-  if ($result === FALSE) {
-    $any_db_error_occurred = TRUE;
+  if ($result === TRUE) {
+    // set response code - 200 OK
+    http_response_code(200);
+  }else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
 }
 
-http_response_code($any_db_error_occurred ? 500 : 200);
 
 $conn->close();
 

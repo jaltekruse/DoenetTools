@@ -258,7 +258,7 @@ $response_arr = [
     "cidChanged" => $cidChanged,
 ];
 
-http_response_code($response_arr['success'] ? 200 : 400);
+http_response_code(200);
 
 echo json_encode($response_arr);
 
