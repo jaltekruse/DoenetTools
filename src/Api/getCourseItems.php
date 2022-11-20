@@ -5,10 +5,10 @@ header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Allow-Credentials: true");
 header('Content-Type: application/json');
 
-include "db_connection.php";
-include "permissionsAndSettingsForOneCourseFunction.php";
+include_once "db_connection.php";
+include_once "permissionsAndSettingsForOneCourseFunction.php";
 
-$jwtArray = include "jwtArray.php";
+$jwtArray = include_once "jwtArray.php";
 $userId = $jwtArray['userId'];
 
 $success = TRUE;

@@ -1,6 +1,6 @@
 <?PHP
-include "db_connection.php"; //DELETE
-error_reporting(E_ERROR | E_PARSE);
+//include_once "db_connection.php"; //DELETE
+//error_reporting(E_ERROR | E_PARSE);
 
 $key = $ini_array['key'];
 use \Firebase\JWT\JWT;
