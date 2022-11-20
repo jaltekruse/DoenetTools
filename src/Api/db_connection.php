@@ -13,7 +13,7 @@ function my_error_handler()
 //register_shutdown_function('my_error_handler');
 
 error_reporting(E_ALL);
-ini_set('display_errors', 'on');
+ini_set('display_errors', 0);
 
 function handle_error($errno, $errstr, $errfile, $errline)
 {
