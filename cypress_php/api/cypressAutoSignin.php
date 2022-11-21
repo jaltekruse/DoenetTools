@@ -9,6 +9,7 @@ include '../api/db_connection.php';
 
 $message = "";
 $success = TRUE;
+$deviceName = 'cypress';
 $userId = $_REQUEST['userId'];
 // $emailaddress = 'devuser@example.com';
 // $userId = 'devuserid';
@@ -42,7 +43,7 @@ SET userId='$userId',
 email='$userId@doenet.org',
 signInCode='123456',
 timestampOfSignInCode=NOW(),
-deviceName='cypress',
+deviceName='$deviceName',
 signedIn='1'
 ";
 

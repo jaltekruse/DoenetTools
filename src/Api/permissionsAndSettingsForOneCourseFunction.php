@@ -4,6 +4,7 @@ function permissionsAndSettingsForOneCourseFunction($conn, $userId, $courseId)
 {
     //TODO: is this safe?
     $sql = "SELECT
+    c.courseId,
     c.label,
     c.isPublic,
     c.image,
