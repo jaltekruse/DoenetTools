@@ -1,7 +1,7 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 import {showCompletedAtom, showOverdueAtom} from "../Widgets/Next7Days.js";
 import Checkbox from "../../_reactComponents/PanelHeaderComponents/Checkbox.js";
-import {useRecoilState} from "recoil";
+import {useRecoilState} from "../../_snowpack/pkg/recoil.js";
 export default function CurrentContent() {
   const [overdue, setOverdue] = useRecoilState(showOverdueAtom);
   const [completed, setCompleted] = useRecoilState(showCompletedAtom);

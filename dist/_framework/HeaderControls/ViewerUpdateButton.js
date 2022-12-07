@@ -1,4 +1,4 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import {useUpdateViewer} from "../ToolPanels/EditorViewer.js";
 export default function ViewerUpdateButton(props) {

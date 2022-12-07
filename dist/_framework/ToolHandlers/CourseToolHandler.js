@@ -1,21 +1,21 @@
-import React, {useState} from "react";
+import React, {useState} from "../../_snowpack/pkg/react.js";
 import {
   atom,
   selector,
   atomFamily,
   selectorFamily,
   useRecoilCallback
-} from "recoil";
-import axios from "axios";
-import {CopyToClipboard} from "react-copy-to-clipboard";
+} from "../../_snowpack/pkg/recoil.js";
+import axios from "../../_snowpack/pkg/axios.js";
+import {CopyToClipboard} from "../../_snowpack/pkg/react-copy-to-clipboard.js";
 import {useToast, toastType} from "../Toast.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 import {
   faExternalLinkAlt
-} from "@fortawesome/free-solid-svg-icons";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import {
   faClipboard
-} from "@fortawesome/free-regular-svg-icons";
+} from "../../_snowpack/pkg/@fortawesome/free-regular-svg-icons.js";
 import {loadAssignmentSelector} from "../../_reactComponents/Drive/NewDrive.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";

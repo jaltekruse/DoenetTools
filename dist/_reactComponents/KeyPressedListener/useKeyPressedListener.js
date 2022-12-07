@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect} from "../../_snowpack/pkg/react.js";
 function useKeyPressedListener(targetKey) {
   const [keyPressed, setKeyPressed] = useState(false);
   function downHandler({key}) {

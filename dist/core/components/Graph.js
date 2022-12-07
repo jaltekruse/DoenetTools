@@ -1,6 +1,6 @@
 import { processAssignNames } from '../utils/serializedStateProcessing.js';
 import BlockComponent from './abstract/BlockComponent.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { orderedPercentWidthMidpoints, orderedWidthMidpoints, widthsBySize, sizePossibilities } from '../utils/size.js';
 export default class Graph extends BlockComponent {
   static componentType = "graph";

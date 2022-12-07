@@ -1,16 +1,16 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {basicSetup} from "@codemirror/basic-setup";
-import {EditorState, Transaction, StateEffect} from "@codemirror/state";
-import {selectLine, deleteLine, cursorLineUp} from "@codemirror/commands";
-import {EditorView, keymap} from "@codemirror/view";
-import {styleTags, tags as t} from "@codemirror/highlight";
-import {gutter, lineNumbers} from "@codemirror/gutter";
-import {LRLanguage, LanguageSupport, syntaxTree, indentNodeProp, foldNodeProp} from "@codemirror/language";
-import {HighlightStyle} from "@codemirror/highlight";
-import {completeFromSchema} from "@codemirror/lang-xml";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "../_snowpack/pkg/react.js";
+import {basicSetup} from "../_snowpack/pkg/@codemirror/basic-setup.js";
+import {EditorState, Transaction, StateEffect} from "../_snowpack/pkg/@codemirror/state.js";
+import {selectLine, deleteLine, cursorLineUp} from "../_snowpack/pkg/@codemirror/commands.js";
+import {EditorView, keymap} from "../_snowpack/pkg/@codemirror/view.js";
+import {styleTags, tags as t} from "../_snowpack/pkg/@codemirror/highlight.js";
+import {gutter, lineNumbers} from "../_snowpack/pkg/@codemirror/gutter.js";
+import {LRLanguage, LanguageSupport, syntaxTree, indentNodeProp, foldNodeProp} from "../_snowpack/pkg/@codemirror/language.js";
+import {HighlightStyle} from "../_snowpack/pkg/@codemirror/highlight.js";
+import {completeFromSchema} from "../_snowpack/pkg/@codemirror/lang-xml.js";
 import {parser} from "../parser/doenet.js";
-import {atom, useRecoilValue} from "recoil";
-import {getRenderer} from "handsontable/renderers";
+import {atom, useRecoilValue} from "../_snowpack/pkg/recoil.js";
+import {getRenderer} from "../_snowpack/pkg/handsontable/renderers.js";
 const editorConfigStateAtom = atom({
   key: "editorConfigStateAtom",
   default: {

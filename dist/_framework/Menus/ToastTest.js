@@ -1,4 +1,4 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 import {useToast, toastType} from "../Toast.js";
 export default function ToastTest(props) {
   const toast = useToast();

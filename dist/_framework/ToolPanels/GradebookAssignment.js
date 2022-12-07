@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
 import {
   Styles,
   Table,
@@ -15,7 +15,7 @@ import {
   useRecoilValue,
   useRecoilValueLoadable,
   useRecoilCallback
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import {pageToolViewAtom, searchParamAtomFamily} from "../NewToolRoot.js";
 import {useToast, toastType} from "../Toast.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
@@ -23,7 +23,7 @@ import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import DropdownMenu from "../../_reactComponents/PanelHeaderComponents/DropdownMenu.js";
 import {suppressMenusAtom} from "../NewToolRoot.js";
 import {effectivePermissionsByCourseId} from "../../_reactComponents/PanelHeaderComponents/RoleDropdown.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import {coursePermissionsAndSettingsByCourseId} from "../../_reactComponents/Course/CourseActions.js";
 export const processGradesAtom = atom({
   key: "processGradesAtom",

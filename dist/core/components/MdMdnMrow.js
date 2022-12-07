@@ -1,6 +1,6 @@
 import InlineComponent from './abstract/InlineComponent.js';
 import { M } from './MMeMen.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { latexToAst, superSubscriptsToUnicode } from '../utils/math.js';
 import { returnSelectedStyleStateVariableDefinition } from '../utils/style.js';
 

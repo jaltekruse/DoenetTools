@@ -1,6 +1,6 @@
 
 import BlockComponent from './abstract/BlockComponent.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import subsets, { buildSubsetFromMathExpression } from '../utils/subset-of-reals.js';
 
 export default class SubsetOfRealsInput extends BlockComponent {

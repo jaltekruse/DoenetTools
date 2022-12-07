@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useRef} from "react";
-import styled from "styled-components";
-import {faAngleRight, faAngleLeft} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, {useState, useEffect, useRef} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
+import {faAngleRight, faAngleLeft} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 const FONT_SIZES = [8, 9, 10, 11, 12, 14, 18, 24, 30, 36, 48, 60, 72, 96];
 const Container = styled.div`
   display: ${(props) => props.label && !props.vertical && "flex"};

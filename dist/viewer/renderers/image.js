@@ -1,10 +1,10 @@
-import React, {useEffect, useState, useContext, useRef} from "react";
+import React, {useEffect, useState, useContext, useRef} from "../../_snowpack/pkg/react.js";
 import {BoardContext} from "./graph.js";
 import {retrieveMediaForCid} from "../../core/utils/retrieveMedia.js";
 import useDoenetRender from "./useDoenetRenderer.js";
 import {sizeToCSS} from "./utils/css.js";
-import VisibilitySensor from "react-visibility-sensor-v2";
-import me from "math-expressions";
+import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
+import me from "../../_snowpack/pkg/math-expressions.js";
 export default React.memo(function Image(props) {
   let {name, id, SVs, actions, callAction} = useDoenetRender(props, false);
   let [url, setUrl] = useState(null);

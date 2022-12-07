@@ -1,5 +1,5 @@
 import Polyline from '../Polyline.js';
-import me from 'math-expressions';
+import me from '../../../_snowpack/pkg/math-expressions.js';
 
 export default class CobwebPolyline extends Polyline {
   static componentType = "cobwebPolyline";

@@ -1,6 +1,6 @@
 import InlineComponent from './abstract/InlineComponent.js';
 import GraphicalComponent from './abstract/GraphicalComponent.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { normalizeMathExpression, returnNVariables, roundForDisplay } from '../utils/math.js';
 import { returnInterpolatedFunction, returnNumericalFunctionFromFormula, returnReturnDerivativesOfInterpolatedFunction, returnSymbolicFunctionFromFormula } from '../utils/function.js';
 

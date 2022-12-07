@@ -1,6 +1,6 @@
-import React from "react";
-import {useRecoilCallback, atom, useRecoilValueLoadable, useSetRecoilState} from "recoil";
-import styled from "styled-components";
+import React from "../_snowpack/pkg/react.js";
+import {useRecoilCallback, atom, useRecoilValueLoadable, useSetRecoilState} from "../_snowpack/pkg/recoil.js";
+import styled from "../_snowpack/pkg/styled-components.js";
 import {profileAtom, pageToolViewAtom} from "./NewToolRoot.js";
 const ProfilePicture = styled.button`
 background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),

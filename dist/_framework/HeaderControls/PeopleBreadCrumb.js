@@ -1,5 +1,5 @@
-import React, {Suspense} from "react";
-import {useRecoilValue} from "recoil";
+import React, {Suspense} from "../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {BreadCrumb} from "../../_reactComponents/PanelHeaderComponents/BreadCrumb.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {

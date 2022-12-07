@@ -1,5 +1,5 @@
 import InlineComponent from './abstract/InlineComponent.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { getFromText, getFromLatex, convertValueToMathExpression, normalizeMathExpression, roundForDisplay, mergeListsWithOtherContainers, preprocessMathInverseDefinition, superSubscriptsToUnicode, unicodeToSuperSubscripts } from '../utils/math.js';
 import { flattenDeep } from '../utils/array.js';
 import { returnSelectedStyleStateVariableDefinition } from '../utils/style.js';

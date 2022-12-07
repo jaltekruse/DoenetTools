@@ -1,5 +1,5 @@
 import Input from './abstract/Input.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { getFromText, getFromLatex, roundForDisplay, stripLatex, normalizeLatexString, convertValueToMathExpression, } from '../utils/math.js';
 import { deepCompare } from '../utils/deepFunctions.js';
 

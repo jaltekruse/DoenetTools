@@ -1,9 +1,9 @@
-import React, {useEffect, useState, useRef} from "react";
-import {useRecoilValue} from "recoil";
+import React, {useEffect, useState, useRef} from "../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {loadAssignmentSelector} from "../../_reactComponents/Drive/NewDrive.js";
 import {currentAttemptNumber} from "../ToolPanels/AssignmentViewer.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import {UTCDateStringToDate} from "../../_utils/dateUtilityFunction.js";
 export default function TimerMenu() {
   const doenetId = useRecoilValue(searchParamAtomFamily("doenetId"));

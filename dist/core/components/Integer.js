@@ -1,5 +1,5 @@
 import NumberComponent from './Number.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { renameStateVariable } from '../utils/stateVariables.js';
 
 export default class Integer extends NumberComponent {

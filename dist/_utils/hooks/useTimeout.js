@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef} from "react";
+import {useCallback, useEffect, useRef} from "../../_snowpack/pkg/react.js";
 export default function useTimeout(callback, delay) {
   const callbackRef = useRef(callback);
   const timeoutRef = useRef();

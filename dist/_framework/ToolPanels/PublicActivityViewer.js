@@ -1,12 +1,12 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "../../_snowpack/pkg/react.js";
 import ActivityViewer from "../../viewer/ActivityViewer.js";
 import {
   useRecoilValue
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import {
   searchParamAtomFamily
 } from "../NewToolRoot.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 export default function Public(props) {
   const doenetId = useRecoilValue(searchParamAtomFamily("doenetId"));
   const [cid, setCid] = useState(null);

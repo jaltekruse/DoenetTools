@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
-import {useRecoilValue} from "recoil";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import {serializedComponentsReviver} from "../../core/utils/serializedStateProcessing.js";
 export default function SurveyDataViewer() {
   let doenetId = useRecoilValue(searchParamAtomFamily("doenetId"));

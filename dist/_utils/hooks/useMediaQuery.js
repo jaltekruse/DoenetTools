@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect} from "../../_snowpack/pkg/react.js";
 import useEventListener from "./useEventListener.js";
 export default function useMediaQuery(mediaQuery) {
   const [isMatch, setIsMatch] = useState(false);

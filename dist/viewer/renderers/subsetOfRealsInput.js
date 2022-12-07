@@ -1,11 +1,11 @@
-import React, {useRef, useState, useEffect} from "react";
-import styled from "styled-components";
+import React, {useRef, useState, useEffect} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 import useDoenetRender from "./useDoenetRenderer.js";
 import ActionButton from "../../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import ActionButtonGroup from "../../_reactComponents/PanelHeaderComponents/ActionButtonGroup.js";
 import ToggleButton from "../../_reactComponents/PanelHeaderComponents/ToggleButton.js";
 import ToggleButtonGroup from "../../_reactComponents/PanelHeaderComponents/ToggleButtonGroup.js";
-import VisibilitySensor from "react-visibility-sensor-v2";
+import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
 const TextNoSelect = styled.text`
   -webkit-user-select: none;
   -moz-user-select: none;

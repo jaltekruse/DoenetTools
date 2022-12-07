@@ -1,16 +1,16 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 import {useToast, toastType} from "../Toast.js";
 import {
   useRecoilValue
-} from "recoil";
-import {CopyToClipboard} from "react-copy-to-clipboard";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+} from "../../_snowpack/pkg/recoil.js";
+import {CopyToClipboard} from "../../_snowpack/pkg/react-copy-to-clipboard.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 import {
   faExternalLinkAlt
-} from "@fortawesome/free-solid-svg-icons";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import {
   faClipboard
-} from "@fortawesome/free-regular-svg-icons";
+} from "../../_snowpack/pkg/@fortawesome/free-regular-svg-icons.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {editorPageIdInitAtom} from "../../_sharedRecoil/EditorViewerRecoil.js";
 export default function DoenetMLSettings(props) {

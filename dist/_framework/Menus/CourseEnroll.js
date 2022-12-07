@@ -1,4 +1,4 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 import {useToast, toastType} from "../Toast.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";

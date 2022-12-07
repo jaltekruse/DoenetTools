@@ -1,4 +1,4 @@
-import {atom} from "recoil";
+import {atom} from "../_snowpack/pkg/recoil.js";
 export const viewerDoenetMLAtom = atom({
   key: "viewerDoenetMLAtom",
   default: ""

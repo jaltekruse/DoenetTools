@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "../../_snowpack/pkg/react.js";
 import ActivityViewer, {saveStateToDBTimerIdAtom} from "../../viewer/ActivityViewer.js";
 import {
   useRecoilValue,
@@ -8,19 +8,19 @@ import {
   useSetRecoilState,
   useRecoilValueLoadable,
   useRecoilState
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import {
   searchParamAtomFamily,
   pageToolViewAtom,
   suppressMenusAtom,
   profileAtom
 } from "../NewToolRoot.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import {retrieveTextFileForCid} from "../../core/utils/retrieveTextFile.js";
-import {prng_alea} from "esm-seedrandom";
+import {prng_alea} from "../../_snowpack/pkg/esm-seedrandom.js";
 import {determineNumberOfActivityVariants, parseActivityDefinition} from "../../_utils/activityUtils.js";
 import {itemByDoenetId, courseIdAtom, useInitCourseItems, useSetCourseIdFromDoenetId} from "../../_reactComponents/Course/CourseActions.js";
-import {useLocation, useNavigate} from "react-router";
+import {useLocation, useNavigate} from "../../_snowpack/pkg/react-router.js";
 import ActionButton from "../../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";

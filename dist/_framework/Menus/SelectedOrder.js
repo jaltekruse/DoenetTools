@@ -1,17 +1,17 @@
 import {
   faFileExport
-} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useEffect, useState} from "react";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import Increment from "../../_reactComponents/PanelHeaderComponents/IncrementMenu.js";
 import Checkbox from "../../_reactComponents/PanelHeaderComponents/Checkbox.js";
-import {useRecoilValue} from "recoil";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {itemByDoenetId, selectedCourseItems, useCourse} from "../../_reactComponents/Course/CourseActions.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import DropdownMenu from "../../_reactComponents/PanelHeaderComponents/DropdownMenu.js";
-import styled from "styled-components";
+import styled from "../../_snowpack/pkg/styled-components.js";
 const CheckboxLabelText = styled.span`
   font-size: 15px;
   line-height: 1.1

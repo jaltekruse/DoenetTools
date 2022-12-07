@@ -1,7 +1,7 @@
-import React, {useEffect, useState, useRef, createContext} from "react";
+import React, {useEffect, useState, useRef, createContext} from "../../_snowpack/pkg/react.js";
 import {sizeToCSS} from "./utils/css.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import VisibilitySensor from "react-visibility-sensor-v2";
+import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
 export const BoardContext = createContext();
 export default React.memo(function Chart(props) {
   let {name, id, SVs, actions, callAction} = useDoenetRender(props);

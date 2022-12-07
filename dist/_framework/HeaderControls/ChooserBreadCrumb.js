@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, {Suspense} from "../../_snowpack/pkg/react.js";
 import {BreadCrumb} from "../../_reactComponents/PanelHeaderComponents/BreadCrumb.js";
 import {useCourseChooserCrumb} from "../../_utils/breadcrumbUtil.js";
 export default function ChooserBreadCrumb() {

@@ -1,18 +1,18 @@
-import React, {useState, lazy, useRef, Suspense} from "react";
+import React, {useState, lazy, useRef, Suspense} from "../../_snowpack/pkg/react.js";
 import {
   atom,
   useRecoilValue,
   useSetRecoilState,
   useRecoilState
-} from "recoil";
-import styled from "styled-components";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+} from "../../_snowpack/pkg/recoil.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 import {
   faChevronLeft,
   faCog,
   faSun,
   faMoon
-} from "@fortawesome/free-solid-svg-icons";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import Logo from "../Logo.js";
 import {pageToolViewAtom, searchParamAtomFamily} from "../NewToolRoot.js";
 import Checkbox from "../../_reactComponents/PanelHeaderComponents/Checkbox.js";

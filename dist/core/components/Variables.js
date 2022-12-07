@@ -1,5 +1,5 @@
 import MathList from './MathList.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { isValidVariable } from '../utils/math.js';
 
 export default class Variables extends MathList {

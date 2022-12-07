@@ -1,17 +1,17 @@
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import React, {
   Suspense,
   useCallback,
   useEffect,
   useLayoutEffect,
   useState
-} from "react";
+} from "../../_snowpack/pkg/react.js";
 import {
   useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState
-} from "recoil";
-import styled from "styled-components";
+} from "../../_snowpack/pkg/recoil.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 import {toastType, useToast} from "../../_framework/Toast.js";
 import {drivecardSelectedNodesAtom} from "../../_framework/ToolHandlers/CourseToolHandler.js";
 import {useValidateEmail} from "../../_utils/hooks/useValidateEmail.js";

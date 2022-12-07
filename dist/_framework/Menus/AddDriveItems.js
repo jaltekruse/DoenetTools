@@ -1,5 +1,5 @@
-import React from "react";
-import {useRecoilValue} from "recoil";
+import React from "../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";

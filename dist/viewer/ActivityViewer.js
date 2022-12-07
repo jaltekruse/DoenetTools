@@ -1,23 +1,23 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "../_snowpack/pkg/react.js";
 import {retrieveTextFileForCid} from "../core/utils/retrieveTextFile.js";
 import PageViewer, {scrollableContainerAtom} from "./PageViewer.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import {get as idb_get, set as idb_set} from "idb-keyval";
+import {FontAwesomeIcon} from "../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faExclamationCircle} from "../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import axios from "../_snowpack/pkg/axios.js";
+import {get as idb_get, set as idb_set} from "../_snowpack/pkg/idb-keyval.js";
 import {cidFromText} from "../core/utils/cid.js";
 import {useToast, toastType} from "../_framework/Toast.js";
-import {nanoid} from "nanoid";
+import {nanoid} from "../_snowpack/pkg/nanoid.js";
 import {calculateOrderAndVariants, parseActivityDefinition} from "../_utils/activityUtils.js";
-import VisibilitySensor from "react-visibility-sensor-v2";
-import {useLocation, useNavigate} from "react-router";
-import cssesc from "cssesc";
-import {atom, useRecoilCallback, useRecoilState, useSetRecoilState} from "recoil";
+import VisibilitySensor from "../_snowpack/pkg/react-visibility-sensor-v2.js";
+import {useLocation, useNavigate} from "../_snowpack/pkg/react-router.js";
+import cssesc from "../_snowpack/pkg/cssesc.js";
+import {atom, useRecoilCallback, useRecoilState, useSetRecoilState} from "../_snowpack/pkg/recoil.js";
 import Button from "../_reactComponents/PanelHeaderComponents/Button.js";
 import ActionButton from "../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import ButtonGroup from "../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
 import {pageToolViewAtom} from "../_framework/NewToolRoot.js";
-import {clear as idb_clear} from "idb-keyval";
+import {clear as idb_clear} from "../_snowpack/pkg/idb-keyval.js";
 export const saveStateToDBTimerIdAtom = atom({
   key: "saveStateToDBTimerIdAtom",
   default: null

@@ -1,18 +1,18 @@
-import React, {useEffect, useRef, useState} from "react";
-import {nanoid} from "nanoid";
+import React, {useEffect, useRef, useState} from "../_snowpack/pkg/react.js";
+import {nanoid} from "../_snowpack/pkg/nanoid.js";
 import {useToast, toastType} from "../_framework/Toast.js";
 import {serializedComponentsReplacer, serializedComponentsReviver} from "../core/utils/serializedStateProcessing.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faExclamationCircle} from "../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import {rendererState} from "./renderers/useDoenetRenderer.js";
-import {atom, atomFamily, useRecoilCallback} from "recoil";
-import {get as idb_get, set as idb_set} from "idb-keyval";
+import {atom, atomFamily, useRecoilCallback} from "../_snowpack/pkg/recoil.js";
+import {get as idb_get, set as idb_set} from "../_snowpack/pkg/idb-keyval.js";
 import {cidFromText} from "../core/utils/cid.js";
 import {retrieveTextFileForCid} from "../core/utils/retrieveTextFile.js";
-import axios from "axios";
+import axios from "../_snowpack/pkg/axios.js";
 import {returnAllPossibleVariants} from "../core/utils/returnAllPossibleVariants.js";
-import {useLocation} from "react-router";
-import cssesc from "cssesc";
+import {useLocation} from "../_snowpack/pkg/react-router.js";
+import cssesc from "../_snowpack/pkg/cssesc.js";
 const rendererUpdatesToIgnore = atomFamily({
   key: "rendererUpdatesToIgnore",
   default: {}

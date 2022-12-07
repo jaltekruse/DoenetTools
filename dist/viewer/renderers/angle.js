@@ -1,8 +1,8 @@
-import React, {useEffect, useContext, useRef} from "react";
+import React, {useEffect, useContext, useRef} from "../../_snowpack/pkg/react.js";
 import useDoenetRender from "./useDoenetRenderer.js";
 import {BoardContext} from "./graph.js";
-import me from "math-expressions";
-import {MathJax} from "better-react-mathjax";
+import me from "../../_snowpack/pkg/math-expressions.js";
+import {MathJax} from "../../_snowpack/pkg/better-react-mathjax.js";
 export default React.memo(function Angle(props) {
   let {name, id, SVs} = useDoenetRender(props);
   const board = useContext(BoardContext);

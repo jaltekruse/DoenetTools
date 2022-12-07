@@ -1,4 +1,4 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 export default function ScaleDonut() {
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("svg", {
     viewBox: "0 0 500 500",

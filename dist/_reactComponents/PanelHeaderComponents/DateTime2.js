@@ -1,7 +1,7 @@
-import React, {useState} from "react";
-import {TimePicker, DateInput, TimePrecision} from "@blueprintjs/datetime";
-import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
-import "@blueprintjs/core/lib/css/blueprint.css";
+import React, {useState} from "../../_snowpack/pkg/react.js";
+import {TimePicker, DateInput, TimePrecision} from "../../_snowpack/pkg/@blueprintjs/datetime.js";
+import "../../_snowpack/pkg/@blueprintjs/datetime/lib/css/blueprint-datetime.css.proxy.js";
+import "../../_snowpack/pkg/@blueprintjs/core/lib/css/blueprint.css.proxy.js";
 export default function DateTime(props) {
   const [dateObjectState, setDateObjectState] = useState(null);
   const dateTimeToText = (date) => {

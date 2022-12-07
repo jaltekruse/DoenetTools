@@ -1,14 +1,14 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState} from "../../_snowpack/pkg/react.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import styled from "styled-components";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 import {
   faCheck,
   faLevelDownAlt,
   faTimes,
   faCloud
-} from "@fortawesome/free-solid-svg-icons";
-import mathquill from "react-mathquill";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import mathquill from "../../_snowpack/pkg/react-mathquill.js";
 mathquill.addStyles();
 let EditableMathField = mathquill.EditableMathField;
 import {
@@ -18,7 +18,7 @@ import {
   palletRef,
   handleRef
 } from "../../_framework/Footers/MathInputSelector.js";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import {rendererState} from "./useDoenetRenderer.js";
 const Button = styled.button`
   position: relative;

@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
-import styled from "styled-components";
-import {useTable, useSortBy, useFilters, useGlobalFilter} from "react-table";
+import React, {useEffect} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
+import {useTable, useSortBy, useFilters, useGlobalFilter} from "../../_snowpack/pkg/react-table.js";
 import {
   atom,
   selector,
@@ -9,14 +9,14 @@ import {
   useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState
-} from "recoil";
-import axios from "axios";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+} from "../../_snowpack/pkg/recoil.js";
+import axios from "../../_snowpack/pkg/axios.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 import {
   faSort,
   faSortUp,
   faSortDown
-} from "@fortawesome/free-solid-svg-icons";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import {
   pageToolViewAtom,
   searchParamAtomFamily,

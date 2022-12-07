@@ -5,10 +5,10 @@ import React, {
   Suspense,
   useCallback,
   useState
-} from "react";
-import axios from "axios";
-import {nanoid} from "nanoid";
-import Measure from "react-measure";
+} from "../../_snowpack/pkg/react.js";
+import axios from "../../_snowpack/pkg/axios.js";
+import {nanoid} from "../../_snowpack/pkg/nanoid.js";
+import Measure from "../../_snowpack/pkg/react-measure.js";
 import {
   faCode,
   faFolder,
@@ -17,10 +17,10 @@ import {
   faCheck,
   faBookOpen,
   faChalkboard
-} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import styled, {keyframes} from "styled-components";
-import {Link} from "react-router-dom";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import styled, {keyframes} from "../../_snowpack/pkg/styled-components.js";
+import {Link} from "../../_snowpack/pkg/react-router-dom.js";
 import {
   atom,
   atomFamily,
@@ -31,8 +31,8 @@ import {
   useRecoilStateLoadable,
   useRecoilState,
   useRecoilValue
-} from "recoil";
-import "../../_utils/util.css";
+} from "../../_snowpack/pkg/recoil.js";
+import "../../_utils/util.css.proxy.js";
 import getSortOrder from "../../_utils/sort/LexicographicalRankingSort.js";
 import useKeyPressedListener from "../KeyPressedListener/useKeyPressedListener.js";
 import {

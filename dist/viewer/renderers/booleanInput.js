@@ -1,13 +1,13 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState} from "../../_snowpack/pkg/react.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCheck, faLevelDownAlt, faTimes, faCloud, faPercentage} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faCheck, faLevelDownAlt, faTimes, faCloud, faPercentage} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import {rendererState} from "./useDoenetRenderer.js";
-import {useSetRecoilState} from "recoil";
+import {useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import ToggleButton from "../../_reactComponents/PanelHeaderComponents/ToggleButton.js";
-import styled from "styled-components";
-import "./booleanInput.css";
-import {MathJax} from "better-react-mathjax";
+import styled from "../../_snowpack/pkg/styled-components.js";
+import "./booleanInput.css.proxy.js";
+import {MathJax} from "../../_snowpack/pkg/better-react-mathjax.js";
 const Button = styled.button`
   position: relative;
   width: 24px;

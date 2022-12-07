@@ -1,7 +1,7 @@
-import {faLink} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useEffect, useState} from "react";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {faLink} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import {useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import {authorCollectionsByCourseId, itemByDoenetId, selectedCourseItems, useCourse} from "../../_reactComponents/Course/CourseActions.js";
 import ActionButton from "../../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import Textfield from "../../_reactComponents/PanelHeaderComponents/Textfield.js";

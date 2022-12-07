@@ -1,4 +1,4 @@
-import React, {Suspense, useState, useEffect} from "react";
+import React, {Suspense, useState, useEffect} from "../../_snowpack/pkg/react.js";
 import {
   atomFamily,
   selectorFamily,
@@ -6,10 +6,10 @@ import {
   useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState
-} from "recoil";
-import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {nanoid} from "nanoid";
+} from "../../_snowpack/pkg/recoil.js";
+import {faMinus, faPlus} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {nanoid} from "../../_snowpack/pkg/nanoid.js";
 import {folderDictionaryFilterSelector} from "../../_reactComponents/Drive/NewDrive.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
@@ -18,7 +18,7 @@ import {
   fileByContentId,
   itemHistoryAtom
 } from "../ToolHandlers/CourseToolHandler.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import {returnAllPossibleVariants} from "../../core/utils/returnAllPossibleVariants.js";
 import {itemType} from "../../_reactComponents/Sockets.js";
 import {

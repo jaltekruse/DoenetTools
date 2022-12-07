@@ -1,8 +1,8 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useRef, useEffect} from "../../_snowpack/pkg/react.js";
 import useDoenetRenderer from "./useDoenetRenderer.js";
 import {sizeToCSS} from "./utils/css.js";
 import CodeMirror from "../../_framework/CodeMirror.js";
-import VisibilitySensor from "react-visibility-sensor-v2";
+import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
 export default React.memo(function CodeEditor(props) {
   let {name, id, SVs, children, actions, callAction} = useDoenetRenderer(props);
   let currentValue = useRef(SVs.immediateValue);

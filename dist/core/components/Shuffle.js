@@ -1,6 +1,6 @@
 import CompositeComponent from './abstract/CompositeComponent.js';
 import { postProcessCopy } from '../utils/copy.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { processAssignNames } from '../utils/serializedStateProcessing.js';
 import { enumerateCombinations, enumeratePermutations } from '../utils/enumeration.js';
 import { setUpVariantSeedAndRng } from '../utils/variants.js';

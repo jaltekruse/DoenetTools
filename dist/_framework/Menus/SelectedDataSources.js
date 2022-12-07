@@ -1,6 +1,6 @@
-import axios from "axios";
-import React, {useEffect, useState} from "react";
-import {useRecoilCallback, useRecoilValue} from "recoil";
+import axios from "../../_snowpack/pkg/axios.js";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import {useRecoilCallback, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {
   itemByDoenetId,
   selectedCourseItems,

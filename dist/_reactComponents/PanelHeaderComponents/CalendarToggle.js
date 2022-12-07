@@ -1,11 +1,11 @@
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 import {
   faCalendarPlus,
   faCalendarTimes,
   faCode
-} from "@fortawesome/free-solid-svg-icons";
-import React, {useRef} from "react";
-import styled from "styled-components";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import React, {useRef} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 import {doenetMainBlue} from "./theme.js";
 const Button = styled.button`
   height: 24px;
