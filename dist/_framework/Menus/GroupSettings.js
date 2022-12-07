@@ -1,13 +1,13 @@
-import axios from "axios";
-import parse from "csv-parse";
-import React, {useEffect, useReducer, useCallback} from "react";
-import {useDropzone} from "react-dropzone";
+import axios from "../../_snowpack/pkg/axios.js";
+import parse from "../../_snowpack/pkg/csv-parse.js";
+import React, {useEffect, useReducer, useCallback} from "../../_snowpack/pkg/react.js";
+import {useDropzone} from "../../_snowpack/pkg/react-dropzone.js";
 import {
   atomFamily,
   useRecoilCallback,
   useRecoilValue,
   useResetRecoilState
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
 import CollapseSection from "../../_reactComponents/PanelHeaderComponents/CollapseSection.js";

@@ -1,9 +1,9 @@
-import React, {useEffect, useState, useRef, createContext} from "react";
+import React, {useEffect, useState, useRef, createContext} from "../../_snowpack/pkg/react.js";
 import {sizeToCSS} from "./utils/css.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import me from "math-expressions";
-import VisibilitySensor from "react-visibility-sensor-v2";
-import cssesc from "cssesc";
+import me from "../../_snowpack/pkg/math-expressions.js";
+import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
+import cssesc from "../../_snowpack/pkg/cssesc.js";
 function cesc(s) {
   s = cssesc(s, {isIdentifier: true});
   if (s.slice(0, 2) === "\\#") {

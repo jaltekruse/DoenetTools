@@ -1,5 +1,5 @@
 
-import axios from "axios";
+import axios from "../_snowpack/pkg/axios.js";
 import { 
   // useRecoilValue, 
   // atom, 
@@ -10,7 +10,7 @@ import {
   // useRecoilValueLoadable,
   // useRecoilStateLoadable, 
   // useRecoilCallback
-} from "recoil";
+} from "../_snowpack/pkg/recoil.js";
 
 export const itemHistoryAtom = atomFamily({
   key:"itemHistoryAtom",

@@ -1,10 +1,10 @@
-import React, {useRef} from "react";
+import React, {useRef} from "../../_snowpack/pkg/react.js";
 import useDoenetRender from "./useDoenetRenderer.js";
 import ActionButton from "../../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import ActionButtonGroup from "../../_reactComponents/PanelHeaderComponents/ActionButtonGroup.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCheck, faLevelDownAlt, faTimes, faCloud, faPercentage} from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faCheck, faLevelDownAlt, faTimes, faCloud, faPercentage} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 const Matrix = styled.div`
   position: relative;
   margin: 6px;

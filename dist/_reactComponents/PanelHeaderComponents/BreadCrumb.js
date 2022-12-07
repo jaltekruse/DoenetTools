@@ -1,7 +1,7 @@
-import React, {useRef, useState, useEffect, useLayoutEffect} from "react";
-import styled from "styled-components";
+import React, {useRef, useState, useEffect, useLayoutEffect} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 import {panelsInfoAtom} from "../../_framework/Panels/NewContentPanel.js";
-import {useRecoilValue} from "recoil";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {supportPanelHandleLeft} from "../../_framework/Panels/NewContentPanel.js";
 const BreadCrumbContainer = styled.ul`
   list-style: none;

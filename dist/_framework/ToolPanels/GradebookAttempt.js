@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect} from "../../_snowpack/pkg/react.js";
 import {specificAttemptData} from "./Gradebook.js";
 import {
   atom,
@@ -11,7 +11,7 @@ import {
   selectorFamily,
   useRecoilValueLoadable,
   useRecoilStateLoadable
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 export default function GradebookDoenetMLView(props) {
   let doenetId = useRecoilValue(searchParamAtomFamily("doenetId"));

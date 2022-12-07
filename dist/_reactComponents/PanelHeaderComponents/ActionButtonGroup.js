@@ -1,5 +1,5 @@
-import React from "react";
-import styled, {ThemeProvider} from "styled-components";
+import React from "../../_snowpack/pkg/react.js";
+import styled, {ThemeProvider} from "../../_snowpack/pkg/styled-components.js";
 const Container = styled.div`
   margin-left: 3px;
   display: ${(props) => props.vertical ? "static" : "flex"};

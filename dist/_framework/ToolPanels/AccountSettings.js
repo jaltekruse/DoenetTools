@@ -1,15 +1,15 @@
-import React, {useState} from "react";
+import React, {useState} from "../../_snowpack/pkg/react.js";
 import {
   useRecoilCallback,
   useRecoilValueLoadable,
   useSetRecoilState
-} from "recoil";
-import styled from "styled-components";
+} from "../../_snowpack/pkg/recoil.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 import {pageToolViewAtom, profileAtom} from "../NewToolRoot.js";
-import {a} from "@react-spring/web";
-import "../doenet.css";
+import {a} from "../../_snowpack/pkg/@react-spring/web.js";
+import "../doenet.css.proxy.js";
 import Switch from "../Switch.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import Textfield from "../../_reactComponents/PanelHeaderComponents/Textfield.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 let SectionHeader = styled.h2`

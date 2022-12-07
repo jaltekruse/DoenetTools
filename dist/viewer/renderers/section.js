@@ -1,10 +1,10 @@
-import React, {useEffect, useRef} from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCheck, faLevelDownAlt, faTimes, faCloud, faPercentage} from "@fortawesome/free-solid-svg-icons";
-import {faCaretRight as twirlIsClosed} from "@fortawesome/free-solid-svg-icons";
-import {faCaretDown as twirlIsOpen} from "@fortawesome/free-solid-svg-icons";
+import React, {useEffect, useRef} from "../../_snowpack/pkg/react.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faCheck, faLevelDownAlt, faTimes, faCloud, faPercentage} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {faCaretRight as twirlIsClosed} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {faCaretDown as twirlIsOpen} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import VisibilitySensor from "react-visibility-sensor-v2";
+import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
 export default React.memo(function Section(props) {
   let {name, id, SVs, children, actions, callAction} = useDoenetRender(props);
   let onChangeVisibility = (isVisible) => {

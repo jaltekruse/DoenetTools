@@ -1,12 +1,12 @@
-import React from "react";
-import {useLocation, useNavigate} from "react-router";
-import {Link} from "react-router-dom";
-import {useRecoilValue} from "recoil";
+import React from "../../_snowpack/pkg/react.js";
+import {useLocation, useNavigate} from "../../_snowpack/pkg/react-router.js";
+import {Link} from "../../_snowpack/pkg/react-router-dom.js";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {pageToolViewAtom} from "../../_framework/NewToolRoot.js";
 import {itemByDoenetId} from "../../_reactComponents/Course/CourseActions.js";
 import {scrollableContainerAtom} from "../PageViewer.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import styled from "styled-components";
+import styled from "../../_snowpack/pkg/styled-components.js";
 const RefButton = styled.button`
   position: relative;
   height: 24px;

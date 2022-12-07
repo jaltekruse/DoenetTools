@@ -1,7 +1,7 @@
-import React, {useContext, useRef} from "react";
+import React, {useContext, useRef} from "../../_snowpack/pkg/react.js";
 import {BoardContext} from "./graph.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import me from "math-expressions";
+import me from "../../_snowpack/pkg/math-expressions.js";
 export default React.memo(function Text(props) {
   let {name, id, SVs, actions, sourceOfUpdate, callAction} = useDoenetRender(props);
   Text.ignoreActionsWithoutCore = true;

@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import styled from "styled-components";
+import React, {useState} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 const Textarea = styled.textarea`
   margin: 0px 4px 0px 0px;
   height: 24px;

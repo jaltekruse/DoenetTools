@@ -1,6 +1,6 @@
 import { returnSelectedStyleStateVariableDefinition } from '../utils/style.js';
 import InlineComponent from './abstract/InlineComponent.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 
 export default class Text extends InlineComponent {
   static componentType = "text";

@@ -1,6 +1,6 @@
-import React, {Suspense, useLayoutEffect} from "react";
-import {useRecoilCallback, useRecoilValue, useSetRecoilState} from "recoil";
-import styled, {keyframes} from "styled-components";
+import React, {Suspense, useLayoutEffect} from "../../_snowpack/pkg/react.js";
+import {useRecoilCallback, useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
+import styled, {keyframes} from "../../_snowpack/pkg/styled-components.js";
 import {useToast, toastType} from "../Toast.js";
 import {suppressMenusAtom} from "../NewToolRoot.js";
 import {selectedMenuPanelAtom} from "../Panels/NewMenuPanel.js";

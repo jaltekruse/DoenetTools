@@ -1,5 +1,5 @@
 import GraphicalComponent from './abstract/GraphicalComponent.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { convertValueToMathExpression, roundForDisplay } from '../utils/math.js';
 import { returnBreakStringsSugarFunction } from './commonsugar/breakstrings.js';
 import { deepClone } from '../utils/deepFunctions.js';

@@ -1,7 +1,7 @@
-import {faChalkboard} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React from "react";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {faChalkboard} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import React from "../../_snowpack/pkg/react.js";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import {useCourse} from "../../_reactComponents/Course/CourseActions.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import DoenetDriveCardMenu from "../../_reactComponents/Drive/DoenetDriveCardMenu.js";

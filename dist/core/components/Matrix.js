@@ -1,5 +1,5 @@
 import MathComponent from './Math.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 
 export default class Matrix extends MathComponent {
   static componentType = "matrix";

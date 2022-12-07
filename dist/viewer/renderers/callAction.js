@@ -1,4 +1,4 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 import useDoenetRender from "./useDoenetRenderer.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 export default React.memo(function CallAction(props) {

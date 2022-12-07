@@ -1,4 +1,4 @@
-import {useState, useCallback} from "react";
+import {useState, useCallback} from "../../_snowpack/pkg/react.js";
 export default function useStateWithValidation(validationFunc, initialValue) {
   const [state, setState] = useState(initialValue);
   const [isValid, setIsValid] = useState(() => validationFunc(state));

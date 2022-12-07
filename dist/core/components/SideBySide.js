@@ -1,5 +1,5 @@
 import BlockComponent from './abstract/BlockComponent.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 
 export class SideBySide extends BlockComponent {
   static componentType = "sideBySide";

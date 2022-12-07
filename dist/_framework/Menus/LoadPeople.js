@@ -1,16 +1,16 @@
-import React, {useCallback, useState} from "react";
-import {useDropzone} from "react-dropzone";
+import React, {useCallback, useState} from "../../_snowpack/pkg/react.js";
+import {useDropzone} from "../../_snowpack/pkg/react-dropzone.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
-import parse from "csv-parse";
-import {atom, useRecoilCallback, useRecoilValue, useSetRecoilState} from "recoil";
+import parse from "../../_snowpack/pkg/csv-parse.js";
+import {atom, useRecoilCallback, useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
 import CollapseSection from "../../_reactComponents/PanelHeaderComponents/CollapseSection.js";
 import {toastType, useToast} from "../Toast.js";
 import {coursePermissionsAndSettings, useCourse} from "../../_reactComponents/Course/CourseActions.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import CheckboxButton from "../../_reactComponents/PanelHeaderComponents/Checkbox.js";
-import {useEffect} from "react";
-import axios from "axios";
+import {useEffect} from "../../_snowpack/pkg/react.js";
+import axios from "../../_snowpack/pkg/axios.js";
 export const peopleTableDataAtom = atom({
   key: "peopleTableDataAtom",
   default: []

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {useRecoilValue} from "recoil";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {itemByDoenetId, courseIdAtom, coursePermissionsAndSettingsByCourseId, useCourse} from "../../_reactComponents/Course/CourseActions.js";
 import {find_image_label, find_color_label} from "./util.js";
 export default function DraftActivityCap() {

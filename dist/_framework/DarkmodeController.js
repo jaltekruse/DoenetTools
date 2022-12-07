@@ -1,5 +1,5 @@
-import React from "react";
-import {atom, useRecoilValue} from "recoil";
+import React from "../_snowpack/pkg/react.js";
+import {atom, useRecoilValue} from "../_snowpack/pkg/recoil.js";
 export const darkModeAtom = atom({
   key: "darkModeAtom",
   default: JSON.parse(localStorage.getItem("theme")),

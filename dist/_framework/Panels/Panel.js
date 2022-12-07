@@ -1,14 +1,14 @@
-import React, {useEffect, useRef} from "react";
-import styled from "styled-components";
-import {animated, useSpring} from "@react-spring/web";
-import {useGesture} from "@use-gesture/react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, {useEffect, useRef} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
+import {animated, useSpring} from "../../_snowpack/pkg/@react-spring/web.js";
+import {useGesture} from "../../_snowpack/pkg/@use-gesture/react.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 import {
   faGripLinesVertical,
   faGripLines,
   faKeyboard
-} from "@fortawesome/free-solid-svg-icons";
-import {useRecoilState, atomFamily, useSetRecoilState} from "recoil";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {useRecoilState, atomFamily, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import {handleRef} from "../Footers/MathInputSelector.js";
 export const handleDirection = {
   LEFT: {

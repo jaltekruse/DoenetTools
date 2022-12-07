@@ -1,5 +1,5 @@
-import React from "react";
-import {atomFamily, selectorFamily, useRecoilValue} from "recoil";
+import React from "../../_snowpack/pkg/react.js";
+import {atomFamily, selectorFamily, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {searchParamAtomFamily} from "../../_framework/NewToolRoot.js";
 import {
   coursePermissionsAndSettingsByCourseId,

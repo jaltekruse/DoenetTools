@@ -1,7 +1,7 @@
-import React, {useState} from "react";
-import styled from "styled-components";
-import {faInfo} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, {useState} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
+import {faInfo} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 const TooltipStyling = styled.button`
     border-radius: 16px;
     width: 16px;

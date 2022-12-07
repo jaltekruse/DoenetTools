@@ -1,12 +1,12 @@
-import React, {Suspense} from "react";
-import {useRecoilCallback, useRecoilValue} from "recoil";
+import React, {Suspense} from "../../_snowpack/pkg/react.js";
+import {useRecoilCallback, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {searchParamAtomFamily, pageToolViewAtom} from "../NewToolRoot.js";
 import CourseNavigator from "../../_reactComponents/Course/CourseNavigator.js";
-import styled, {keyframes} from "styled-components";
+import styled, {keyframes} from "../../_snowpack/pkg/styled-components.js";
 import {itemByDoenetId, useCourse} from "../../_reactComponents/Course/CourseActions.js";
 import {useToast, toastType} from "../Toast.js";
 import {selectedMenuPanelAtom} from "../Panels/NewMenuPanel.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 const movingGradient = keyframes`
   0% { background-position: -250px 0; }
   100% { background-position: 250px 0; }

@@ -1,7 +1,7 @@
-import {faFolderTree} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useEffect, useState} from "react";
-import {useRecoilValue} from "recoil";
+import {faFolderTree} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {
   itemByDoenetId,
   selectedCourseItems,

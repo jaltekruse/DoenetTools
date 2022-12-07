@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
-import axios from "axios";
-import {useSetRecoilState} from "recoil";
+import React, {useState, useEffect} from "../../_snowpack/pkg/react.js";
+import axios from "../../_snowpack/pkg/axios.js";
+import {useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import {pageToolViewAtom} from "../NewToolRoot.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import {checkIfUserClearedOut, clearUsersInformationFromTheBrowser} from "../../_utils/applicationUtils.js";

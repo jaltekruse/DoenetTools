@@ -1,4 +1,4 @@
-import React, {useState, lazy, Suspense, useRef, useEffect} from "react";
+import React, {useState, lazy, Suspense, useRef, useEffect} from "../_snowpack/pkg/react.js";
 import {
   atom,
   selector,
@@ -7,17 +7,17 @@ import {
   useRecoilCallback,
   useRecoilState,
   useSetRecoilState
-} from "recoil";
-import styled, {keyframes} from "styled-components";
+} from "../_snowpack/pkg/recoil.js";
+import styled, {keyframes} from "../_snowpack/pkg/styled-components.js";
 import Toast from "./Toast.js";
 import ContentPanel, {panelsInfoAtom} from "./Panels/NewContentPanel.js";
-import axios from "axios";
+import axios from "../_snowpack/pkg/axios.js";
 import MainPanel from "./Panels/NewMainPanel.js";
 import SupportPanel from "./Panels/NewSupportPanel.js";
 import MenuPanel from "./Panels/NewMenuPanel.js";
 import FooterPanel from "./Panels/FooterPanel.js";
-import {animated} from "@react-spring/web";
-import {useNavigate, useLocation} from "react-router";
+import {animated} from "../_snowpack/pkg/@react-spring/web.js";
+import {useNavigate, useLocation} from "../_snowpack/pkg/react-router.js";
 const ToolContainer = styled(animated.div)`
   display: grid;
   grid-template:

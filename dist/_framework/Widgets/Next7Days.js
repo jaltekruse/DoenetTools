@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, {useState} from "../../_snowpack/pkg/react.js";
 import {
   useRecoilCallback,
   useRecoilValue,
   useSetRecoilState,
   atom
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import {pageToolViewAtom} from "../NewToolRoot.js";
 import {
   selectedDriveAtom,
@@ -13,7 +13,7 @@ import {
   clearDriveAndItemSelections
 } from "../../_reactComponents/Drive/NewDrive.js";
 import {selectedMenuPanelAtom} from "../Panels/NewMenuPanel.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import Checkbox from "../../_reactComponents/PanelHeaderComponents/Checkbox.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
@@ -21,12 +21,12 @@ import {globalSelectedNodesAtom} from "../../_reactComponents/Drive/NewDrive.js"
 import {mainPanelClickAtom} from "../Panels/NewMainPanel.js";
 import {effectivePermissionsByCourseId} from "../../_reactComponents/PanelHeaderComponents/RoleDropdown.js";
 import {UTCDateStringToDate} from "../../_utils/dateUtilityFunction.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 import {
   faChevronLeft,
   faChevronRight,
   faThumbtack
-} from "@fortawesome/free-solid-svg-icons";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import {findFirstPageOfActivity, itemByDoenetId, useInitCourseItems} from "../../_reactComponents/Course/CourseActions.js";
 export const classTimesAtom = atom({
   key: "classTimesAtom",

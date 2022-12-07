@@ -1,5 +1,5 @@
-import axios from "axios";
-import {useRecoilCallback, useRecoilValueLoadable} from "recoil";
+import axios from "../../_snowpack/pkg/axios.js";
+import {useRecoilCallback, useRecoilValueLoadable} from "../../_snowpack/pkg/recoil.js";
 import {useToast} from "../../_framework/Toast.js";
 import {DateToUTCDateString, DateToUTCDateWithoutSecondsString} from "../../_utils/dateUtilityFunction.js";
 import {itemByDoenetId} from "../Course/CourseActions.js";

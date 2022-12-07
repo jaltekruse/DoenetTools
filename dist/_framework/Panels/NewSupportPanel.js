@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
+import React from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 import {
   useRecoilCallback
-} from "recoil";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
+} from "../../_snowpack/pkg/recoil.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faQuestionCircle} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 const SupportWrapper = styled.div`
   overflow: auto;
   grid-area: supportPanel;

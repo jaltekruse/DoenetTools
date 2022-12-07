@@ -1,4 +1,4 @@
-import React from "react";
+import React from "../../../_snowpack/pkg/react.js";
 const BreadcrumbDivider = ({children, ...props}) => {
   const breadcrumbDividerStyle = {
     color: "var(--mainGray)",

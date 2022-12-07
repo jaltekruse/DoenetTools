@@ -1,4 +1,4 @@
-import { prng_alea } from "esm-seedrandom";
+import { prng_alea } from "../_snowpack/pkg/esm-seedrandom.js";
 import { retrieveTextFileForCid } from "../core/utils/retrieveTextFile.js";
 import { returnAllPossibleVariants } from "../core/utils/returnAllPossibleVariants.js";
 import { parseAndCompile } from "../parser/parser.js";

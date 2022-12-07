@@ -1,9 +1,9 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 import {
   useSetRecoilState,
   useRecoilValue,
   useRecoilValueLoadable
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import {coursePermissionsAndSettingsByCourseId} from "../../_reactComponents/Course/CourseActions.js";
 import {UTCDateStringToDate} from "../../_utils/dateUtilityFunction.js";
 import {pageToolViewAtom, searchParamAtomFamily} from "../NewToolRoot.js";

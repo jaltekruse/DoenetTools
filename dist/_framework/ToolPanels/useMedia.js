@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState} from "../../_snowpack/pkg/react.js";
 export default function useMedia(queries, values, defaultValue) {
   const match = () => values[queries.findIndex((q) => matchMedia(q).matches)] || defaultValue;
   const [value, set] = useState(match);

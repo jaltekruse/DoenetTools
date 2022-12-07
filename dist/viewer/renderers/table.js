@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React, {useEffect} from "../../_snowpack/pkg/react.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import VisibilitySensor from "react-visibility-sensor-v2";
+import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
 export default React.memo(function Table(props) {
   let {name, id, SVs, children, actions, callAction} = useDoenetRender(props);
   let onChangeVisibility = (isVisible) => {

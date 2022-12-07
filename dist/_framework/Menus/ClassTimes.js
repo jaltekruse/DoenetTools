@@ -1,16 +1,16 @@
-import React, {useState} from "react";
+import React, {useState} from "../../_snowpack/pkg/react.js";
 import {
   useRecoilCallback,
   useRecoilValue
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import {classTimesAtom} from "../Widgets/Next7Days.js";
 import DropdownMenu from "../../_reactComponents/PanelHeaderComponents/DropdownMenu.js";
 import DateTime from "../../_reactComponents/PanelHeaderComponents/DateTime.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTimes, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faTimes, faPlus} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import {DateToUTCDateString} from "../../_utils/dateUtilityFunction.js";
 function sortClassTimes(classTimesArray) {
   return classTimesArray.sort((first, second) => {

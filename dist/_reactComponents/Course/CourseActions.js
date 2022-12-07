@@ -1,5 +1,5 @@
-import axios from "axios";
-import {useEffect, useCallback} from "react";
+import axios from "../../_snowpack/pkg/axios.js";
+import {useEffect, useCallback} from "../../_snowpack/pkg/react.js";
 import {
   atom,
   atomFamily,
@@ -8,7 +8,7 @@ import {
   useRecoilState,
   useRecoilValue,
   useSetRecoilState
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import {searchParamAtomFamily} from "../../_framework/NewToolRoot.js";
 import {selectedMenuPanelAtom} from "../../_framework/Panels/NewMenuPanel.js";
 import {useToast, toastType} from "../../_framework/Toast.js";

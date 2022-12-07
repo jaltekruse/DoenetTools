@@ -1,4 +1,4 @@
-import React from "react";
+import React from "../../_snowpack/pkg/react.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 export default function PlaygroundTool() {
   return /* @__PURE__ */ React.createElement("div", {

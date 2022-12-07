@@ -1,10 +1,10 @@
-import React, {useState} from "react";
-import {useRecoilCallback, useRecoilState, useRecoilValue} from "recoil";
+import React, {useState} from "../../_snowpack/pkg/react.js";
+import {useRecoilCallback, useRecoilState, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import {loadAssignmentSelector} from "../../_reactComponents/Drive/NewDrive.js";
 import {cidChangedAtom, currentAttemptNumber, numberOfAttemptsAllowedAdjustmentAtom} from "../ToolPanels/AssignmentViewer.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 export default function AssignmentNewAttempt() {
   const doenetId = useRecoilValue(searchParamAtomFamily("doenetId"));
   const [numberOfAttemptsAllowedAdjustment, setNumberOfAttemptsAllowedAdjustment] = useRecoilState(numberOfAttemptsAllowedAdjustmentAtom);

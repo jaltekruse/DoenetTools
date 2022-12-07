@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState, Suspense} from "react";
+import React, {useEffect, useRef, useState, Suspense} from "../../_snowpack/pkg/react.js";
 import {
   atom,
   useRecoilState,
@@ -6,7 +6,7 @@ import {
   atomFamily,
   selectorFamily,
   useRecoilValueLoadable
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 export const focusedMathFieldID = atom({
   key: "focusedMathFieldID",
   default: null

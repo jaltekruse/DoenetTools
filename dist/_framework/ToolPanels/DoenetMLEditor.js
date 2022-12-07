@@ -1,8 +1,8 @@
-import React, {useRef, useEffect} from "react";
+import React, {useRef, useEffect} from "../../_snowpack/pkg/react.js";
 import {
   useRecoilValue,
   useSetRecoilState
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import CodeMirror from "../CodeMirror.js";
 import {courseIdAtom} from "../../_reactComponents/Course/CourseActions.js";

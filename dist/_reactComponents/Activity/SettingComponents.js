@@ -1,23 +1,23 @@
 import {
   faCalendarPlus,
   faCalendarTimes
-} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useEffect, useState} from "react";
-import styled from "styled-components";
+} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 import {DateToDateString} from "../../_utils/dateUtilityFunction.js";
 import DateTime from "../PanelHeaderComponents/DateTime.js";
 import {useActivity} from "./ActivityActions.js";
 import Checkbox from "../PanelHeaderComponents/Checkbox.js";
 import Increment from "../PanelHeaderComponents/IncrementMenu.js";
 import DropdownMenu from "../PanelHeaderComponents/DropdownMenu.js";
-import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
+import {atomFamily, useRecoilState, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import {
   peopleByCourseId,
   itemByDoenetId,
   useCourse
 } from "../Course/CourseActions.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import RelatedItems from "../PanelHeaderComponents/RelatedItems.js";
 import ActionButtonGroup from "../PanelHeaderComponents/ActionButtonGroup.js";
 import ActionButton from "../PanelHeaderComponents/ActionButton.js";

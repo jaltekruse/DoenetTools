@@ -1,13 +1,13 @@
-import {faLink} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useEffect, useState} from "react";
-import {useRecoilCallback, useRecoilValue, useSetRecoilState} from "recoil";
+import {faLink} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import {useRecoilCallback, useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import {itemByDoenetId, selectedCourseItems, useCourse} from "../../_reactComponents/Course/CourseActions.js";
 import {pageToolViewAtom, searchParamAtomFamily} from "../NewToolRoot.js";
 import ActionButton from "../../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import ActionButtonGroup from "../../_reactComponents/PanelHeaderComponents/ActionButtonGroup.js";
 import Textfield from "../../_reactComponents/PanelHeaderComponents/Textfield.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 export default function SelectedPageLink() {
   const setPageToolView = useSetRecoilState(pageToolViewAtom);

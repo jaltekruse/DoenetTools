@@ -1,5 +1,5 @@
-import axios from "axios";
-import { clear as idb_clear, keys as idb_keys } from 'idb-keyval';
+import axios from "../_snowpack/pkg/axios.js";
+import { clear as idb_clear, keys as idb_keys } from '../_snowpack/pkg/idb-keyval.js';
 
 
 

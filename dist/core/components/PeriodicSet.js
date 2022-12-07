@@ -1,5 +1,5 @@
 import MathComponent from './Math.js';
-import me from 'math-expressions';
+import me from '../../_snowpack/pkg/math-expressions.js';
 import { deepClone } from '../utils/deepFunctions.js';
 
 export default class PeriodicSet extends MathComponent {

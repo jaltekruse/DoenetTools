@@ -1,11 +1,11 @@
-import React, {useEffect} from "react";
+import React, {useEffect} from "../../_snowpack/pkg/react.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import {HotTable} from "@handsontable/react";
-import {HyperFormula} from "hyperformula";
-import "handsontable/dist/handsontable.full.css";
+import {HotTable} from "../../_snowpack/pkg/@handsontable/react.js";
+import {HyperFormula} from "../../_snowpack/pkg/hyperformula.js";
+import "../../_snowpack/pkg/handsontable/dist/handsontable.full.css.proxy.js";
 import {sizeToCSS} from "./utils/css.js";
-import {registerAllModules} from "handsontable/registry";
-import VisibilitySensor from "react-visibility-sensor-v2";
+import {registerAllModules} from "../../_snowpack/pkg/handsontable/registry.js";
+import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
 registerAllModules();
 export default React.memo(function SpreadsheetRenderer(props) {
   let {name, id, SVs, actions, callAction} = useDoenetRender(props);

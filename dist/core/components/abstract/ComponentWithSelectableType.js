@@ -1,5 +1,5 @@
 import BaseComponent from './BaseComponent.js';
-import me from 'math-expressions';
+import me from '../../../_snowpack/pkg/math-expressions.js';
 import { convertValueToMathExpression, textToAst } from '../../utils/math.js';
 import { breakEmbeddedStringsIntoParensPieces } from '../commonsugar/breakstrings.js';
 import { returnBreakStringsIntoComponentTypeBySpaces, returnGroupIntoComponentTypeSeparatedBySpaces } from '../commonsugar/lists.js';

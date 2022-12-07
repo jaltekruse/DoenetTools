@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import styled from "styled-components";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 const Container = styled.div`
   // Depend on if we have a label or the showProgress props
   display: ${(props) => props.align};

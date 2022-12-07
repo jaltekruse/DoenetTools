@@ -1,8 +1,8 @@
-import React, {useEffect, useState, useRef} from "react";
-import Datetime from "react-datetime";
-import "react-datetime/css/react-datetime.css";
-import styled from "styled-components";
-import "./DateTime.css";
+import React, {useEffect, useState, useRef} from "../../_snowpack/pkg/react.js";
+import Datetime from "../../_snowpack/pkg/react-datetime.js";
+import "../../_snowpack/pkg/react-datetime/css/react-datetime.css.proxy.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
+import "./DateTime.css.proxy.js";
 const Label = styled.div`
   font-size: 14px;
   width: fit-content;

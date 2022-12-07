@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {atomFamily, useRecoilValue, useSetRecoilState} from "recoil";
+import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import {atomFamily, useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import {renderersloadComponent} from "../PageViewer.js";
 export const rendererState = atomFamily({
   key: "rendererState",

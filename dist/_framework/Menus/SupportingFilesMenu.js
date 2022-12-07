@@ -1,5 +1,5 @@
-import React, {useCallback, useState, useRef} from "react";
-import {useDropzone} from "react-dropzone";
+import React, {useCallback, useState, useRef} from "../../_snowpack/pkg/react.js";
+import {useDropzone} from "../../_snowpack/pkg/react-dropzone.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import ActionButtonGroup from "../../_reactComponents/PanelHeaderComponents/ActionButtonGroup.js";
 import ActionButton from "../../_reactComponents/PanelHeaderComponents/ActionButton.js";
@@ -10,17 +10,17 @@ import {
   selectorFamily,
   useRecoilState,
   useRecoilCallback
-} from "recoil";
+} from "../../_snowpack/pkg/recoil.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
 import CollapseSection from "../../_reactComponents/PanelHeaderComponents/CollapseSection.js";
 import {useToast, toastType} from "../Toast.js";
-import axios from "axios";
+import axios from "../../_snowpack/pkg/axios.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
-import {CopyToClipboard} from "react-copy-to-clipboard";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {CopyToClipboard} from "../../_snowpack/pkg/react-copy-to-clipboard.js";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
 import {
   faClipboard
-} from "@fortawesome/free-regular-svg-icons";
+} from "../../_snowpack/pkg/@fortawesome/free-regular-svg-icons.js";
 function bytesToSize(bytes) {
   var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
   if (bytes == 0)

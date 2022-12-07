@@ -1,11 +1,11 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState} from "../../_snowpack/pkg/react.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCheck, faLevelDownAlt, faTimes, faCloud, faPercentage} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faCheck, faLevelDownAlt, faTimes, faCloud, faPercentage} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
 import {sizeToCSS} from "./utils/css.js";
 import {rendererState} from "./useDoenetRenderer.js";
-import {useSetRecoilState} from "recoil";
-import styled from "styled-components";
+import {useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
+import styled from "../../_snowpack/pkg/styled-components.js";
 const Button = styled.button`
   position: relative;
   height: 24px;

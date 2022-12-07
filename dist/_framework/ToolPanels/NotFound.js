@@ -1,5 +1,5 @@
-import React from "react";
-import {useLocation} from "react-router-dom";
+import React from "../../_snowpack/pkg/react.js";
+import {useLocation} from "../../_snowpack/pkg/react-router-dom.js";
 export default function NotFound(props) {
   const location = useLocation();
   let urlParamsObj = Object.fromEntries(new URLSearchParams(location.search));

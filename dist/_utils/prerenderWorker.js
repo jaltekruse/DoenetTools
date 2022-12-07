@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../_snowpack/pkg/axios.js";
 import { retrieveTextFileForCid } from "../core/utils/retrieveTextFile.js";
 import { serializedComponentsReplacer } from "../core/utils/serializedStateProcessing.js";
 import { calculateOrderAndVariants, determineNumberOfActivityVariants, parseActivityDefinition } from "./activityUtils.js";

@@ -1,8 +1,8 @@
-import React, {useCallback} from "react";
-import {useDropzone} from "react-dropzone";
+import React, {useCallback} from "../../_snowpack/pkg/react.js";
+import {useDropzone} from "../../_snowpack/pkg/react-dropzone.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
-import parse from "csv-parse";
-import {useSetRecoilState} from "recoil";
+import parse from "../../_snowpack/pkg/csv-parse.js";
+import {useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
 import {
   processGradesAtom,
   headersGradesAtom,
