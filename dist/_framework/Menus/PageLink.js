@@ -1,10 +1,10 @@
-import React from "../../_snowpack/pkg/react.js";
-import copyToClipboard from "../../_snowpack/pkg/copy-to-clipboard.js";
-import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import React from "react";
+import copyToClipboard from "copy-to-clipboard";
+import {useRecoilValue} from "recoil";
 import ActionButton from "../../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {toastType, useToast} from "../Toast.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import axios from "axios";
 import {courseIdAtom} from "../../_reactComponents/Course/CourseActions.js";
 import {viewerDoenetMLAtom} from "../../_sharedRecoil/EditorViewerRecoil.js";
 export default function PageLink() {

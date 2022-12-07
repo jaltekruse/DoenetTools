@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useRef} from "../../_snowpack/pkg/react.js";
-import {faTh} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import React, {useCallback, useEffect, useRef} from "react";
+import {faTh} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   folderDictionary,
   fetchCoursesQuery,
@@ -12,9 +12,9 @@ import {
   selectorFamily,
   useSetRecoilState,
   useRecoilValueLoadable
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {pageToolViewAtom} from "../../_framework/NewToolRoot.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import styled from "styled-components";
 const Breadcrumb = styled.ul`
   list-style: none;
   overflow: hidden;

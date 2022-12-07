@@ -1,5 +1,5 @@
 import InlineComponent from './abstract/InlineComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { getFromText, mathStateVariableFromNumberStateVariable, numberToMathExpression, roundForDisplay, textToAst } from '../utils/math.js';
 import { buildParsedExpression, evaluateLogic } from '../utils/booleanLogic.js';
 

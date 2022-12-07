@@ -1,5 +1,5 @@
 import BaseComponent from '../abstract/BaseComponent.js';
-import me from '../../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 
 export default class EigenDecomposition extends BaseComponent {
   static componentType = "eigenDecomposition";

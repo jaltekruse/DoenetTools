@@ -1,23 +1,23 @@
 import {
   faCalendarPlus,
   faCalendarTimes
-} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, {useEffect, useState} from "react";
+import styled from "styled-components";
 import {DateToDateString} from "../../_utils/dateUtilityFunction.js";
 import DateTime from "../PanelHeaderComponents/DateTime.js";
 import {useActivity} from "./ActivityActions.js";
 import Checkbox from "../PanelHeaderComponents/Checkbox.js";
 import Increment from "../PanelHeaderComponents/IncrementMenu.js";
 import DropdownMenu from "../PanelHeaderComponents/DropdownMenu.js";
-import {atomFamily, useRecoilState, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
 import {
   peopleByCourseId,
   itemByDoenetId,
   useCourse
 } from "../Course/CourseActions.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import axios from "axios";
 import RelatedItems from "../PanelHeaderComponents/RelatedItems.js";
 import ActionButtonGroup from "../PanelHeaderComponents/ActionButtonGroup.js";
 import ActionButton from "../PanelHeaderComponents/ActionButton.js";
@@ -307,24 +307,25 @@ export const TimeLimit = ({courseId, doenetId}) => {
     value: {timeLimit: recoilValue},
     updateAssignmentSettings
   } = useActivity(courseId, doenetId);
-  const [timeLimit, setTimeLimit] = useState();
-  useEffect(() => {
-    setTimeLimit(recoilValue);
-  }, [recoilValue]);
+  const [timeLimit, setTimeLimit] = useState(recoilValue);
+  const [isEnabled, setIsEnabled] = useState(recoilValue ? true : false);
   return /* @__PURE__ */ React.createElement(InputWrapper, null, /* @__PURE__ */ React.createElement(LabelText, null, "Time Limit in Minutes"), /* @__PURE__ */ React.createElement(InputControl, {
     onClick: (e) => e.preventDefault()
   }, /* @__PURE__ */ React.createElement(Checkbox, {
     style: {marginRight: "5px"},
     dataTest: "Time Limit Checkbox",
-    checked: timeLimit !== null,
+    checked: isEnabled,
     onClick: () => {
       let valueDescription = "Not Limited";
       let value = null;
-      if (timeLimit === null) {
-        valueDescription = "60 Minutes";
+      let enable = false;
+      if (!isEnabled) {
+        valueDescription = 60 + " Minutes";
         value = 60;
+        enable = true;
       }
       setTimeLimit(value);
+      setIsEnabled(enable);
       updateAssignmentSettings({
         keyToUpdate: "timeLimit",
         value,
@@ -333,30 +334,22 @@ export const TimeLimit = ({courseId, doenetId}) => {
       });
     }
   }), /* @__PURE__ */ React.createElement(Increment, {
-    disabled: timeLimit === null,
+    disabled: !isEnabled,
     value: timeLimit,
     dataTest: "Time Limit",
-    min: 0,
-    onBlur: () => {
-      if (recoilValue !== timeLimit) {
-        let timelimitlocal = null;
-        if (timeLimit < 0 || timeLimit === "" || isNaN(timeLimit)) {
-          setTimeLimit(0);
-          timelimitlocal = 0;
-        } else {
-          timelimitlocal = parseInt(timeLimit);
-          setTimeLimit(parseInt(timeLimit));
-        }
-        let valueDescription = `${timelimitlocal} Minutes`;
-        updateAssignmentSettings({
-          keyToUpdate: "timeLimit",
-          value: timelimitlocal,
-          description: "Time Limit",
-          valueDescription
-        });
-      }
+    min: 1,
+    onBlur: (limit) => {
+      if (isNaN(limit) || limit < 1)
+        limit = 1;
+      setTimeLimit(parseInt(limit));
+      updateAssignmentSettings({
+        keyToUpdate: "timeLimit",
+        value: parseInt(limit),
+        description: "Time Limit",
+        valueDescription: `${limit} Minutes`
+      });
     },
-    onChange: (newValue) => setTimeLimit(newValue)
+    onChange: (limit) => setTimeLimit(parseInt(limit))
   })));
 };
 export const AttemptLimit = ({courseId, doenetId}) => {
@@ -365,23 +358,24 @@ export const AttemptLimit = ({courseId, doenetId}) => {
     updateAssignmentSettings
   } = useActivity(courseId, doenetId);
   const [numberOfAttemptsAllowed, setNumberOfAttemptsAllowed] = useState(recoilValue);
-  useEffect(() => {
-    setNumberOfAttemptsAllowed(recoilValue);
-  }, [recoilValue]);
+  const [isEnabled, setIsEnabled] = useState(recoilValue ? true : false);
   return /* @__PURE__ */ React.createElement(InputWrapper, null, /* @__PURE__ */ React.createElement(LabelText, null, "Attempts"), /* @__PURE__ */ React.createElement(InputControl, {
     onClick: (e) => e.preventDefault()
   }, /* @__PURE__ */ React.createElement(Checkbox, {
     style: {marginRight: "5px"},
     dataTest: "Attempt Limit Checkbox",
-    checked: numberOfAttemptsAllowed !== null,
+    checked: isEnabled,
     onClick: () => {
       let valueDescription = "Not Limited";
       let value = null;
-      if (numberOfAttemptsAllowed === null) {
+      let enable = false;
+      if (!isEnabled) {
         valueDescription = "1";
         value = 1;
+        enable = true;
       }
       setNumberOfAttemptsAllowed(value);
+      setIsEnabled(enable);
       updateAssignmentSettings({
         keyToUpdate: "numberOfAttemptsAllowed",
         value,
@@ -390,27 +384,21 @@ export const AttemptLimit = ({courseId, doenetId}) => {
       });
     }
   }), /* @__PURE__ */ React.createElement(Increment, {
-    disabled: numberOfAttemptsAllowed === null,
+    disabled: !isEnabled,
     value: numberOfAttemptsAllowed,
     dataTest: "Attempt Limit",
-    min: 0,
-    onBlur: () => {
-      if (recoilValue !== numberOfAttemptsAllowed) {
-        let numberOfAttemptsAllowedLocal = 1;
-        if (numberOfAttemptsAllowed <= 0 || numberOfAttemptsAllowed === "" || isNaN(numberOfAttemptsAllowed)) {
-          setNumberOfAttemptsAllowed(numberOfAttemptsAllowedLocal);
-        } else {
-          numberOfAttemptsAllowedLocal = parseInt(numberOfAttemptsAllowed);
-          setNumberOfAttemptsAllowed(numberOfAttemptsAllowedLocal);
-        }
-        updateAssignmentSettings({
-          keyToUpdate: "numberOfAttemptsAllowed",
-          value: numberOfAttemptsAllowedLocal,
-          description: "Attempts Allowed"
-        });
-      }
+    min: 1,
+    onBlur: (attempts) => {
+      if (isNaN(attempts) || attempts < 1)
+        attempts = 1;
+      setNumberOfAttemptsAllowed(parseInt(attempts));
+      updateAssignmentSettings({
+        keyToUpdate: "numberOfAttemptsAllowed",
+        value: parseInt(attempts),
+        description: "Attempts Allowed"
+      });
     },
-    onChange: (newValue) => setNumberOfAttemptsAllowed(newValue)
+    onChange: (attempts) => setNumberOfAttemptsAllowed(parseInt(attempts))
   })));
 };
 export const AttemptAggregation = ({courseId, doenetId}) => {
@@ -455,7 +443,7 @@ export const TotalPointsOrPercent = ({courseId, doenetId}) => {
     setTotalPointsOrPercent(recoilValue);
   }, [recoilValue]);
   return /* @__PURE__ */ React.createElement(InputWrapper, null, /* @__PURE__ */ React.createElement(LabelText, null, "Total Points Or Percent"), /* @__PURE__ */ React.createElement(InputControl, null, /* @__PURE__ */ React.createElement(Increment, {
-    value: totalPointsOrPercent,
+    value: totalPointsOrPercent || 0,
     dataTest: "Total Points Or Percent",
     min: 0,
     onBlur: () => {

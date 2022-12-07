@@ -1,8 +1,8 @@
-import React, {useState, useRef, useEffect} from "../../_snowpack/pkg/react.js";
+import React, {useState, useRef, useEffect} from "react";
 import useDoenetRenderer from "./useDoenetRenderer.js";
 import {sizeToCSS} from "./utils/css.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
-import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
+import VisibilitySensor from "react-visibility-sensor-v2";
 export default React.memo(function CodeViewer(props) {
   let {name, id, SVs, children, actions, callAction} = useDoenetRenderer(props, false);
   let onChangeVisibility = (isVisible) => {

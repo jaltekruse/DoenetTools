@@ -1,12 +1,12 @@
-import React, {useRef, useState, useEffect} from "../../_snowpack/pkg/react.js";
-import me from "../../_snowpack/pkg/math-expressions.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import React, {useRef, useState, useEffect} from "react";
+import me from "math-expressions";
+import styled from "styled-components";
 import useDoenetRender from "./useDoenetRenderer.js";
 import ActionButton from "../../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import ActionButtonGroup from "../../_reactComponents/PanelHeaderComponents/ActionButtonGroup.js";
-import {useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
+import {useSetRecoilState} from "recoil";
 import {rendererState} from "./useDoenetRenderer.js";
-import {MathJax} from "../../_snowpack/pkg/better-react-mathjax.js";
+import {MathJax} from "better-react-mathjax";
 let round_to_decimals = (x, n) => me.round_numbers_to_decimals(x, n).tree;
 const SliderContainer = styled.div`
     width: fit-content;

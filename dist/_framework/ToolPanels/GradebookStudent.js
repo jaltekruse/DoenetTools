@@ -1,9 +1,9 @@
-import React from "../../_snowpack/pkg/react.js";
+import React from "react";
 import {
   useSetRecoilState,
   useRecoilValue,
   useRecoilValueLoadable
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {coursePermissionsAndSettingsByCourseId} from "../../_reactComponents/Course/CourseActions.js";
 import {UTCDateStringToDate} from "../../_utils/dateUtilityFunction.js";
 import {pageToolViewAtom, searchParamAtomFamily} from "../NewToolRoot.js";
@@ -49,6 +49,8 @@ export default function GradebookStudent() {
       {category: "Participation"}
     ];
     let totalPossiblePoints = 0;
+    let sortedAssignments = Object.entries(assignments.contents);
+    sortedAssignments.sort((a, b) => a[1].sortOrder < b[1].sortOrder ? -1 : 1);
     for (let {
       category,
       scaleFactor = 1,
@@ -61,7 +63,7 @@ export default function GradebookStudent() {
       let allpossiblepoints = [];
       let allassignedpoints = [];
       let categoryAssignedPointsAreAllDashes = true;
-      for (let doenetId in assignments.contents) {
+      for (let [doenetId] of sortedAssignments) {
         let inCategory = assignments.contents[doenetId].category;
         if (inCategory?.toLowerCase() !== category.toLowerCase()) {
           continue;

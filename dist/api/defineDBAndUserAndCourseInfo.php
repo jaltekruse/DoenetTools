@@ -5,7 +5,7 @@
 require_once "db_connection.php";
 error_reporting(E_ERROR | E_PARSE);
 
-
+$settings = new \stdClass;
 $settings->key = $ini_array['key'];
 use \Firebase\JWT\JWT;
 require_once "vendor/autoload.php";

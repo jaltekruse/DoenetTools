@@ -1,6 +1,6 @@
 import CompositeComponent from './abstract/CompositeComponent.js';
 import { postProcessCopy } from '../utils/copy.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { processAssignNames } from '../utils/serializedStateProcessing.js';
 
 export default class Intersection extends CompositeComponent {

@@ -1,12 +1,12 @@
-import React, {useCallback, useState} from "../../_snowpack/pkg/react.js";
+import React, {useCallback, useState} from "react";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
-import {useRecoilState, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import {useRecoilState, useRecoilValue} from "recoil";
 import Checkbox from "../../_reactComponents/PanelHeaderComponents/Checkbox.js";
 import {peopleByCourseId} from "../../_reactComponents/Course/CourseActions.js";
 import {AddUserWithOptions} from "../../_reactComponents/Course/SettingComponents.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
-import Measure from "../../_snowpack/pkg/react-measure.js";
+import styled from "styled-components";
+import Measure from "react-measure";
 import {RoleDropdown} from "../../_reactComponents/PanelHeaderComponents/RoleDropdown.js";
 import {useCourse} from "../../_reactComponents/Course/CourseActions.js";
 import {

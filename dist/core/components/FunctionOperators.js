@@ -1,5 +1,5 @@
 import FunctionBaseOperator from './abstract/FunctionBaseOperator.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { returnNVariables } from '../utils/math.js';
 import { functionOperatorDefinitions } from '../utils/function.js';
 

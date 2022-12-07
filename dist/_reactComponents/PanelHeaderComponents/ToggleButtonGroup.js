@@ -1,5 +1,5 @@
-import React, {useState} from "../../_snowpack/pkg/react.js";
-import styled, {ThemeProvider} from "../../_snowpack/pkg/styled-components.js";
+import React, {useState} from "react";
+import styled, {ThemeProvider} from "styled-components";
 const Container = styled.div`
   display: ${(props) => props.vertical ? "static" : "flex"};
   // height: 'fit-content';

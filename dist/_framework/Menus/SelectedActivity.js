@@ -1,8 +1,8 @@
-import {faFileCode} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {faFileCode} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {toastType, useToast} from "../Toast.js";
-import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
-import {useRecoilValue, useSetRecoilState, atom} from "../../_snowpack/pkg/recoil.js";
+import React, {useEffect, useState} from "react";
+import {useRecoilValue, useSetRecoilState, atom} from "recoil";
 import {useActivity} from "../../_reactComponents/Activity/ActivityActions.js";
 import {
   AssignedDate,

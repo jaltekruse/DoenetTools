@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
-import {useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
+import React, {useEffect, useState} from "react";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 import {pageToolViewAtom, searchParamAtomFamily} from "../NewToolRoot.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import axios from "axios";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 export default function SurveyListViewer() {
   let driveId = useRecoilValue(searchParamAtomFamily("driveId"));

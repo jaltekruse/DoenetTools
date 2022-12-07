@@ -3,8 +3,8 @@ import React, {
   useEffect,
   useRef,
   useState
-} from "../../_snowpack/pkg/react.js";
-import Measure from "../../_snowpack/pkg/react-measure.js";
+} from "react";
+import Measure from "react-measure";
 import {
   faCode,
   faFileCode,
@@ -15,13 +15,13 @@ import {
   faChevronDown,
   faCheck,
   faLink
-} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   useRecoilValue,
   useRecoilCallback,
   useSetRecoilState
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {
   itemByDoenetId,
   useInitCourseItems,
@@ -29,8 +29,8 @@ import {
   authorCourseItemOrderByCourseIdBySection,
   studentCourseItemOrderByCourseIdBySection
 } from "./CourseActions.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
-import "../../_utils/util.css.proxy.js";
+import styled from "styled-components";
+import "../../_utils/util.css";
 import {searchParamAtomFamily} from "../../_framework/NewToolRoot.js";
 import {mainPanelClickAtom} from "../../_framework/Panels/NewMainPanel.js";
 import {selectedMenuPanelAtom} from "../../_framework/Panels/NewMenuPanel.js";

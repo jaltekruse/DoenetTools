@@ -1,6 +1,6 @@
-import React, {useState} from "../../_snowpack/pkg/react.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import {faTimes} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import React, {useState} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTimes} from "@fortawesome/free-solid-svg-icons";
 export default function Banner(props) {
   const [bannerVisible, setBannerVisible] = useState("flex");
   var banner = {

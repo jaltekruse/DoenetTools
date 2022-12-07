@@ -1,6 +1,6 @@
 /* Hand-written tokenizer for XML tag matching. */
 
-import {ExternalTokenizer, ContextTracker} from "../_snowpack/pkg/@lezer/lr.js"
+import {ExternalTokenizer, ContextTracker} from "@lezer/lr"
 import {StartTag, StartCloseTag, mismatchedStartCloseTag, incompleteStartCloseTag, MissingCloseTag, Element, OpenTag,
         commentContent as _commentContent} from "./doenet.terms.js"
 

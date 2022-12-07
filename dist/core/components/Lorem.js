@@ -1,5 +1,5 @@
 import CompositeComponent from './abstract/CompositeComponent.js';
-import { LoremIpsum } from "../../_snowpack/pkg/lorem-ipsum.js";
+import { LoremIpsum } from "lorem-ipsum";
 import { processAssignNames } from '../utils/serializedStateProcessing.js';
 import { setUpVariantSeedAndRng } from '../utils/variants.js';
 

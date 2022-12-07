@@ -1,5 +1,5 @@
 import InlineComponent from './abstract/InlineComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 
 export default class FunctionIterates extends InlineComponent {
   static componentType = "functionIterates";

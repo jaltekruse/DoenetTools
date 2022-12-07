@@ -1,5 +1,5 @@
-import React from "../../_snowpack/pkg/react.js";
-import {useRecoilState, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import React from "react";
+import {useRecoilState, useRecoilValue} from "recoil";
 import {coursePermissionsAndSettingsByCourseId} from "../../_reactComponents/Course/CourseActions.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {effectiveRoleIdByCourseId, RoleDropdown} from "../../_reactComponents/PanelHeaderComponents/RoleDropdown.js";

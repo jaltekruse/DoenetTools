@@ -1,10 +1,10 @@
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faCheck,
   faBan
-} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import React, {useRef} from "../../_snowpack/pkg/react.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+} from "@fortawesome/free-solid-svg-icons";
+import React, {useRef} from "react";
+import styled from "styled-components";
 const Button = styled.button`
   height: 24px;
   border: 2px solid;

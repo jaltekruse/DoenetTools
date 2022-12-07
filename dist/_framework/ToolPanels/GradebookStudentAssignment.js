@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from "../../_snowpack/pkg/react.js";
+import React, {useState, useEffect} from "react";
 import {Styles, Table, studentData, attemptData, assignmentData} from "./Gradebook.js";
 import {
   useSetRecoilState,
   useRecoilValue,
   useRecoilValueLoadable
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {pageToolViewAtom, searchParamAtomFamily, suppressMenusAtom} from "../NewToolRoot.js";
 import {serializedComponentsReviver} from "../../core/utils/serializedStateProcessing.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import axios from "axios";
 import {currentAttemptNumber} from "./AssignmentViewer.js";
 import PageViewer from "../../viewer/PageViewer.js";
 import {effectivePermissionsByCourseId} from "../../_reactComponents/PanelHeaderComponents/RoleDropdown.js";

@@ -1,6 +1,6 @@
 import MathBaseOperator from './abstract/MathBaseOperator.js';
 import MathBaseOperatorOneInput from './abstract/MathBaseOperatorOneInput.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 
 export class Sum extends MathBaseOperator {
   static componentType = "sum";

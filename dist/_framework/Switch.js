@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "../_snowpack/pkg/react.js";
-import "./Switch.css.proxy.js";
+import React, {useState, useEffect} from "react";
+import "./Switch.css";
 function randomAlphaString(len) {
   let c = "abcdefghijklmnopqrstuvwxyz";
   let str = "";

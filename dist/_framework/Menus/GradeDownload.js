@@ -1,10 +1,10 @@
-import React from "../../_snowpack/pkg/react.js";
+import React from "react";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
-import {useRecoilCallback} from "../../_snowpack/pkg/recoil.js";
+import {useRecoilCallback} from "recoil";
 import {fetchCoursesQuery} from "../../_reactComponents/Drive/NewDrive.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {assignmentData, overviewData, studentData} from "../ToolPanels/Gradebook.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import axios from "axios";
 export default function GradeDownload() {
   const download = useRecoilCallback(({snapshot}) => async () => {
     const driveId = await snapshot.getPromise(searchParamAtomFamily("driveId"));

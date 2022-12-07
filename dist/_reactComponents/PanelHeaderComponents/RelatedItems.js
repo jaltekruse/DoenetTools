@@ -1,5 +1,5 @@
-import React from "../../_snowpack/pkg/react.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import React from "react";
+import styled from "styled-components";
 const Container = styled.div`
     display: ${(props) => props.align};
     width: auto;

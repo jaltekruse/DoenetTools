@@ -1,7 +1,7 @@
-import React, {createRef, useEffect, useState} from "../../_snowpack/pkg/react.js";
+import React, {createRef, useEffect, useState} from "react";
 import useDoenetRenderer from "./useDoenetRenderer.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
-import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
+import styled from "styled-components";
+import VisibilitySensor from "react-visibility-sensor-v2";
 const Box = styled.svg`
 border: '2px solid red';
 margin: 2px;

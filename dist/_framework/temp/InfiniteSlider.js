@@ -1,7 +1,7 @@
-import React, {useRef, useCallback, useState, useEffect} from "../../_snowpack/pkg/react.js";
-import {useDrag, useGesture} from "../../_snowpack/pkg/@use-gesture/react.js";
-import {useSprings, a, useSpring} from "../../_snowpack/pkg/@react-spring/web.js";
-import debounce from "../../_snowpack/pkg/lodash.debounce.js";
+import React, {useRef, useCallback, useState, useEffect} from "react";
+import {useDrag, useGesture} from "@use-gesture/react";
+import {useSprings, a, useSpring} from "@react-spring/web";
+import debounce from "lodash.debounce";
 const styles = {
   container: {display: "flex", alignItems: "center", position: "relative", overflow: "hidden", height: "100%", width: "100%"},
   item: {position: "absolute", height: "100%", willChange: "transform"},

@@ -1,5 +1,5 @@
 import GraphicalComponent from './abstract/GraphicalComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { returnNVariables, convertValueToMathExpression, roundForDisplay } from '../utils/math.js';
 
 export default class Line extends GraphicalComponent {

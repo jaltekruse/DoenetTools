@@ -1,6 +1,6 @@
 import { returnSelectedStyleStateVariableDefinition } from '../utils/style.js';
 import InlineComponent from './abstract/InlineComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 
 export default class Text extends InlineComponent {
   static componentType = "text";
@@ -37,10 +37,10 @@ export default class Text extends InlineComponent {
       createComponentOfType: "point",
     }
 
-    attributes.anchorPosition = {
+    attributes.positionFromAnchor = {
       createComponentOfType: "text",
-      createStateVariable: "anchorPosition",
-      defaultValue: "upperleft",
+      createStateVariable: "positionFromAnchor",
+      defaultValue: "center",
       public: true,
       forRenderer: true,
       toLowerCase: true,

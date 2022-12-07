@@ -1,6 +1,6 @@
-import React, {useEffect} from "../../_snowpack/pkg/react.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
-import {useTable, useSortBy, useFilters, useGlobalFilter} from "../../_snowpack/pkg/react-table.js";
+import React, {useEffect} from "react";
+import styled from "styled-components";
+import {useTable, useSortBy, useFilters, useGlobalFilter} from "react-table";
 import {
   atom,
   selector,
@@ -9,14 +9,14 @@ import {
   useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState
-} from "../../_snowpack/pkg/recoil.js";
-import axios from "../../_snowpack/pkg/axios.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+} from "recoil";
+import axios from "axios";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faSort,
   faSortUp,
   faSortDown
-} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+} from "@fortawesome/free-solid-svg-icons";
 import {
   pageToolViewAtom,
   searchParamAtomFamily,
@@ -68,7 +68,6 @@ export const Styles = styled.div`
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-
     }
 
     th:first-child {
@@ -83,7 +82,7 @@ export const Styles = styled.div`
       height: 100%;
     } */
 
-    tr:first-child th > p{
+    tr:first-child th > p {
       margin: 0px 0px 4px 0px;
       padding: 0px;
     }
@@ -93,7 +92,6 @@ export const Styles = styled.div`
       text-align: left;
       transform: rotate(180deg);
       max-height: 160px;
-
     }
 
     thead tr:only-child th:not(:first-child) > p {
@@ -161,8 +159,8 @@ export const assignmentData = selector({
     let data = get(assignmentDataQuery);
     if (isIterable(data)) {
       for (let row of data) {
-        let [doenetId, assignmentName] = row;
-        assignmentArray[doenetId] = assignmentName;
+        let [doenetId, assignmentInfo] = row;
+        assignmentArray[doenetId] = assignmentInfo;
       }
     }
     return assignmentArray;
@@ -492,6 +490,8 @@ function GradebookOverview() {
     accessor: "name",
     Footer: "Possible Points"
   });
+  let sortedAssignments = Object.entries(assignments.contents);
+  sortedAssignments.sort((a, b) => a[1].sortOrder < b[1].sortOrder ? -1 : 1);
   possiblePointRow["name"] = "Possible Points";
   for (let {
     category,
@@ -500,7 +500,7 @@ function GradebookOverview() {
   } of gradeCategories) {
     let allpossiblepoints = [];
     let hasAssignments = false;
-    for (let doenetId in assignments.contents) {
+    for (let [doenetId] of sortedAssignments) {
       let inCategory = assignments.contents[doenetId].category;
       if (inCategory?.toLowerCase() !== category.toLowerCase()) {
         continue;
@@ -603,7 +603,7 @@ function GradebookOverview() {
       maximumNumber = Infinity
     } of gradeCategories) {
       let scores = [];
-      for (let doenetId in assignments.contents) {
+      for (let [doenetId] of sortedAssignments) {
         let inCategory = assignments.contents[doenetId].category;
         if (inCategory?.toLowerCase() !== category.toLowerCase()) {
           continue;

@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useMemo,
   useRef
-} from "../../_snowpack/pkg/react.js";
+} from "react";
 import DropTargetsContants from "./constants.js";
 import {DropTargetsContext} from "./context.js";
 export default function DropTargetsProvider({children}) {

@@ -1,4 +1,4 @@
-import {atom} from "../_snowpack/pkg/recoil.js";
+import {atom} from "recoil";
 export const pageVariantInfoAtom = atom({
   key: "pageVariantInfoAtom",
   default: {index: 1}

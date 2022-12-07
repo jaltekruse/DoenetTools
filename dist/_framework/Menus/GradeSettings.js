@@ -1,6 +1,6 @@
-import axios from "../../_snowpack/pkg/axios.js";
-import React, {useState} from "../../_snowpack/pkg/react.js";
-import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import axios from "axios";
+import React, {useState} from "react";
+import {useRecoilValue} from "recoil";
 import CalendarButton from "../../_reactComponents/PanelHeaderComponents/CalendarToggle.js";
 import DateTime from "../../_reactComponents/PanelHeaderComponents/DateTime.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";

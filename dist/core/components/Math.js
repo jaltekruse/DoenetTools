@@ -1,5 +1,5 @@
 import InlineComponent from './abstract/InlineComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { getFromText, getFromLatex, convertValueToMathExpression, normalizeMathExpression, roundForDisplay, mergeListsWithOtherContainers, preprocessMathInverseDefinition, superSubscriptsToUnicode, unicodeToSuperSubscripts } from '../utils/math.js';
 import { flattenDeep } from '../utils/array.js';
 import { returnSelectedStyleStateVariableDefinition } from '../utils/style.js';
@@ -147,10 +147,10 @@ export default class MathComponent extends InlineComponent {
       createComponentOfType: "point",
     }
 
-    attributes.anchorPosition = {
+    attributes.positionFromAnchor = {
       createComponentOfType: "text",
-      createStateVariable: "anchorPosition",
-      defaultValue: "upperleft",
+      createStateVariable: "positionFromAnchor",
+      defaultValue: "center",
       public: true,
       forRenderer: true,
       toLowerCase: true,

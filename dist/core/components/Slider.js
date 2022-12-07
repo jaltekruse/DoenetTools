@@ -1,6 +1,6 @@
 import { roundForDisplay } from '../utils/math.js';
 import BaseComponent from './abstract/BaseComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { returnLabelStateVariableDefinitions } from '../utils/label.js';
 
 export default class Slider extends BaseComponent {

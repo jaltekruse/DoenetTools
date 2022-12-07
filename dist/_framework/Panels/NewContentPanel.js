@@ -1,14 +1,14 @@
-import React, {useState, useRef, useEffect, useLayoutEffect} from "../../_snowpack/pkg/react.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import React, {useState, useRef, useEffect, useLayoutEffect} from "react";
+import styled from "styled-components";
 import {
   atom,
   selector,
   useRecoilCallback,
   useRecoilValue,
   useSetRecoilState
-} from "../../_snowpack/pkg/recoil.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import {faGripLinesVertical} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+} from "recoil";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faGripLinesVertical} from "@fortawesome/free-solid-svg-icons";
 const Wrapper = styled.div`
   grid-area: contentPanel;
   display: grid;

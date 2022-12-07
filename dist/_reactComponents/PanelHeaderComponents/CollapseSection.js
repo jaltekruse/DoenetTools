@@ -1,7 +1,7 @@
-import React, {useState} from "../../_snowpack/pkg/react.js";
-import Styled from "../../_snowpack/pkg/styled-components.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import {faCaretRight} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+import React, {useState} from "react";
+import Styled from "styled-components";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCaretRight} from "@fortawesome/free-solid-svg-icons";
 const Section = Styled.div`
   transition: height .25s;
   border-radius: .5em;

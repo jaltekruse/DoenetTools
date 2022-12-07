@@ -1,7 +1,7 @@
 import { roundForDisplay } from '../utils/math.js';
 import InlineComponent from './abstract/InlineComponent.js';
 import { returnBreakStringsIntoComponentTypeBySpaces, returnGroupIntoComponentTypeSeparatedBySpaces } from './commonsugar/lists.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 
 export default class NumberList extends InlineComponent {
   static componentType = "numberList";

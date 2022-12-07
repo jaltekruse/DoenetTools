@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "../../_snowpack/pkg/react.js";
+import React, {useEffect, useRef} from "react";
 import PageViewer, {scrollableContainerAtom} from "../../viewer/PageViewer.js";
 import useEventListener from "../../_utils/hooks/useEventListener.js";
 import {
@@ -6,12 +6,12 @@ import {
   useRecoilCallback,
   useRecoilState,
   useSetRecoilState
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {profileAtom, searchParamAtomFamily, suppressMenusAtom} from "../NewToolRoot.js";
 import {itemByDoenetId, courseIdAtom, useInitCourseItems, useSetCourseIdFromDoenetId} from "../../_reactComponents/Course/CourseActions.js";
 import {editorPageIdInitAtom, editorViewerErrorStateAtom, refreshNumberAtom, textEditorDoenetMLAtom, updateTextEditorDoenetMLAtom, viewerDoenetMLAtom} from "../../_sharedRecoil/EditorViewerRecoil.js";
-import axios from "../../_snowpack/pkg/axios.js";
-import {useLocation} from "../../_snowpack/pkg/react-router.js";
+import axios from "axios";
+import {useLocation} from "react-router";
 import {pageVariantInfoAtom, pageVariantPanelAtom} from "../../_sharedRecoil/PageViewerRecoil.js";
 export const useUpdateViewer = () => {
   const updateViewer = useRecoilCallback(({snapshot, set}) => async () => {

@@ -1,4 +1,4 @@
-import {useRecoilCallback} from "../../_snowpack/pkg/recoil.js";
+import {useRecoilCallback} from "recoil";
 import {currentDraftSelectedAtom, selectedVersionIdAtom} from "../Menus/VersionHistory.js";
 export default function EditorLeave() {
   const resetToCurrent = useRecoilCallback(({set}) => () => {

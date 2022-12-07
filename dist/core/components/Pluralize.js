@@ -1,6 +1,6 @@
 import Text from './Text.js';
-import nlp from '../../_snowpack/pkg/compromise.js';
-import compromise_numbers from '../../_snowpack/pkg/compromise-numbers.js';
+import nlp from 'compromise';
+import compromise_numbers from 'compromise-numbers';
 
 import { renameStateVariable } from '../utils/stateVariables.js';
 

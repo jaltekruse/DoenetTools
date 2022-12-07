@@ -1,8 +1,8 @@
-import React from "../../_snowpack/pkg/react.js";
+import React from "react";
 import useDoenetRender from "./useDoenetRenderer.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import {faCheck, faLevelDownAlt, faTimes, faCloud} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCheck, faLevelDownAlt, faTimes, faCloud} from "@fortawesome/free-solid-svg-icons";
+import styled from "styled-components";
 const Button = styled.button`
   position: relative;
   height: 24px;

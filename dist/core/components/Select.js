@@ -2,7 +2,7 @@ import CompositeComponent from './abstract/CompositeComponent.js';
 import { enumerateSelectionCombinations, enumerateCombinations } from '../utils/enumeration.js';
 import { deepClone } from '../utils/deepFunctions.js';
 import { gatherVariantComponents, markToCreateAllUniqueNames, processAssignNames } from '../utils/serializedStateProcessing.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { textToAst } from '../utils/math.js';
 import { returnGroupIntoComponentTypeSeparatedBySpaces } from './commonsugar/lists.js';
 

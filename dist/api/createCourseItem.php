@@ -47,13 +47,13 @@ if ($success){
   $cloneMode = mysqli_real_escape_string($conn,$_POST["cloneMode"]);
   $pageDoenetIds = array_map(function ($item) use ($conn) {
       return mysqli_real_escape_string($conn, $item);
-  }, $_POST["pageDoenetIds"]);
+  }, $_POST["pageDoenetIds"] ?? []); // TODO - do we really want to tolerate this being null?
   $pageLabels = array_map(function ($item) use ($conn) {
     return mysqli_real_escape_string($conn, $item);
-}, $_POST["pageLabels"]);
+}, $_POST["pageLabels"] ?? []); // TODO - do we really want to tolerate this being null?
   $orderDoenetIds = array_map(function ($item) use ($conn) {
     return mysqli_real_escape_string($conn, $item);
-}, $_POST["orderDoenetIds"]);
+}, $_POST["orderDoenetIds"] ?? []); // TODO - do we really want to tolerate this being null?
   $activityLabel = mysqli_real_escape_string($conn,$_POST["activityLabel"]);
   $DangerousActivityObj = json_encode($_POST['activityObj']);
 

@@ -1,4 +1,4 @@
-import React from "../../_snowpack/pkg/react.js";
+import React from "react";
 export default function AutoSaves(props) {
   return /* @__PURE__ */ React.createElement("div", {
     style: props.style

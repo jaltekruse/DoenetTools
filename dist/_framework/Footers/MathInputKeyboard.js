@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from "../../_snowpack/pkg/react.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
-import {MathJax} from "../../_snowpack/pkg/better-react-mathjax.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import React, {useState, useEffect} from "react";
+import styled from "styled-components";
+import {MathJax} from "better-react-mathjax";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import ToggleButton from "../../_reactComponents/PanelHeaderComponents/ToggleButton.js";
 import ToggleButtonGroup from "../../_reactComponents/PanelHeaderComponents/ToggleButtonGroup.js";
 import VerticalDivider from "../../_reactComponents/PanelHeaderComponents/VerticalDivider.js";
-import {faBackspace, faArrowUp} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
+import {faBackspace, faArrowUp} from "@fortawesome/free-solid-svg-icons";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {
   focusedMathField,
   palletRef,
@@ -14,7 +14,7 @@ import {
 } from "./MathInputSelector.js";
 import {panelOpen} from "../Panels/Panel.js";
 import {doenetMainBlue} from "../../_reactComponents/PanelHeaderComponents/theme.js";
-import {useRef} from "../../_snowpack/pkg/react.js";
+import {useRef} from "react";
 const Panel = styled.div`
   height: 240px;
   // position: fixed;

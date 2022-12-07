@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from "../../_snowpack/pkg/react.js";
+import React, {useContext, useEffect, useRef} from "react";
 import {createFunctionFromDefinition} from "../../core/utils/function.js";
 import useDoenetRender from "./useDoenetRenderer.js";
 import {BoardContext} from "./graph.js";

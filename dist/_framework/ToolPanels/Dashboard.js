@@ -1,9 +1,9 @@
-import React, {useEffect} from "../../_snowpack/pkg/react.js";
+import React, {useEffect} from "react";
 import {
   useRecoilValue,
   useSetRecoilState,
   useRecoilValueLoadable
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import Card from "../../_reactComponents/PanelHeaderComponents/Card.js";
 import {
   pageToolViewAtom,
@@ -13,13 +13,13 @@ import {
 import Next7Days from "../Widgets/Next7Days.js";
 import {effectivePermissionsByCourseId} from "../../_reactComponents/PanelHeaderComponents/RoleDropdown.js";
 import {suppressMenusAtom} from "../NewToolRoot.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faCode,
   faUser,
   faChartPie,
   faTasks
-} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
+} from "@fortawesome/free-solid-svg-icons";
 import {coursePermissionsAndSettingsByCourseId} from "../../_reactComponents/Course/CourseActions.js";
 export default function Dashboard(props) {
   const setPageToolView = useSetRecoilState(pageToolViewAtom);

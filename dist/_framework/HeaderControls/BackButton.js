@@ -1,5 +1,5 @@
-import React from "../../_snowpack/pkg/react.js";
-import {useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
+import React from "react";
+import {useSetRecoilState} from "recoil";
 import {pageToolViewAtom} from "../NewToolRoot.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 export default function BackButton() {

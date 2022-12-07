@@ -1,5 +1,5 @@
 import Polygon from './Polygon.js';
-import me from "../../_snowpack/pkg/math-expressions.js";
+import me from "math-expressions";
 
 export default class Rectangle extends Polygon {
   static componentType = "rectangle";

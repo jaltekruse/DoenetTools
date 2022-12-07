@@ -1,12 +1,12 @@
-import React, {useEffect, useState, useRef} from "../../_snowpack/pkg/react.js";
-import {useRecoilValue, useRecoilCallback} from "../../_snowpack/pkg/recoil.js";
+import React, {useEffect, useState, useRef} from "react";
+import {useRecoilValue, useRecoilCallback} from "recoil";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import axios from "axios";
 import {creditAchievedAtom, currentAttemptNumber} from "../ToolPanels/AssignmentViewer.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import styled from "styled-components";
 import {itemByDoenetId} from "../../_reactComponents/Course/CourseActions.js";
 import {activityAttemptNumberSetUpAtom, currentPageAtom, itemWeightsAtom} from "../../viewer/ActivityViewer.js";
-import {useLocation, useNavigate} from "../../_snowpack/pkg/react-router.js";
+import {useLocation, useNavigate} from "react-router";
 const Line = styled.div`
   border-bottom: 2px solid var(--canvastext);
   height: 2px;

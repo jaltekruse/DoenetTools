@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "../../_snowpack/pkg/react.js";
+import React, {useEffect, useRef, useState} from "react";
 import ActivityViewer from "../../viewer/ActivityViewer.js";
 import {
   useRecoilValue,
@@ -7,12 +7,12 @@ import {
   useSetRecoilState,
   useRecoilValueLoadable,
   useRecoilState
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {
   searchParamAtomFamily,
   profileAtom
 } from "../NewToolRoot.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import axios from "axios";
 import {returnNumberOfActivityVariantsForCid} from "../../_utils/activityUtils.js";
 import {itemByDoenetId, courseIdAtom, useInitCourseItems, useSetCourseIdFromDoenetId} from "../../_reactComponents/Course/CourseActions.js";
 import {activityVariantPanelAtom} from "../../_sharedRecoil/PageViewerRecoil.js";

@@ -1,13 +1,13 @@
-import axios from "../_snowpack/pkg/axios.js";
-import {nanoid} from "../_snowpack/pkg/nanoid.js";
+import axios from "axios";
+import {nanoid} from "nanoid";
 import {
   atom,
   selector,
   atomFamily,
   selectorFamily,
   useRecoilCallback
-} from "../_snowpack/pkg/recoil.js";
-import {Manager} from "../_snowpack/pkg/socket.io-client.js";
+} from "recoil";
+import {Manager} from "socket.io-client";
 import {useToast, toastType} from "../_framework/Toast.js";
 import {
   folderCacheDirtyAtom,

@@ -1,9 +1,9 @@
-import React, {useEffect} from "../../_snowpack/pkg/react.js";
+import React, {useEffect} from "react";
 import useDoenetRender from "./useDoenetRenderer.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import {faComment as thoughtBubble} from "../../_snowpack/pkg/@fortawesome/free-regular-svg-icons.js";
-import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faComment as thoughtBubble} from "@fortawesome/free-regular-svg-icons";
+import VisibilitySensor from "react-visibility-sensor-v2";
+import styled from "styled-components";
 const FeedbackStyling = styled.aside`
   background-color: white;
   margin: 0px 4px 12px 4px;

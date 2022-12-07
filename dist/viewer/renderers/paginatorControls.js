@@ -1,4 +1,4 @@
-import React from "../../_snowpack/pkg/react.js";
+import React from "react";
 import useDoenetRender from "./useDoenetRenderer.js";
 export default React.memo(function PaginatorControls(props) {
   let {name, id, SVs, actions, callAction} = useDoenetRender(props, false);

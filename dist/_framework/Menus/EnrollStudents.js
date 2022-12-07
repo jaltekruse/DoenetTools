@@ -1,7 +1,7 @@
-import React from "../../_snowpack/pkg/react.js";
+import React from "react";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import {searchParamAtomFamily, pageToolViewAtom} from "../NewToolRoot.js";
-import {useSetRecoilState, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import {useSetRecoilState, useRecoilValue} from "recoil";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
 export default function EnrollStudents() {
   const setPageToolView = useSetRecoilState(pageToolViewAtom);

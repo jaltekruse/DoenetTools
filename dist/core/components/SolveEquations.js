@@ -1,5 +1,5 @@
 import InlineComponent from './abstract/InlineComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { normalizeMathExpression, returnNVariables } from '../utils/math.js';
 // import nerdamer from 'nerdamer'
 // import 'nerdamer/Algebra.js'

@@ -1,9 +1,9 @@
-import React, {useEffect, useState, useRef, createContext} from "../../_snowpack/pkg/react.js";
+import React, {useEffect, useState, useRef, createContext} from "react";
 import {sizeToCSS} from "./utils/css.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import me from "../../_snowpack/pkg/math-expressions.js";
-import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
-import cssesc from "../../_snowpack/pkg/cssesc.js";
+import me from "math-expressions";
+import VisibilitySensor from "react-visibility-sensor-v2";
+import cssesc from "cssesc";
 function cesc(s) {
   s = cssesc(s, {isIdentifier: true});
   if (s.slice(0, 2) === "\\#") {
@@ -314,7 +314,8 @@ export default React.memo(function Graph(props) {
         position,
         offset,
         anchorx,
-        strokeColor: "var(--canvastext)"
+        strokeColor: "var(--canvastext)",
+        highlight: false
       };
       if (SVs.ylabelHasLatex) {
         yaxisOptions.label.useMathJax = true;
@@ -430,7 +431,8 @@ export default React.memo(function Graph(props) {
         position,
         offset,
         anchorx,
-        strokeColor: "var(--canvastext)"
+        strokeColor: "var(--canvastext)",
+        highlight: false
       };
       if (SVs.xlabelHasLatex) {
         xaxisOptions.label.useMathJax = true;

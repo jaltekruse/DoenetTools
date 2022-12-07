@@ -1,6 +1,6 @@
-import React from "../../_snowpack/pkg/react.js";
-import Select from "../../_snowpack/pkg/react-select.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import React from "react";
+import Select from "react-select";
+import styled from "styled-components";
 const Container = styled.div`
     display: ${(props) => props.align};
     align-items: center;

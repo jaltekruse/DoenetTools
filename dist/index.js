@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "./_snowpack/pkg/react.js";
-import ReactDOM from "./_snowpack/pkg/react-dom.js";
-import {BrowserRouter as Router, Routes, Route} from "./_snowpack/pkg/react-router-dom.js";
-import {RecoilRoot} from "./_snowpack/pkg/recoil.js";
+import React, {useEffect, useState} from "react";
+import ReactDOM from "react-dom";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import {RecoilRoot} from "recoil";
 import ToolRoot from "./_framework/NewToolRoot.js";
-import {MathJaxContext} from "./_snowpack/pkg/better-react-mathjax.js";
+import {MathJaxContext} from "better-react-mathjax";
 import {mathjaxConfig} from "./core/utils/math.js";
 import DarkmodeController from "./_framework/DarkmodeController.js";
 ReactDOM.render(/* @__PURE__ */ React.createElement(RecoilRoot, null, /* @__PURE__ */ React.createElement(Router, null, /* @__PURE__ */ React.createElement(Routes, null, /* @__PURE__ */ React.createElement(Route, {

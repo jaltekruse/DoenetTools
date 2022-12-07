@@ -1,6 +1,6 @@
 import BooleanComponent from './Boolean.js';
 import { numberToLetters } from '../utils/sequence.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 
 export default class MatchesPattern extends BooleanComponent {
   static componentType = "matchesPattern";

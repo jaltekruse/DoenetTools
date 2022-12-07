@@ -1,9 +1,9 @@
-import React, {useEffect} from "../../_snowpack/pkg/react.js";
+import React, {useEffect} from "react";
 import useDoenetRender from "./useDoenetRenderer.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import {faPuzzlePiece as puzzle} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPuzzlePiece as puzzle} from "@fortawesome/free-solid-svg-icons";
+import VisibilitySensor from "react-visibility-sensor-v2";
+import styled from "styled-components";
 import P from "../../core/components/P.js";
 const SpanStyling = styled.span`
 // display: block;

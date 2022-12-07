@@ -1,5 +1,5 @@
-import React from "../../_snowpack/pkg/react.js";
-import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import React from "react";
+import {useRecoilValue} from "recoil";
 import {AssignmentSettings} from "./SelectedActivity.js";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {courseIdAtom} from "../../_reactComponents/Course/CourseActions.js";

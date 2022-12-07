@@ -1,6 +1,6 @@
 import BlockComponent from './abstract/BlockComponent.js';
 import { orderedPercentWidthMidpoints, orderedWidthMidpoints, widthsBySize, sizePossibilities, widthFractions, percentWidthsBySize } from '../utils/size.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { returnSelectedStyleStateVariableDefinition } from '../utils/style.js';
 
 export default class Image extends BlockComponent {
@@ -97,10 +97,10 @@ export default class Image extends BlockComponent {
       createComponentOfType: "point",
     }
 
-    attributes.anchorPosition = {
+    attributes.positionFromAnchor = {
       createComponentOfType: "text",
-      createStateVariable: "anchorPosition",
-      defaultValue: "upperleft",
+      createStateVariable: "positionFromAnchor",
+      defaultValue: "center",
       public: true,
       forRenderer: true,
       toLowerCase: true,

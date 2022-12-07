@@ -1,7 +1,7 @@
-import axios from "../../_snowpack/pkg/axios.js";
-import {set} from "../../_snowpack/pkg/lodash.js";
-import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
-import {useRecoilValue, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
+import axios from "axios";
+import {set} from "lodash";
+import React, {useEffect, useState} from "react";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import ButtonGroup from "../../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
 import {

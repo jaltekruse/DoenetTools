@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useRef} from "../../_snowpack/pkg/react.js";
+import React, {useContext, useEffect, useRef} from "react";
 import useDoenetRender from "./useDoenetRenderer.js";
 import {BoardContext} from "./graph.js";
-import me from "../../_snowpack/pkg/math-expressions.js";
-import {MathJax} from "../../_snowpack/pkg/better-react-mathjax.js";
+import me from "math-expressions";
+import {MathJax} from "better-react-mathjax";
 export default React.memo(function Line(props) {
   let {name, id, SVs, actions, callAction} = useDoenetRender(props);
   Line.ignoreActionsWithoutCore = true;

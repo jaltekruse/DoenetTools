@@ -1,8 +1,8 @@
 import { normalizeIndex } from '../utils/table.js';
 import BlockComponent from './abstract/BlockComponent.js';
 import { textToAst } from '../utils/math.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
-import { HyperFormula } from '../../_snowpack/pkg/hyperformula.js';
+import me from 'math-expressions';
+import { HyperFormula } from 'hyperformula';
 
 
 export default class Spreadsheet extends BlockComponent {

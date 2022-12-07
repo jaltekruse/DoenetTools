@@ -1,10 +1,10 @@
-import React from "../../_snowpack/pkg/react.js";
+import React from "react";
 import {
   atom,
   useRecoilValue,
   useRecoilValueLoadable,
   useRecoilCallback
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {itemHistoryAtom} from "../ToolHandlers/CourseToolHandler.js";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
@@ -15,8 +15,8 @@ import {
   RenameVersionControl,
   fileByContentId
 } from "../ToolHandlers/CourseToolHandler.js";
-import {nanoid} from "../../_snowpack/pkg/nanoid.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import {nanoid} from "nanoid";
+import axios from "axios";
 import {useToast, toastType} from "../Toast.js";
 import {folderDictionary} from "../../_reactComponents/Drive/NewDrive.js";
 import {editorSaveTimestamp} from "../ToolPanels/DoenetMLEditor.js";

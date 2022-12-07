@@ -1,5 +1,5 @@
-import React from "../../_snowpack/pkg/react.js";
-import {useRecoilState, useSetRecoilState} from "../../_snowpack/pkg/recoil.js";
+import React from "react";
+import {useRecoilState, useSetRecoilState} from "recoil";
 import Increment from "../../_reactComponents/PanelHeaderComponents/IncrementMenu.js";
 import {activityVariantPanelAtom} from "../../_sharedRecoil/PageViewerRecoil.js";
 import {pageToolViewAtom} from "../NewToolRoot.js";

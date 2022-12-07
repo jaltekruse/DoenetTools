@@ -1,13 +1,13 @@
-import React, {useEffect, useMemo} from "../../_snowpack/pkg/react.js";
+import React, {useEffect, useMemo} from "react";
 import {
   useRecoilCallback,
   useSetRecoilState,
   useRecoilState,
   useRecoilValue
-} from "../../_snowpack/pkg/recoil.js";
-import {useTransition, a} from "../../_snowpack/pkg/@react-spring/web.js";
-import useMeasure from "../../_snowpack/pkg/react-use-measure.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+} from "recoil";
+import {useTransition, a} from "@react-spring/web";
+import useMeasure from "react-use-measure";
+import styled from "styled-components";
 import {selectedMenuPanelAtom} from "../Panels/NewMenuPanel.js";
 import {drivecardSelectedNodesAtom} from "../ToolHandlers/CourseToolHandler.js";
 import {pageToolViewAtom} from "../NewToolRoot.js";
@@ -15,7 +15,7 @@ import DriveCard from "../../_reactComponents/Drive/DoenetDriveCard.js";
 import {coursePermissionsAndSettings} from "../../_reactComponents/Course/CourseActions.js";
 import {mainPanelClickAtom} from "../Panels/NewMainPanel.js";
 import useMedia from "./useMedia.js";
-import "./driveCardsStyle.css.proxy.js";
+import "./driveCardsStyle.css";
 const DriveCardFocus = styled.div`
   border-radius: 5px;
   padding-right: 4px;

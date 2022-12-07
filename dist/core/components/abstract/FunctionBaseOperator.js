@@ -1,5 +1,5 @@
 import Function from '../Function.js';
-import me from '../../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { returnNumericalFunctionFromFormula, returnSymbolicFunctionFromFormula } from '../../utils/function.js';
 
 export default class FunctionOperator extends Function {

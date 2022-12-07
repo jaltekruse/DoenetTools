@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import React, {useEffect, useState} from "react";
 import {find_image_label, find_color_label} from "./util.js";
-import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import {useRecoilValue} from "recoil";
 import {
   courseIdAtom,
   coursePermissionsAndSettingsByCourseId

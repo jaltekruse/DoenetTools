@@ -1,5 +1,5 @@
 import InlineComponent from './abstract/InlineComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { returnBreakStringsIntoComponentTypeBySpaces, returnGroupIntoComponentTypeSeparatedBySpaces } from './commonsugar/lists.js';
 import { convertValueToMathExpression, roundForDisplay } from '../utils/math.js';
 

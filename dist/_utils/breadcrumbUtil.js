@@ -3,7 +3,7 @@ import {
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
-} from '../_snowpack/pkg/recoil.js';
+} from 'recoil';
 import { pageToolViewAtom } from '../_framework/NewToolRoot.js';
 import { effectivePermissionsByCourseId } from '../_reactComponents/PanelHeaderComponents/RoleDropdown.js';
 import {

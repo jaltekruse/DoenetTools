@@ -1,6 +1,6 @@
-import React from "../../_snowpack/pkg/react.js";
-import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import React from "react";
+import {useRecoilValue} from "recoil";
+import styled from "styled-components";
 import {coursePermissionsAndSettingsByCourseId} from "../../_reactComponents/Course/CourseActions.js";
 import {
   AddRole,

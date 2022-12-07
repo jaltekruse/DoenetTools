@@ -1,9 +1,9 @@
-import React, {useRef, useEffect} from "../../_snowpack/pkg/react.js";
+import React, {useRef, useEffect} from "react";
 import useDoenetRender from "./useDoenetRenderer.js";
 import {sizeToCSS} from "./utils/css.js";
-import cssesc from "../../_snowpack/pkg/cssesc.js";
-import VisibilitySensor from "../../_snowpack/pkg/react-visibility-sensor-v2.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import cssesc from "cssesc";
+import VisibilitySensor from "react-visibility-sensor-v2";
+import styled from "styled-components";
 const VideoStyling = styled.div`
 &: focus {
   outline: 2px solid var(--mainBlue);

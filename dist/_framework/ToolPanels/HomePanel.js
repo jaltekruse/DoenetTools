@@ -1,8 +1,8 @@
-import React from "../../_snowpack/pkg/react.js";
-import {useNavigate} from "../../_snowpack/pkg/react-router-dom.js";
-import Cookies from "../../_snowpack/pkg/js-cookie.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
-import "./homepage.css.proxy.js";
+import React from "react";
+import {useNavigate} from "react-router-dom";
+import Cookies from "js-cookie";
+import styled from "styled-components";
+import "./homepage.css";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import DoenetDriveCard from "../../_reactComponents/Drive/DoenetDriveCard.js";
 const Headings = styled.h1`

@@ -1,8 +1,8 @@
-import React from "../../_snowpack/pkg/react.js";
-import {nanoid} from "../../_snowpack/pkg/nanoid.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import React from "react";
+import {nanoid} from "nanoid";
+import axios from "axios";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
-import {useSetRecoilState, useRecoilValue, useRecoilState} from "../../_snowpack/pkg/recoil.js";
+import {useSetRecoilState, useRecoilValue, useRecoilState} from "recoil";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {enrolllearnerAtom, peopleTableDataAtom, processAtom} from "./LoadPeople.js";
 export default function ManualEnrollment(props) {

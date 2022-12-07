@@ -1,6 +1,6 @@
-import React, {useState} from "../../_snowpack/pkg/react.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
-import {MathJax} from "../../_snowpack/pkg/better-react-mathjax.js";
+import React, {useState} from "react";
+import styled from "styled-components";
+import {MathJax} from "better-react-mathjax";
 const ButtonStyling = styled.button`
   margin: ${(props) => props.theme.margin};
   height: 24px;

@@ -1,22 +1,23 @@
-import React, {useEffect, useRef, useState} from "../_snowpack/pkg/react.js";
+import React, {useEffect, useRef, useState} from "react";
 import {retrieveTextFileForCid} from "../core/utils/retrieveTextFile.js";
 import PageViewer, {scrollableContainerAtom} from "./PageViewer.js";
-import {FontAwesomeIcon} from "../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import {faExclamationCircle} from "../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import axios from "../_snowpack/pkg/axios.js";
-import {get as idb_get, set as idb_set} from "../_snowpack/pkg/idb-keyval.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import {get as idb_get, set as idb_set} from "idb-keyval";
 import {cidFromText} from "../core/utils/cid.js";
 import {useToast, toastType} from "../_framework/Toast.js";
-import {nanoid} from "../_snowpack/pkg/nanoid.js";
+import {nanoid} from "nanoid";
 import {calculateOrderAndVariants, parseActivityDefinition} from "../_utils/activityUtils.js";
-import VisibilitySensor from "../_snowpack/pkg/react-visibility-sensor-v2.js";
-import {useLocation, useNavigate} from "../_snowpack/pkg/react-router.js";
-import cssesc from "../_snowpack/pkg/cssesc.js";
-import {atom, useRecoilCallback, useRecoilState, useSetRecoilState} from "../_snowpack/pkg/recoil.js";
+import VisibilitySensor from "react-visibility-sensor-v2";
+import {useLocation, useNavigate} from "react-router";
+import cssesc from "cssesc";
+import {atom, useRecoilCallback, useRecoilState, useSetRecoilState} from "recoil";
 import Button from "../_reactComponents/PanelHeaderComponents/Button.js";
 import ActionButton from "../_reactComponents/PanelHeaderComponents/ActionButton.js";
 import ButtonGroup from "../_reactComponents/PanelHeaderComponents/ButtonGroup.js";
 import {pageToolViewAtom} from "../_framework/NewToolRoot.js";
+import {clear as idb_clear} from "idb-keyval";
 export const saveStateToDBTimerIdAtom = atom({
   key: "saveStateToDBTimerIdAtom",
   default: null
@@ -747,6 +748,7 @@ export default function ActivityViewer(props) {
     await saveState({overrideThrottle: true});
     if (!activityInfo.canViewAfterCompleted) {
       console.log("CLEAR state from viewer and cache");
+      idb_clear();
     }
     let resp = await axios.get("/api/saveCompleted.php", {
       params: {doenetId: props.doenetId, isCompleted: true}
@@ -955,7 +957,7 @@ export default function ActivityViewer(props) {
   if (props.showFinishButton) {
     if (finishAssessmentMessageOpen) {
       finishAssessmentPrompt = /* @__PURE__ */ React.createElement("div", {
-        style: {border: "var(--mainBorder)", borderRadius: "var(--mainBorderRadius)", padding: "5px", margin: "5px", display: "flex", flexFlow: "column wrap"}
+        style: {marginLeft: "1px", marginRight: "5px", marginBottom: "5px", marginTop: "80px", border: "var(--mainBorder)", borderRadius: "var(--mainBorderRadius)", padding: "5px", display: "flex", flexFlow: "column wrap"}
       }, /* @__PURE__ */ React.createElement("div", {
         style: {display: "flex", justifyContent: "center", padding: "5px"}
       }, "Are you sure you want to finish this assessment?"), /* @__PURE__ */ React.createElement("div", {
@@ -974,12 +976,17 @@ export default function ActivityViewer(props) {
       }))));
     } else {
       finishAssessmentPrompt = /* @__PURE__ */ React.createElement("div", {
-        style: {marginLeft: "1px", marginRight: "5px", marginBottom: "5px", marginTop: "5px"}
+        style: {marginLeft: "1px", marginRight: "5px", marginBottom: "5px", marginTop: "80px"}
+      }, /* @__PURE__ */ React.createElement("div", {
+        "data-test": "centerone",
+        style: {display: "flex", justifyContent: "center"}
+      }, /* @__PURE__ */ React.createElement("div", {
+        style: {width: "240px"}
       }, /* @__PURE__ */ React.createElement(ActionButton, {
         onClick: () => setFinishAssessmentMessageOpen(true),
         "data-test": "FinishAssessmentPrompt",
         value: "Finish assessment"
-      }));
+      }))));
     }
   }
   return /* @__PURE__ */ React.createElement("div", {

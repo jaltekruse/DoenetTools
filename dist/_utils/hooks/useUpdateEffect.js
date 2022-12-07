@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "../../_snowpack/pkg/react.js";
+import {useEffect, useRef} from "react";
 export default function useUpdateEffect(callback, dependencies) {
   const firstRenderRef = useRef(true);
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "../../_snowpack/pkg/react.js";
+import React, {useEffect, useRef, useState} from "react";
 import PageViewer, {scrollableContainerAtom} from "../../viewer/PageViewer.js";
 import useEventListener from "../../_utils/hooks/useEventListener.js";
 import {
@@ -6,14 +6,14 @@ import {
   useRecoilCallback,
   useRecoilState,
   useSetRecoilState
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
 import {findFirstPageOfActivity} from "../../_reactComponents/Course/CourseActions.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import axios from "axios";
 import {retrieveTextFileForCid} from "../../core/utils/retrieveTextFile.js";
 import {parseActivityDefinition} from "../../_utils/activityUtils.js";
 import {editorPageIdInitAtom, editorViewerErrorStateAtom, refreshNumberAtom, textEditorDoenetMLAtom, updateTextEditorDoenetMLAtom, viewerDoenetMLAtom} from "../../_sharedRecoil/EditorViewerRecoil.js";
-import {useLocation} from "../../_snowpack/pkg/react-router.js";
+import {useLocation} from "react-router";
 import {pageVariantInfoAtom, pageVariantPanelAtom} from "../../_sharedRecoil/PageViewerRecoil.js";
 import {useUpdateViewer} from "./EditorViewer.js";
 export default function EditorViewer() {

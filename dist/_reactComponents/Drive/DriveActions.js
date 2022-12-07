@@ -1,4 +1,4 @@
-import {useRecoilCallback} from "../../_snowpack/pkg/recoil.js";
+import {useRecoilCallback} from "recoil";
 import {
   folderDictionaryFilterSelector,
   globalSelectedNodesAtom,

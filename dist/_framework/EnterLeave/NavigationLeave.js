@@ -1,5 +1,5 @@
 import {selectedMenuPanelAtom} from "../Panels/NewMenuPanel.js";
-import {useRecoilCallback} from "../../_snowpack/pkg/recoil.js";
+import {useRecoilCallback} from "recoil";
 import {itemByDoenetId, copiedCourseItems, cutCourseItems, selectedCourseItems} from "../../_reactComponents/Course/CourseActions.js";
 export default function NavigationLeave() {
   const clearSelections = useRecoilCallback(({set, snapshot}) => async () => {

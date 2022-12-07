@@ -1,5 +1,5 @@
 import BlockComponent from './abstract/BlockComponent.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 import { roundForDisplay } from '../utils/math.js';
 
 export default class SummaryStatistics extends BlockComponent {

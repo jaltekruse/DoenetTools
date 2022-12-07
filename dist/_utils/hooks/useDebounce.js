@@ -1,4 +1,4 @@
-import {useEffect} from "../../_snowpack/pkg/react.js";
+import {useEffect} from "react";
 import useTimeout from "./useTimeout.js";
 export default function useDebounce(callback, delay, dependencies) {
   const {reset, clear} = useTimeout(callback, delay);

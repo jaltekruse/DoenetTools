@@ -1,4 +1,4 @@
-import {useCallback, useState, useEffect} from "../../_snowpack/pkg/react.js";
+import {useCallback, useState, useEffect} from "react";
 export function useLocalStorage(key, defaultValue) {
   return useStorage(key, defaultValue, window.localStorage);
 }

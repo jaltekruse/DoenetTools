@@ -1,6 +1,6 @@
 import checkEquality from '../utils/checkEquality.js';
 import BooleanComponent from './Boolean.js';
-import me from '../../_snowpack/pkg/math-expressions.js';
+import me from 'math-expressions';
 
 export default class HasSameFactoring extends BooleanComponent {
   static componentType = "hasSameFactoring";

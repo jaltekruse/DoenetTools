@@ -1,4 +1,4 @@
-import React, {useState, lazy, Suspense, useRef, useEffect} from "../_snowpack/pkg/react.js";
+import React, {useState, lazy, Suspense, useRef, useEffect} from "react";
 import {
   atom,
   selector,
@@ -7,17 +7,17 @@ import {
   useRecoilCallback,
   useRecoilState,
   useSetRecoilState
-} from "../_snowpack/pkg/recoil.js";
-import styled, {keyframes} from "../_snowpack/pkg/styled-components.js";
+} from "recoil";
+import styled, {keyframes} from "styled-components";
 import Toast from "./Toast.js";
 import ContentPanel, {panelsInfoAtom} from "./Panels/NewContentPanel.js";
-import axios from "../_snowpack/pkg/axios.js";
+import axios from "axios";
 import MainPanel from "./Panels/NewMainPanel.js";
 import SupportPanel from "./Panels/NewSupportPanel.js";
 import MenuPanel from "./Panels/NewMenuPanel.js";
 import FooterPanel from "./Panels/FooterPanel.js";
-import {animated} from "../_snowpack/pkg/@react-spring/web.js";
-import {useNavigate, useLocation} from "../_snowpack/pkg/react-router.js";
+import {animated} from "@react-spring/web";
+import {useNavigate, useLocation} from "react-router";
 const ToolContainer = styled(animated.div)`
   display: grid;
   grid-template:
@@ -290,6 +290,8 @@ let navigationObj = {
       menusInitOpen: [true],
       headerControls: [],
       displaySettings: false,
+      hasNoMenuPanel: true,
+      hasNoHeaderPanel: true,
       waitForMenuSuppression: true,
       footer: {height: 250, open: false, component: "MathInputKeyboard"}
     },

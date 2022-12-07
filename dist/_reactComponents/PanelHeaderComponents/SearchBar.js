@@ -1,7 +1,7 @@
-import React, {useState, useRef, useEffect, useLayoutEffect} from "../../_snowpack/pkg/react.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
-import {faSearch, faTimes} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import React, {useState, useRef, useEffect, useLayoutEffect} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSearch, faTimes} from "@fortawesome/free-solid-svg-icons";
+import styled from "styled-components";
 const SearchBar = styled.input`
     margin: 0px -${(props) => props.inputWidth}px 0px 0px;
     height: 24px;

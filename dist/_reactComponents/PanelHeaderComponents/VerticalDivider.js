@@ -1,4 +1,4 @@
-import React from "../../_snowpack/pkg/react.js";
+import React from "react";
 export default function VerticalDivider(props) {
   const verticalHeaderDivider = {
     borderRadius: "var(--mainBorderRadius)",

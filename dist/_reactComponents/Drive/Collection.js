@@ -1,17 +1,17 @@
-import React, {useContext, useEffect, useRef} from "../../_snowpack/pkg/react.js";
+import React, {useContext, useEffect, useRef} from "react";
 import {
   useRecoilState,
   useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState
-} from "../../_snowpack/pkg/recoil.js";
+} from "recoil";
 import {
   faChevronDown,
   faChevronRight,
   faCode,
   faLayerGroup
-} from "../../_snowpack/pkg/@fortawesome/free-solid-svg-icons.js";
-import {FontAwesomeIcon} from "../../_snowpack/pkg/@fortawesome/react-fontawesome.js";
+} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Draggable from "../Draggable/index.js";
 import {DropTargetsContext, WithDropTarget} from "../DropTarget/index.js";
 import useSockets, {itemType} from "../Sockets.js";
@@ -32,7 +32,7 @@ import {
   sortOptions,
   useDnDCallbacks
 } from "./NewDrive.js";
-import {useState} from "../../_snowpack/pkg/react.js";
+import {useState} from "react";
 function Collection(props) {
   const itemId = props?.item.itemId;
   const {folderInfo, contentsDictionary, contentIdsArr} = useRecoilValueLoadable(folderInfoSelector({

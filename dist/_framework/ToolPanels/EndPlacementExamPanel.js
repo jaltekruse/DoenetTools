@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
+import React, {useEffect, useState} from "react";
 export default function EndPlacementExamPanel() {
   return /* @__PURE__ */ React.createElement("div", {
     style: {

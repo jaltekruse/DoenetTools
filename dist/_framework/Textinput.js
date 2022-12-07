@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "../_snowpack/pkg/react.js";
-import {useSpring, animated} from "../_snowpack/pkg/@react-spring/web.js";
-import styled from "../_snowpack/pkg/styled-components.js";
+import React, {useState, useEffect} from "react";
+import {useSpring, animated} from "@react-spring/web";
+import styled from "styled-components";
 import {doenetComponentForegroundActive} from "./temp/theme.js";
 const LABELCOLOR = "var(--mainBlue)";
 const FONTFAMILY = "sans-serif";

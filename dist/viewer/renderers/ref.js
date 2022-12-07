@@ -1,13 +1,34 @@
-import React from "../../_snowpack/pkg/react.js";
-import {useLocation, useNavigate} from "../../_snowpack/pkg/react-router.js";
-import {Link} from "../../_snowpack/pkg/react-router-dom.js";
-import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import React from "react";
+import {useLocation, useNavigate} from "react-router";
+import {Link} from "react-router-dom";
+import {useRecoilValue} from "recoil";
 import {pageToolViewAtom} from "../../_framework/NewToolRoot.js";
 import {itemByDoenetId} from "../../_reactComponents/Course/CourseActions.js";
 import {scrollableContainerAtom} from "../PageViewer.js";
 import useDoenetRender from "./useDoenetRenderer.js";
-import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import styled from "styled-components";
+const RefButton = styled.button`
+  position: relative;
+  height: 24px;
+  display: inline-block;
+  color: white;
+  background-color: var(--mainBlue);
+  padding: 2px;
+  border: none;
+  border-radius: var(--mainBorderRadius);
+  cursor: pointer;
+  padding: 1px 6px 1px 6px;
+
+  &:hover {
+    background-color: var(--lightBlue);
+    color: black;
+  };
+
+  &:focus {
+    outline: 2px solid var(--mainBlue);
+    outline-offset: 2px;
+  }
+`;
 export default React.memo(function Ref(props) {
   let {name, id, SVs, children} = useDoenetRender(props);
   const pageToolView = useRecoilValue(pageToolViewAtom);
@@ -87,7 +108,7 @@ export default React.memo(function Ref(props) {
         id
       }, /* @__PURE__ */ React.createElement("a", {
         name: id
-      }), /* @__PURE__ */ React.createElement("button", {
+      }), /* @__PURE__ */ React.createElement(RefButton, {
         id: id + "_button",
         onClick: () => window.location.href = url,
         disabled: SVs.disabled
@@ -97,7 +118,7 @@ export default React.memo(function Ref(props) {
         id
       }, /* @__PURE__ */ React.createElement("a", {
         name: id
-      }), /* @__PURE__ */ React.createElement("button", {
+      }), /* @__PURE__ */ React.createElement(RefButton, {
         id: id + "_button",
         onClick: () => navigate(url),
         disabled: SVs.disabled

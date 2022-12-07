@@ -1,8 +1,8 @@
-import axios from "../../_snowpack/pkg/axios.js";
-import React, {useEffect, useState} from "../../_snowpack/pkg/react.js";
-import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
+import axios from "axios";
+import React, {useEffect, useState} from "react";
+import {useRecoilValue} from "recoil";
 import {searchParamAtomFamily} from "../NewToolRoot.js";
-import styled from "../../_snowpack/pkg/styled-components.js";
+import styled from "styled-components";
 const Line = styled.div`
   border-bottom: 2px solid var(--canvastext);
   height: 2px;

@@ -1,5 +1,5 @@
-import axios from "../../_snowpack/pkg/axios.js";
-import {useRecoilCallback} from "../../_snowpack/pkg/recoil.js";
+import axios from "axios";
+import {useRecoilCallback} from "recoil";
 import {toastType, useToast} from "../../_framework/Toast.js";
 import {fileByPageId} from "../../_reactComponents/Course/CourseActions.js";
 import {textEditorDoenetMLAtom} from "../../_sharedRecoil/EditorViewerRecoil.js";

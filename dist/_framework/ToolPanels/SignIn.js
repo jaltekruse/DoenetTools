@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useRef} from "../../_snowpack/pkg/react.js";
-import Cookies from "../../_snowpack/pkg/js-cookie.js";
-import axios from "../../_snowpack/pkg/axios.js";
+import React, {useState, useEffect, useRef} from "react";
+import Cookies from "js-cookie";
+import axios from "axios";
 import Button from "../../_reactComponents/PanelHeaderComponents/Button.js";
 import Textfield from "../../_reactComponents/PanelHeaderComponents/Textfield.js";
 import {useToast, toastType} from "../Toast.js";

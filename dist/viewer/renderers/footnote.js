@@ -1,4 +1,4 @@
-import React, {useState} from "../../_snowpack/pkg/react.js";
+import React, {useState} from "react";
 import useDoenetRender from "./useDoenetRenderer.js";
 export default React.memo(function Footnote(props) {
   let {name, id, SVs} = useDoenetRender(props, false);
