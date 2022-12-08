@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   dev:
-    image: lyanthropos/doenet_test:snowpack-dev
+    image: lyanthropos/doenet_dev
     ports:
       - 80:80
     volumes:
@@ -15,7 +15,7 @@ services:
       - CYPRESS_CACHE_FOLDER=/home/node/workspace/.cache/Cypress
 
   apache:
-    image: lyanthropos/doenet_test:apache-dev
+    image: lyanthropos/doenet_apache:dev
     ports:
       - 8080:80
     volumes:
@@ -43,7 +43,7 @@ services:
     restart: always
 
   mysql:
-    image: lyanthropos/doenet_test:mysql-dev
+    image: lyanthropos/doenet_mysql:dev
     ports:
       - 3306:3306
     volumes:
