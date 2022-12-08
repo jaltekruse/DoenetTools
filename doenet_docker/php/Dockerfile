@@ -8,5 +8,6 @@ RUN docker-php-ext-install mysqli
 
 WORKDIR /usr/local/apache2/htdocs/api/
 COPY ./src/Api .
+COPY ./src/Api/lti13 /usr/local/apache2/htdocs/
 COPY --from=composer /build/vendor ./vendor
 EXPOSE 9000
