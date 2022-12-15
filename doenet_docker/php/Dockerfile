@@ -2,6 +2,7 @@ FROM composer as composer
 WORKDIR /build
 COPY ./doenet_docker/php/composer.json .
 RUN composer install --ignore-platform-reqs
+RUN ls /build/vendor
 
 FROM php:8.1-fpm
 RUN docker-php-ext-install mysqli

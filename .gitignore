@@ -47,7 +47,7 @@ doenet_docker/volumes/db/*
 
 .eslintrc.js
 
-src/API/vendor
+src/Api/vendor
 
 src/Media/bydoenetid/
 
