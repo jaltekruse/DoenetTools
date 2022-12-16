@@ -26,6 +26,52 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `doenet_local` /*!40100 DEFAULT CHARACT
 USE `doenet_local`;
 
 --
+-- Tables for LTI 1.3
+--
+
+CREATE TABLE `lti13_issuers` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `host` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `client_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auth_login_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auth_token_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `key_set_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `private_key` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kid` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `lti13_deployments` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deployment_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `issuer_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `lti13_deployments_issuer_id_foreign` (`issuer_id`),
+  CONSTRAINT `lti13_deployments_issuer_id_foreign` FOREIGN KEY (`issuer_id`) REFERENCES `lti13_issuers` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `lti13_resource_links` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `resource_link` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deployment_id` bigint(20) unsigned DEFAULT NULL,
+  `created_line_item` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `endpoint` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`endpoint`)),
+  PRIMARY KEY (`id`),
+  KEY `lti13_resource_links_deployment_id_foreign` (`deployment_id`),
+  CONSTRAINT `lti13_resource_links_deployment_id_foreign` FOREIGN KEY (`deployment_id`) REFERENCES `lti13_deployments` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- End of tables for LTI 1.3
+--
+
+--
 -- Table structure for table `activity_state`
 --
 

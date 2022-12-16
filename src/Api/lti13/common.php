@@ -12,6 +12,8 @@ use Packback\Lti1p3\LtiDeployment;
 
 use \Packback\Lti1p3\OidcException;
 
+require_once "../db_connection.php";
+
 class DoenetImsCache implements ICache
 {
 
@@ -89,12 +91,48 @@ class DoenetImsCache implements ICache
     }
 }
 
+function esc($conn, $str) {
+    return mysqli_real_escape_string($conn, $str);
+}
+
 class LTI13Database implements IDatabase {
-    public function findRegistrationByIssuer($iss, $clientId = null) {
-        $registration = LtiRegistration::new()->setAuthLoginUrl('/lti13/launch');
-        return $registration;
+
+    private $conn;
+
+    public function __construct($conn) {
+        $this->conn = $conn;
     }
-    public function findDeployment($iss, $deploymentId, $clientId = null) {
+
+    public function findRegistrationByIssuer($host, $clientId = null) {
+
+        $host = esc($this->conn, $host);
+        $sql = "select * from lti13_issuers where host = '$host'";
+        if ($clientId) {
+            $clientId = esc($this->conn, $clientId);
+            $sql .= " and client_id = '$clientId'";
+        }
+        $result = $this->conn->query($sql);
+
+        if ($result && $result->num_rows > 0) {
+            $result = $result->fetch_assoc();
+
+            //id | created_at | updated_at | host  | client_id | auth_login_url| auth_token_url| key_set_url| private_key| kid 
+            $registration = LtiRegistration::new()
+                ->setAuthLoginUrl($result['auth_login_url'])
+                ->setAuthTokenUrl($result['auth_token_url'])
+                ->setClientId($result['client_id'])
+                ->setKeySetUrl($result['key_set_url'])
+                ->setKid($result['kid'])
+                ->setIssuer($host)
+                ->setToolPrivateKey($result['private_key']);
+            return $registration;
+        } else {
+            echo $this->conn->error;
+            // TODO - throw error?
+        }
+    }
+
+    public function findDeployment($host, $deploymentId, $clientId = null) {
         return LtiDeployment::new()
             ->setDeploymentId(12121212);
     }

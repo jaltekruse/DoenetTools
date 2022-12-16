@@ -13,16 +13,19 @@ use Packback\Lti1p3\LtiDeployment;
 use \Packback\Lti1p3\OidcException;
 require_once "../vendor/autoload.php";
 require_once "./common.php";
+require_once "../db_connection.php";
 
 
 
+/*
 print_r($_POST);
 echo '<br />';
 echo '<br />';
 print_r($_REQUEST);
+*/
 try {
-return LtiOidcLogin::new(new LTI13Database(), new DoenetImsCache(), new ImsCookie())
-->doOidcLoginRedirect("/lti13/launch", $_POST)
+return LtiOidcLogin::new(new LTI13Database($conn), new DoenetImsCache(), new ImsCookie())
+->doOidcLoginRedirect("http://doenetdev.org/lti13/launch", $_POST)
 ->doRedirect();
 } catch (Exception $e) {
     print_r($_POST);
