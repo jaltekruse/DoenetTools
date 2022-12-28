@@ -5,7 +5,7 @@ header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');
 
-include 'db_connection.php';
+include '../db_connection.php';
 
 use \Firebase\JWT\JWT;
 require_once "../vendor/autoload.php";
@@ -26,6 +26,7 @@ if ($email == ''){
 }
 
 if ($success){
+  //echo "an email was set";
   //Check if there is a user with $email
   $sql = "
   SELECT userId
@@ -37,6 +38,7 @@ if ($success){
 
   $result = $conn->query($sql);
     if ($result->num_rows > 0) {
+      //echo " - email matched a user in the database";
       $row = $result->fetch_assoc();
       $dbUserId = $row['userId'];
       $hasDoenetAccount = TRUE;
@@ -59,6 +61,8 @@ if ($success){
     $isHttpOnly = true;
     $expirationTime = -3600;
 
+    $domain = "doenetdev.org";
+    //echo ' - set cookie line 64';
     setcookie("JWT", "", $expirationTime, "/", $domain, $isSecure, $isHttpOnly);
     setcookie("JWT_JS", "", $expirationTime, "/", $domain, $isSecure, false);
   }
@@ -123,7 +127,9 @@ if ($success){
     if ($domain == 'localhost') {
         $isSecure = false;
     }
+    $domain = "doenetdev.org";
     $isHttpOnly = true;
+    //echo ' - set cookie line 130';
     setcookie(
         'JWT',
         $value,
@@ -194,6 +200,7 @@ if ($success){
 
   
 
+/*
 $response_arr = [
   'success' => $success,
   'needToClearOutPreviousUser' => $needToClearOutPreviousUser,
@@ -205,5 +212,8 @@ http_response_code(200);
 
 // make it json format
 echo json_encode($response_arr);
+*/
+
 
 $conn->close();
+header('Location: /#/signin'); //needs to store profile into localstorage
