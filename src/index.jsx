@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import ToolRoot from '../_framework/NewToolRoot';
+import ToolRoot from './Tools/_framework/NewToolRoot';
 import { MathJaxContext } from 'better-react-mathjax';
-import { mathjaxConfig } from '../../Core/utils/math';
-import DarkmodeController from '../_framework/DarkmodeController';
+import { mathjaxConfig } from './Core/utils/math';
+import DarkmodeController from './Tools/_framework/DarkmodeController';
 
 ReactDOM.render(
   <RecoilRoot>
