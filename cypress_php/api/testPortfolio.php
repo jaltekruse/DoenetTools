@@ -3,16 +3,19 @@ include_once("utilities.php");
 
 class Portfolio_Tests extends Unit_Tests {
 
+  private $portfolioCourseId;
+
   function init_tests() {
     include "../api/createPortfolioCourse.php";
     $output = $this->getOutputString();
-    print_r(json_decode($output));
+    $newlyCreatedCourseId = json_decode($output)->portfolioCourseId;
+    error_log($output);
 
-    ob_start( null, 0, PHP_OUTPUT_HANDLER_CLEANABLE | PHP_OUTPUT_HANDLER_REMOVABLE);
-    include "../api/getPortfolioCourseId.php";
-    $this->porfolioCourseId = $this->getOutputString();
-    ob_start( null, 0, PHP_OUTPUT_HANDLER_CLEANABLE | PHP_OUTPUT_HANDLER_REMOVABLE);
-    echo $this->porfolioCourseId;
+    include "../api/getPorfolioCourseId.php";
+    $output = $this->getOutputString();
+    error_log(json_decode($output)->portfolioCourseId);
+    $this->portfolioCourseId = json_decode($output)->portfolioCourseId;
+    assertEquals($this->portfolioCourseId, $newlyCreatedCourseId);
   }
 
 
