@@ -30,7 +30,10 @@ class Unit_Tests {
   function getOutputString() {
     // TODO - hack to get the test output to show in the browser with styles
     header("Content-Type: text/html");
-    return ob_get_clean();
+    $ret = ob_get_clean();
+    //ob_end_clean();
+    ob_start( null, 0, PHP_OUTPUT_HANDLER_CLEANABLE | PHP_OUTPUT_HANDLER_REMOVABLE);
+    return $ret;
   }
 }
 
