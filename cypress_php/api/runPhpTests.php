@@ -1,4 +1,9 @@
 <?php
+
+$key = $ini_array['key'];
+use \Firebase\JWT\JWT;
+require_once "../api/vendor/autoload.php";
+
 include_all_tests(".");
 
 function include_all_tests($folder){
@@ -28,12 +33,21 @@ $old_error_handler = set_error_handler("myErrorHandler");
 
 //$unit_test_classes[0]->init_tests();
 
-ob_start();
-header("Content-Type: text/html");
-echo "<html>";
+ob_start( null, 0, PHP_OUTPUT_HANDLER_CLEANABLE | PHP_OUTPUT_HANDLER_REMOVABLE);
+
+$_REQUEST['userId'] = 'cyuserid';
+$payload = [
+    // "email" => $emailaddress,
+    'userId' => 'cyuserid',
+    'deviceName' => "does this matter?",
+    // "expires" => $expirationTime
+];
+$jwt = JWT::encode($payload, $key);
+$value = $jwt;
 
 foreach ($unit_test_classes as $unit_tests) {
     $reflection = new ReflectionClass($unit_tests);
+    ob_start( null, 0, PHP_OUTPUT_HANDLER_CLEANABLE | PHP_OUTPUT_HANDLER_REMOVABLE);
     $unit_tests->init_tests();
     foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
         if ($method->class == $reflection->getName()) {
