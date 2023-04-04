@@ -1,8 +1,10 @@
 <?php
+include_once '../api/db_connection.php';
 
-$key = $ini_array['key'];
 use \Firebase\JWT\JWT;
 require_once "../api/vendor/autoload.php";
+$key = $ini_array['key'];
+error_log("key: " . $key);
 
 include_all_tests(".");
 
@@ -13,21 +15,18 @@ function include_all_tests($folder){
     }
 }
 
-$unit_test_classes = array(
-  new Portfolio_Tests()
-);
+$unit_test_classes = array();
 
 // TODO - this currently isn't working, not sure how to access classes declared in
 // an included script file, going to explicitly run the project specific tests seprately
 // for now
-/*
+
 foreach( get_declared_classes() as $class ) {
-    if ($class instanceof Unit_Tests) {
-      $unit_test_classes[] = $class;
-      echo $class;
+    if (in_array('Unit_Tests', class_parents($class))) {
+      $unit_test_classes[] = new $class;
     }
 }
-*/
+
 
 $old_error_handler = set_error_handler("myErrorHandler");
 
@@ -43,16 +42,22 @@ $payload = [
     // "expires" => $expirationTime
 ];
 $jwt = JWT::encode($payload, $key);
-$value = $jwt;
+$_COOKIE['JWT'] = $jwt;
 
 foreach ($unit_test_classes as $unit_tests) {
     $reflection = new ReflectionClass($unit_tests);
+    try {
+        $unit_tests->init();
+    } catch (Exception $ex){
+        echo '<span style="color:red">Error in test init() method</span><br>';
+        echo $ex->getMessage() . "<br>\n";
+    }
     ob_start( null, 0, PHP_OUTPUT_HANDLER_CLEANABLE | PHP_OUTPUT_HANDLER_REMOVABLE);
-    $unit_tests->init_tests();
     foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
         if ($method->class == $reflection->getName()) {
             if ( strpos($method->name, 'test') !== FALSE) {
                 echo "<b>Running test: " . $method->name . "</b><br>\n";
+                error_log("<b>Running test: " . $method->name . "</b><br>\n");
                 $name = $method->name;
                 try {
                     ob_start( null, 0, PHP_OUTPUT_HANDLER_CLEANABLE | PHP_OUTPUT_HANDLER_REMOVABLE);
@@ -80,7 +85,8 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
     $file_name = $file_parts[count($file_parts) - 1];
     switch ($errno) {
         case E_USER_WARNING:    echo "<b>WARNING</b> [$errno] $errstr<br />\n";  break;
-        case E_USER_NOTICE:     echo "<b>NOTICE</b> [$errno] $errstr<br />\n";   break;
+        case E_NOTICE:          echo "<b>NOTICE</b> [$errno] $errstr<br />\n";   break;
+        case E_USER_NOTICE:     echo "<b>USER_NOTICE</b> [$errno] $errstr<br />\n";   break;
         case E_WARNING:         echo "Assert failed - " . $file_name . " (" . $errline . ") - " . $errstr . "<br>\n"; break;
         default:                echo "Unknown error type: [$errno] in file: " . $file_name . " (" . $errline . ") - " . $errstr . "<br>\n"; break;
     }
