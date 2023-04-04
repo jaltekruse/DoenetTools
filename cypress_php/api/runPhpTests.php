@@ -84,11 +84,11 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
     $file_parts = explode('/', $errfile);
     $file_name = $file_parts[count($file_parts) - 1];
     switch ($errno) {
-        case E_USER_WARNING:    echo "<b>WARNING</b> [$errno] $errstr<br />\n";  break;
-        case E_NOTICE:          echo "<b>NOTICE</b> [$errno] $errstr<br />\n";   break;
-        case E_USER_NOTICE:     echo "<b>USER_NOTICE</b> [$errno] $errstr<br />\n";   break;
-        case E_WARNING:         echo "Assert failed - " . $file_name . " (" . $errline . ") - " . $errstr . "<br>\n"; break;
-        default:                echo "Unknown error type: [$errno] in file: " . $file_name . " (" . $errline . ") - " . $errstr . "<br>\n"; break;
+        case E_USER_WARNING:    error_log("<b>WARNING</b> [$errno] $errstr<br />\n");  break;
+        case E_NOTICE:          error_log("<b>NOTICE</b> [$errno] $errstr<br />\n");   break;
+        case E_USER_NOTICE:     error_log("<b>USER_NOTICE</b> [$errno] $errstr<br />\n");   break;
+        case E_WARNING:         error_log("Assert failed - " . $file_name . " (" . $errline . ") - " . $errstr . "<br>\n"); break;
+        default:                error_log("Unknown error type: [$errno] in file: " . $file_name . " (" . $errline . ") - " . $errstr . "<br>\n"); break;
     }
     /* Do execute PHP internal error handler */
     return false;
