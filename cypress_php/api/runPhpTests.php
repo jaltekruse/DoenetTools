@@ -1,10 +1,13 @@
 <?php
 include_once '../api/db_connection.php';
 
+// save this connection under a different name, as other scripts will initialize
+// a db connection under this default name when they include db_connection.php
+$db_conn = $conn;
+
 use \Firebase\JWT\JWT;
 require_once "../api/vendor/autoload.php";
 $key = $ini_array['key'];
-error_log("key: " . $key);
 
 include_all_tests(".");
 
@@ -47,7 +50,7 @@ $_COOKIE['JWT'] = $jwt;
 foreach ($unit_test_classes as $unit_tests) {
     $reflection = new ReflectionClass($unit_tests);
     try {
-        $unit_tests->init();
+        $unit_tests->init($db_conn);
     } catch (Exception $ex){
         echo '<span style="color:red">Error in test init() method</span><br>';
         echo $ex->getMessage() . "<br>\n";
@@ -68,6 +71,7 @@ foreach ($unit_test_classes as $unit_tests) {
                 } catch (Exception $ex){
                     echo '<span style="color:red">Test Failure: </span><br>';
                     echo $ex->getMessage() . "<br>\n";
+                    echo nl2br($ex->getTraceAsString()) . "<br>\n";
                 }
             }
         }
