@@ -1,7 +1,7 @@
 <?php
 
 function assertEquals($expected, $actual, $message = "") {
-  if ($expected != $actual) {
+  if ($expected !== $actual) {
       $ret = "";
       $ret .= "Error: expected value <br>'";
       $ret .= print_r($expected, TRUE);
@@ -15,8 +15,10 @@ function assertEquals($expected, $actual, $message = "") {
 
 
 class Unit_Tests {
+  protected $db_conn;
 
-  function init() {
+  function init($db_conn) {
+    $this->db_conn = $db_conn;
   }
 
   function runScript($scriptFile) {
@@ -45,6 +47,14 @@ class Unit_Tests {
   function runScriptExpectUnparsableOutput($scriptFile) {
     include $scriptFile;
     return $this->getOutputString();
+  }
+
+  function checkSqlRows($expectedRows, $sql) {
+    $result = $this->db_conn->query($sql);
+    if (!$result) {
+      throw new Exception($this->db_conn->error);
+    }
+    assertEquals($expectedRows, $result->num_rows);
   }
 
   function expectOutputString($expected, $message="") {
