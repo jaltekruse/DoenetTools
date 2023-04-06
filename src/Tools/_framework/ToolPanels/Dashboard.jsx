@@ -36,7 +36,8 @@ export default function Dashboard(props) {
   let profile = loadProfile.contents;
 
   useEffect(() => {
-    setSuppressMenus(canModifyCourseSettings === '1' ? [] : ['ClassTimes']);
+    console.log("set setSuppressMenus - canModifyCourseSettings", canModifyCourseSettings);
+    setSuppressMenus(canModifyCourseSettings === '1' ? [] : null);
   }, [canModifyCourseSettings, setSuppressMenus]);
 
 

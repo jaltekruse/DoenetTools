@@ -721,6 +721,7 @@ export default function Next7Days({ courseId }) {
       </div>
 
       <table style={{ width: '850px', borderSpacing: '0em .2em' }}>
+        <tbody>
         <tr>
           <th
             style={{
@@ -786,6 +787,7 @@ export default function Next7Days({ courseId }) {
         {pinnedRows}
         {overdueRows}
         {dayRows}
+        </tbody>
       </table>
     </>
   );

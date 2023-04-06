@@ -5,7 +5,7 @@ RUN composer install --ignore-platform-reqs
 
 FROM php:7.4-fpm
 RUN  apt-get update -y && \
-     apt-get dist-upgrade -y
+    apt-get dist-upgrade -y
 RUN apt-get install -y p7zip \
     p7zip-full \
     unace \

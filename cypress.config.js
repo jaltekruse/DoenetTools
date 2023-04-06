@@ -24,6 +24,7 @@ module.exports = defineConfig({
   numTestsKeptInMemory: 20,
   defaultCommandTimeout: 30000,
   e2e: {
+    experimentalStudio: true,
     setupNodeEvents(on, config) {
       on('before:browser:launch', (browser = {}, launchOptions) => {
 

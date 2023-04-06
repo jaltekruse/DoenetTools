@@ -174,6 +174,8 @@ export default function ToolRoot() {
 
   let MainPanelKey = `${toolRootMenusAndPanels.pageName}-${toolRootMenusAndPanels.currentMainPanel}`;
 
+  console.log('toolRootMenusAndPanels.currentMainPanel', toolRootMenusAndPanels.currentMainPanel);
+
   mainPanel = (
     <Suspense
       key={MainPanelKey}
@@ -927,9 +929,17 @@ function RootController(props) {
     lastSuppressMenu.current,
   );
   lastSuppressMenu.current = suppressMenus;
+  console.log("$$$$$$$$$$$$$$------------------$$$$$$");
+  console.log('isSuppressMenuChange', isSuppressMenuChange);
+  console.log('suppressMenus', suppressMenus);
+  console.log('nextMenusAndPanels', nextMenusAndPanels);
+  console.log(isSuppressMenuChange && suppressMenus !== null);
+  console.log('navigationObj', navigationObj);
+  console.log('recoilPageToolView', recoilPageToolView);
 
   //Suppression
   if (isSuppressMenuChange && suppressMenus !== null) {
+    console.log("WAT in if block");
     nextMenusAndPanels = {
       ...navigationObj[recoilPageToolView.page][recoilPageToolView.tool],
     };
