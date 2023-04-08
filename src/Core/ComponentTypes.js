@@ -48,6 +48,7 @@ import Polyline from './components/Polyline';
 import Polygon from './components/Polygon';
 import Triangle from './components/Triangle';
 import Rectangle from './components/Rectangle';
+import RegularPolygon from './components/RegularPolygon';
 import Circle from './components/Circle';
 import Parabola from './components/Parabola';
 import Curve from './components/Curve';
@@ -82,6 +83,7 @@ import Map from './components/Map';
 import Sources from './components/Sources';
 import Slider from './components/Slider';
 import Markers from './components/Markers';
+import Pegboard from './components/Pegboard';
 import Constraints from './components/Constraints';
 import ConstrainToGrid from './components/ConstrainToGrid';
 import ConstrainToGraph from './components/ConstrainToGraph';
@@ -227,6 +229,7 @@ const componentTypeArray = [
   Polygon,
   Triangle,
   Rectangle,
+  RegularPolygon,
   Circle,
   Parabola,
   Curve,
@@ -258,6 +261,7 @@ const componentTypeArray = [
   Markers,
   Panel,
   Map, Sources,
+  Pegboard,
   Constraints,
   ConstrainToGrid,
   ConstrainToGraph,

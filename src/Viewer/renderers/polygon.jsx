@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import useDoenetRender from './useDoenetRenderer';
-import { BoardContext } from './graph';
+import { BoardContext, LINE_LAYER_OFFSET, VERTEX_LAYER_OFFSET } from './graph';
 
 
 export default React.memo(function Polygon(props) {
@@ -45,21 +45,23 @@ export default React.memo(function Polygon(props) {
     }
 
     let fixed = !SVs.draggable || SVs.fixed;
+    let verticesFixed = !SVs.verticesDraggable || SVs.fixed;
 
     jsxPointAttributes.current = {
       fillColor: 'none',
       strokeColor: 'none',
       highlightStrokeColor: 'none',
       highlightFillColor: getComputedStyle(document.documentElement).getPropertyValue("--mainGray"),
-      visible: !fixed && !SVs.hidden,
+      visible: !verticesFixed && !SVs.hidden,
       withLabel: false,
-      layer: 10 * SVs.layer + 9,
+      layer: 10 * SVs.layer + VERTEX_LAYER_OFFSET,
+      highlight: true,
     };
 
     let jsxBorderAttributes = {
       highlight: false,
       visible: !SVs.hidden,
-      layer: 10 * SVs.layer + 8,
+      layer: 10 * SVs.layer + LINE_LAYER_OFFSET,
       fixed: true,
       strokeColor: SVs.selectedStyle.lineColor,
       strokeOpacity: SVs.selectedStyle.lineOpacity,
@@ -77,7 +79,7 @@ export default React.memo(function Polygon(props) {
       visible: !SVs.hidden,
       withLabel: SVs.showLabel && SVs.labelForGraph !== "",
       fixed,
-      layer: 10 * SVs.layer + 7,
+      layer: 10 * SVs.layer + LINE_LAYER_OFFSET,
 
       //specific to polygon
       fillColor,
@@ -131,6 +133,12 @@ export default React.memo(function Polygon(props) {
 
       pointsAtDown.current = newPolygonJXG.vertices.map(x => [...x.coords.scrCoords])
 
+      if (downOnPoint.current === null) {
+        // Note: counting on fact that down on polygon itself will trigger after down on points
+        callAction({
+          action: actions.mouseDownOnPolygon
+        });
+      }
     });
 
 
@@ -155,6 +163,9 @@ export default React.memo(function Polygon(props) {
         draggedPoint.current = null;
         pointerAtDown.current = [e.x, e.y];
         downOnPoint.current = i;
+        callAction({
+          action: actions.mouseDownOnPolygon
+        });
       });
     }
   }
@@ -168,6 +179,10 @@ export default React.memo(function Polygon(props) {
         vertex.off('down');
       }
     }
+    polygonJXG.current.off('drag');
+    polygonJXG.current.off('up');
+    polygonJXG.current.off('down');
+    polygonJXG.current.off('hit');
     board.removeObject(polygonJXG.current);
     polygonJXG.current = null;
   }
@@ -202,7 +217,7 @@ export default React.memo(function Polygon(props) {
             pointCoords: pointCoords.current,
             transient: true,
             skippable: true,
-            sourceInformation: { vertex: i }
+            sourceDetails: { vertex: i }
           }
         })
         polygonJXG.current.vertices[i].coords.setCoordinates(JXG.COORDS_BY_USER, [...lastPositionsFromCore.current[i]]);
@@ -225,7 +240,7 @@ export default React.memo(function Polygon(props) {
           action: actions.movePolygon,
           args: {
             pointCoords: pointCoords.current,
-            sourceInformation: { vertex: i }
+            sourceDetails: { vertex: i }
           }
         })
 
@@ -303,7 +318,8 @@ export default React.memo(function Polygon(props) {
       }
 
       let fixed = !SVs.draggable || SVs.fixed;
-      let verticesVisible = !fixed && !SVs.hidden;
+      let verticesFixed = !SVs.verticesDraggable || SVs.fixed;
+      let verticesVisible = !verticesFixed && !SVs.hidden;
 
       for (let i = 0; i < SVs.nVertices; i++) {
         polygonJXG.current.vertices[i].coords.setCoordinates(JXG.COORDS_BY_USER, [...SVs.numericalVertices[i]]);
@@ -338,10 +354,13 @@ export default React.memo(function Polygon(props) {
       polygonJXG.current.visPropCalc["visible"] = visibleNow;
       // polygonJXG.current.setAttribute({visible: visibleNow})
 
-      let polygonLayer = 10 * SVs.layer + 7;
+      let polygonLayer = 10 * SVs.layer + LINE_LAYER_OFFSET;
       let layerChanged = polygonJXG.current.visProp.layer !== polygonLayer;
+      let borderLayer, pointLayer;
 
       if (layerChanged) {
+        borderLayer = 10 * SVs.layer + LINE_LAYER_OFFSET;
+        pointLayer = 10 * SVs.layer + VERTEX_LAYER_OFFSET;
         polygonJXG.current.setAttribute({ layer: polygonLayer });
       }
 
@@ -380,7 +399,7 @@ export default React.memo(function Polygon(props) {
         border.visPropCalc.visible = visibleNow;
 
         if (layerChanged) {
-          border.setAttribute({ layer: polygonLayer + 1 });
+          border.setAttribute({ layer: borderLayer });
         }
 
         if (border.visProp.strokecolor !== SVs.selectedStyle.lineColor) {
@@ -405,9 +424,9 @@ export default React.memo(function Polygon(props) {
       }
 
       if (layerChanged) {
-        jsxPointAttributes.current.layer = polygonLayer + 2;
+        jsxPointAttributes.current.layer = pointLayer;
         for (let vertex of polygonJXG.current.vertices) {
-          vertex.setAttribute({ layer: polygonLayer + 2 });
+          vertex.setAttribute({ layer: pointLayer });
           vertex.needsUpdate = true;
           vertex.update();
         }

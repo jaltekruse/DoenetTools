@@ -154,6 +154,7 @@ export default function ToolRoot() {
     ),
     DataBreadCrumb: lazy(() => import('./HeaderControls/DataBreadCrumb')),
     EditorBreadCrumb: lazy(() => import('./HeaderControls/EditorBreadCrumb')),
+    PortfolioBreadCrumb: lazy(() => import('./HeaderControls/PortfolioBreadCrumb')),
     GradebookBreadCrumb: lazy(() =>
       import('./HeaderControls/GradebookBreadCrumb'),
     ),
@@ -492,6 +493,34 @@ let navigationObj = {
       hasNoMenuPanel: true,
     }
   },
+  portfolioeditor: {
+    editor: {
+      //singleFile
+      pageName: 'PortfolioEditor',
+      menuPanelCap: 'PortfilioEditorInfoCap',
+      currentMainPanel: 'EditorViewer',
+      currentMenus: [
+        'PageVariant',
+        'PageLink',
+        // 'AssignmentSettingsMenu',
+        'SupportingFilesMenu',
+      ],
+      menusTitles: [
+        'Page Variant',
+        'Page Link',
+        // 'Assignment Settings',
+        'Supporting Files',
+      ],
+      menusInitOpen: [false, false],
+      supportPanelOptions: ['DoenetMLEditor'],
+      supportPanelTitles: ['DoenetML Editor'],
+      supportPanelIndex: 0,
+      headerControls: ['PortfolioBreadCrumb', 'ViewerUpdateButton'],
+      // onLeave: 'EditorLeave',
+      footer: { height: 250, open: false, component: 'MathInputKeyboard' },
+      waitForMenuSuppression: true,
+    },
+  },
   exam: {
     default: {
       defaultTool: 'chooseLearner',
@@ -535,8 +564,6 @@ let navigationObj = {
       waitForMenuSuppression: true,
       footer: { height: 250, open: false, component: 'MathInputKeyboard' },
     },
-
-
     courseChooser: {
       //allCourses
       pageName: 'Course',
@@ -933,17 +960,15 @@ function RootController(props) {
     nextMenusAndPanels = {
       ...navigationObj[recoilPageToolView.page][recoilPageToolView.tool],
     };
+    // console.log("navigationObj[recoilPageToolView.page][recoilPageToolView.tool].currentMenus",navigationObj[recoilPageToolView.page][recoilPageToolView.tool].currentMenus)
     nextMenusAndPanels.currentMenus = [
-      ...navigationObj[recoilPageToolView.page][recoilPageToolView.tool]
-        .currentMenus,
+      ...navigationObj[recoilPageToolView.page][recoilPageToolView.tool].currentMenus,
     ];
     nextMenusAndPanels.menusTitles = [
-      ...navigationObj[recoilPageToolView.page][recoilPageToolView.tool]
-        .menusTitles,
+      ...navigationObj[recoilPageToolView.page][recoilPageToolView.tool].menusTitles,
     ];
     nextMenusAndPanels.menusInitOpen = [
-      ...navigationObj[recoilPageToolView.page][recoilPageToolView.tool]
-        .menusInitOpen,
+      ...navigationObj[recoilPageToolView.page][recoilPageToolView.tool].menusInitOpen,
     ];
 
     if (suppressMenus.length > 0) {

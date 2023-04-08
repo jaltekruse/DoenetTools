@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { createFunctionFromDefinition } from '../../Core/utils/function';
 import useDoenetRender from './useDoenetRenderer';
-import { BoardContext } from './graph';
+import { BoardContext, CONTROL_POINT_LAYER_OFFSET, LINE_LAYER_OFFSET, VERTEX_LAYER_OFFSET } from './graph';
 
 
 export default React.memo(function Curve(props) {
@@ -70,7 +70,7 @@ export default React.memo(function Curve(props) {
       visible: !SVs.hidden,
       withLabel: SVs.showLabel && SVs.labelForGraph !== "",
       fixed: true,
-      layer: 10 * SVs.layer + 5,
+      layer: 10 * SVs.layer + LINE_LAYER_OFFSET,
       strokeColor: SVs.selectedStyle.lineColor,
       strokeOpacity: SVs.selectedStyle.lineOpacity,
       strokeWidth: SVs.selectedStyle.lineWidth,
@@ -155,9 +155,10 @@ export default React.memo(function Curve(props) {
       ], curveAttributes);
 
     } else if (SVs.curveType === "bezier") {
-      let fs = createFunctionFromDefinition(SVs.fDefinitions[0]);
+      let f1 = createFunctionFromDefinition(SVs.fDefinitions[0]);
+      let f2 = createFunctionFromDefinition(SVs.fDefinitions[1]);
       newCurveJXG = board.create('curve', [
-        fs[0], fs[1],
+        f1, f2,
         SVs.parMin, SVs.parMax
       ], curveAttributes);
 
@@ -204,7 +205,14 @@ export default React.memo(function Curve(props) {
     if (SVs.curveType === "bezier") {
 
       board.on('up', upBoard);
-      newCurveJXG.on('down', downOther);
+      newCurveJXG.on('down', () => {
+        downOther();
+        callAction({
+          action: actions.mouseDownOnCurve,
+          args: { name }   // send name so get original name if adapted
+        });
+
+      });
 
       segmentAttributes.current = {
         visible: false,
@@ -212,7 +220,7 @@ export default React.memo(function Curve(props) {
         fixed: true,
         strokeColor: 'var(--mainGray)',
         highlightStrokeColor: 'var(--mainGray)',
-        layer: 10 * SVs.layer + 7,
+        layer: 10 * SVs.layer + VERTEX_LAYER_OFFSET,
         strokeWidth: 1,
         highlightStrokeWidth: 1,
       };
@@ -226,7 +234,7 @@ export default React.memo(function Curve(props) {
         highlightStrokeColor: 'var(--mainGray)',
         strokeWidth: 1,
         highlightStrokeWidth: 1,
-        layer: 10 * SVs.layer + 7,
+        layer: 10 * SVs.layer + VERTEX_LAYER_OFFSET,
         size: 3,
       };
       throughPointAlwaysVisible.current = {
@@ -248,7 +256,7 @@ export default React.memo(function Curve(props) {
         highlightStrokeColor: 'var(--mainGray)',
         strokeWidth: 1,
         highlightStrokeWidth: 1,
-        layer: 10 * SVs.layer + 8,
+        layer: 10 * SVs.layer + CONTROL_POINT_LAYER_OFFSET,
         size: 2,
       };
 
@@ -271,6 +279,10 @@ export default React.memo(function Curve(props) {
     } else {
       newCurveJXG.on('down', function (e) {
         updateSinceDown.current = false;
+        callAction({
+          action: actions.mouseDownOnCurve,
+          args: { name }   // send name so get original name if adapted
+        });
       });
     }
     return newCurveJXG;
@@ -279,6 +291,7 @@ export default React.memo(function Curve(props) {
   function deleteCurveJXG() {
     board.off('up', upBoard);
     curveJXG.current.off('down');
+    curveJXG.current.off('up');
     board.removeObject(curveJXG.current);
     curveJXG.current = null;
     deleteControls();
@@ -598,14 +611,18 @@ export default React.memo(function Curve(props) {
       curveJXG.current.visProp["visible"] = visible;
       curveJXG.current.visPropCalc["visible"] = visible;
 
-      let curveLayer = 10 * SVs.layer + 5;
+      let curveLayer = 10 * SVs.layer + LINE_LAYER_OFFSET;
       let layerChanged = curveJXG.current.visProp.layer !== curveLayer;
+      let segmentLayer, throughPointLayer, controlPointLayer;
 
       if (layerChanged) {
+        segmentLayer = 10 * SVs.layer + VERTEX_LAYER_OFFSET;
+        throughPointLayer = 10 * SVs.layer + VERTEX_LAYER_OFFSET;
+        controlPointLayer = 10 * SVs.layer + CONTROL_POINT_LAYER_OFFSET;
         curveJXG.current.setAttribute({ layer: curveLayer });
-        segmentAttributes.current.layer = curveLayer + 2;
-        throughPointAttributes.current.layer = curveLayer + 2;
-        controlPointAttributes.current.layer = curveLayer + 3;
+        segmentAttributes.current.layer = segmentLayer;
+        throughPointAttributes.current.layer = throughPointLayer;
+        controlPointAttributes.current.layer = controlPointLayer;
       }
 
       if (curveJXG.current.visProp.strokecolor !== SVs.selectedStyle.lineColor) {
@@ -634,9 +651,8 @@ export default React.memo(function Curve(props) {
         curveJXG.current.maxX = () => SVs.parMax;
 
       } else if (SVs.curveType === "bezier") {
-        let fs = createFunctionFromDefinition(SVs.fDefinitions[0]);
-        curveJXG.current.X = fs[0];
-        curveJXG.current.Y = fs[1];
+        curveJXG.current.X = createFunctionFromDefinition(SVs.fDefinitions[0]);
+        curveJXG.current.Y = createFunctionFromDefinition(SVs.fDefinitions[1]);
         curveJXG.current.minX = () => SVs.parMin;
         curveJXG.current.maxX = () => SVs.parMax;
 
@@ -799,11 +815,11 @@ export default React.memo(function Curve(props) {
         }
 
         if (layerChanged) {
-          throughPointsJXG.current[i].setAttribute({ layer: curveLayer + 2 });
-          segmentsJXG.current[i][0].setAttribute({ layer: curveLayer + 2 });
-          controlPointsJXG.current[i][0].setAttribute({ layer: curveLayer + 3 });
-          segmentsJXG.current[i][1].setAttribute({ layer: curveLayer + 2 });
-          controlPointsJXG.current[i][1].setAttribute({ layer: curveLayer + 3 });
+          throughPointsJXG.current[i].setAttribute({ layer: throughPointLayer });
+          segmentsJXG.current[i][0].setAttribute({ layer: segmentLayer });
+          controlPointsJXG.current[i][0].setAttribute({ layer: controlPointLayer });
+          segmentsJXG.current[i][1].setAttribute({ layer: segmentLayer });
+          controlPointsJXG.current[i][1].setAttribute({ layer: controlPointLayer });
         }
 
         throughPointsJXG.current[i].coords.setCoordinates(JXG.COORDS_BY_USER, [...SVs.numericalThroughPoints[i]]);

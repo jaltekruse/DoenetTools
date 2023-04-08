@@ -3,6 +3,17 @@ import BlockComponent from './abstract/BlockComponent';
 import me from 'math-expressions';
 import { orderedPercentWidthMidpoints, orderedWidthMidpoints, widthsBySize, sizePossibilities } from '../utils/size';
 export default class Graph extends BlockComponent {
+  constructor(args) {
+    super(args);
+
+    Object.assign(this.actions, {
+      changeAxisLimits: this.changeAxisLimits.bind(this),
+      addChildren: this.addChildren.bind(this),
+      deleteChildren: this.deleteChildren.bind(this),
+      recordVisibilityChange: this.recordVisibilityChange.bind(this),
+    });
+
+  }
   static componentType = "graph";
   static renderChildren = true;
 
@@ -184,6 +195,14 @@ export default class Graph extends BlockComponent {
       createStateVariable: "padZeros",
       defaultValue: false,
       public: true,
+    };
+
+    attributes.showBorder = {
+      createComponentOfType: "boolean",
+      createStateVariable: "showBorder",
+      defaultValue: true,
+      public: true,
+      forRenderer: true,
     };
     return attributes;
   }
@@ -1377,7 +1396,9 @@ export default class Graph extends BlockComponent {
     return stateVariableDefinitions;
   }
 
-  async changeAxisLimits({ xmin, xmax, ymin, ymax, actionId }) {
+  async changeAxisLimits({ xmin, xmax, ymin, ymax, actionId,
+    sourceInformation = {}, skipRendererUpdate = false
+  }) {
 
     let updateInstructions = [];
 
@@ -1417,6 +1438,8 @@ export default class Graph extends BlockComponent {
     return await this.coreFunctions.performUpdate({
       updateInstructions,
       actionId,
+      sourceInformation,
+      skipRendererUpdate,
       event: {
         verb: "interacted",
         object: {
@@ -1431,7 +1454,7 @@ export default class Graph extends BlockComponent {
 
   }
 
-  async addChildren({ serializedComponents, actionId }) {
+  async addChildren({ serializedComponents, actionId, sourceInformation = {}, skipRendererUpdate = false }) {
 
     if (serializedComponents && serializedComponents.length > 0) {
 
@@ -1456,13 +1479,15 @@ export default class Graph extends BlockComponent {
           value: await this.stateValues.nChildrenAdded + processResult.serializedComponents.length,
         }],
         actionId,
+        sourceInformation,
+        skipRendererUpdate
       });
     } else {
       this.coreFunctions.resolveAction({ actionId });
     }
   }
 
-  async deleteChildren({ number, actionId }) {
+  async deleteChildren({ number, actionId, sourceInformation = {}, skipRendererUpdate = false }) {
 
     let numberToDelete = Math.min(number, await this.stateValues.nChildrenAdded);
 
@@ -1482,7 +1507,9 @@ export default class Graph extends BlockComponent {
           stateVariable: "nChildrenAdded",
           value: await this.stateValues.nChildrenAdded - numberToDelete,
         }],
-        actionId
+        actionId,
+        sourceInformation,
+        skipRendererUpdate,
       });
 
     } else {
@@ -1502,12 +1529,5 @@ export default class Graph extends BlockComponent {
     })
     this.coreFunctions.resolveAction({ actionId });
   }
-
-  actions = {
-    changeAxisLimits: this.changeAxisLimits.bind(this),
-    addChildren: this.addChildren.bind(this),
-    deleteChildren: this.deleteChildren.bind(this),
-    recordVisibilityChange: this.recordVisibilityChange.bind(this),
-  };
 
 }

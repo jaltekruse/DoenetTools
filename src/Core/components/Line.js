@@ -3,13 +3,18 @@ import me from 'math-expressions';
 import { returnNVariables, convertValueToMathExpression, roundForDisplay } from '../utils/math';
 
 export default class Line extends GraphicalComponent {
-  static componentType = "line";
+  constructor(args) {
+    super(args);
 
-  actions = {
-    moveLine: this.moveLine.bind(this),
-    switchLine: this.switchLine.bind(this),
-    lineClicked: this.lineClicked.bind(this)
-  };
+    Object.assign(this.actions, {
+      moveLine: this.moveLine.bind(this),
+      switchLine: this.switchLine.bind(this),
+      lineClicked: this.lineClicked.bind(this),
+      mouseDownOnLine: this.mouseDownOnLine.bind(this),
+    });
+
+  }
+  static componentType = "line";
 
 
   static createAttributesObject() {
@@ -1627,7 +1632,9 @@ export default class Line extends GraphicalComponent {
     stateVariablesToShadow: ["displayDigits", "displayDecimals", "displaySmallAsZero", "padZeros"]
   }];
 
-  async moveLine({ point1coords, point2coords, transient, actionId }) {
+  async moveLine({ point1coords, point2coords, transient, actionId,
+    sourceInformation = {}, skipRendererUpdate = false
+  }) {
 
     let desiredPoints = {
       "0,0": me.fromAst(point1coords[0]),
@@ -1648,6 +1655,8 @@ export default class Line extends GraphicalComponent {
         }],
         transient: true,
         actionId,
+        sourceInformation,
+        skipRendererUpdate,
       });
     } else {
       return await this.coreFunctions.performUpdate({
@@ -1658,6 +1667,8 @@ export default class Line extends GraphicalComponent {
           value: desiredPoints
         }],
         actionId,
+        sourceInformation,
+        skipRendererUpdate,
         event: {
           verb: "interacted",
           object: {
@@ -1678,11 +1689,28 @@ export default class Line extends GraphicalComponent {
 
   }
 
-  async lineClicked({ actionId }) {
+  async lineClicked({ actionId, sourceInformation = {}, skipRendererUpdate = false }) {
 
     await this.coreFunctions.triggerChainedActions({
       triggeringAction: "click",
       componentName: this.componentName,
+      actionId,
+      sourceInformation,
+      skipRendererUpdate,
+    })
+
+    this.coreFunctions.resolveAction({ actionId });
+
+  }
+
+  async mouseDownOnLine({ actionId, sourceInformation = {}, skipRendererUpdate = false }) {
+
+    await this.coreFunctions.triggerChainedActions({
+      triggeringAction: "down",
+      componentName: this.componentName,
+      actionId,
+      sourceInformation,
+      skipRendererUpdate,
     })
 
     this.coreFunctions.resolveAction({ actionId });

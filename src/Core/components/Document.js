@@ -4,6 +4,15 @@ import { returnStyleDefinitionStateVariables } from '../utils/style';
 import { returnFeedbackDefinitionStateVariables } from '../utils/feedback';
 
 export default class Document extends BaseComponent {
+  constructor(args) {
+    super(args);
+
+    Object.assign(this.actions, {
+      submitAllAnswers: this.submitAllAnswers.bind(this),
+      recordVisibilityChange: this.recordVisibilityChange.bind(this)
+    });
+
+  }
   static componentType = "document";
   static rendererType = "section";
   static renderChildren = true;
@@ -617,12 +626,7 @@ export default class Document extends BaseComponent {
     return stateVariableDefinitions;
   }
 
-  actions = {
-    submitAllAnswers: this.submitAllAnswers.bind(this),
-    recordVisibilityChange: this.recordVisibilityChange.bind(this)
-  }
-
-  async submitAllAnswers({ actionId }) {
+  async submitAllAnswers({ actionId, sourceInformation = {}, skipRendererUpdate = false }) {
 
     this.coreFunctions.requestRecordEvent({
       verb: "submitted",
@@ -633,11 +637,17 @@ export default class Document extends BaseComponent {
     });
 
 
-    for (let answer of await this.stateValues.answerDescendants) {
+    let nAnswers = await this.stateValues.answerDescendants;
+    for (let [ind, answer] of await this.stateValues.answerDescendants.entries()) {
       if (!await answer.stateValues.justSubmitted) {
         await this.coreFunctions.performAction({
           componentName: answer.componentName,
-          actionName: "submitAnswer"
+          actionName: "submitAnswer",
+          args: {
+            actionId,
+            sourceInformation,
+            skipRendererUpdate: skipRendererUpdate || ind < nAnswers - 1
+          }
         })
       }
     }

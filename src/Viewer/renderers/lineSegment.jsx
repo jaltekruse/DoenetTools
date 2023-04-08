@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import useDoenetRender from './useDoenetRenderer';
-import { BoardContext } from './graph';
+import { BoardContext, LINE_LAYER_OFFSET, VERTEX_LAYER_OFFSET } from './graph';
 
 export default React.memo(function LineSegment(props) {
-  let { name, id, SVs, actions, callAction } = useDoenetRender(props);
+  let { name, id, SVs, actions, sourceOfUpdate, callAction } = useDoenetRender(props);
 
   LineSegment.ignoreActionsWithoutCore = true;
 
@@ -58,7 +58,7 @@ export default React.memo(function LineSegment(props) {
       visible: !SVs.hidden,
       withlabel,
       fixed,
-      layer: 10 * SVs.layer + 7,
+      layer: 10 * SVs.layer + LINE_LAYER_OFFSET,
       strokeColor: SVs.selectedStyle.lineColor,
       strokeOpacity: SVs.selectedStyle.lineOpacity,
       highlightStrokeColor: SVs.selectedStyle.lineColor,
@@ -116,19 +116,22 @@ export default React.memo(function LineSegment(props) {
       }
     }
 
+    let endpointsFixed = !SVs.endpointsDraggable || SVs.fixed;
+    let endpointsVisible = !endpointsFixed && !SVs.hidden;
+
     let jsxPointAttributes = Object.assign({}, jsxSegmentAttributes);
     Object.assign(jsxPointAttributes, {
       withLabel: false,
+      fixed: false,
+      highlight: true,
       fillColor: 'none',
       strokeColor: 'none',
       highlightStrokeColor: 'none',
       highlightFillColor: getComputedStyle(document.documentElement).getPropertyValue("--mainGray"),
-      layer: 10 * SVs.layer + 8,
+      layer: 10 * SVs.layer + VERTEX_LAYER_OFFSET,
       showInfoBox: SVs.showCoordsWhenDragging,
+      visible: endpointsVisible
     });
-    if (!SVs.draggable || SVs.fixed) {
-      jsxPointAttributes.visible = false;
-    }
 
 
     let endpoints = [
@@ -197,11 +200,17 @@ export default React.memo(function LineSegment(props) {
       draggedPoint.current = null;
       pointerAtDown.current = [e.x, e.y];
       downOnPoint.current = 1;
+      callAction({
+        action: actions.mouseDownOnLineSegment
+      });
     });
     point2JXG.current.on('down', (e) => {
       draggedPoint.current = null;
       pointerAtDown.current = [e.x, e.y];
       downOnPoint.current = 2;
+      callAction({
+        action: actions.mouseDownOnLineSegment
+      });
     });
     lineSegmentJXG.current.on('down', function (e) {
       draggedPoint.current = null;
@@ -210,6 +219,12 @@ export default React.memo(function LineSegment(props) {
         [...point1JXG.current.coords.scrCoords],
         [...point2JXG.current.coords.scrCoords]
       ]
+      if (downOnPoint.current === null) {
+        // Note: counting on fact that down on line segment itself will trigger after down on points
+        callAction({
+          action: actions.mouseDownOnLineSegment
+        });
+      }
     });
 
     previousLabelPosition.current = SVs.labelPosition;
@@ -235,6 +250,7 @@ export default React.memo(function LineSegment(props) {
             point1coords: pointCoords.current,
             transient: true,
             skippable: true,
+            sourceDetails: { endpoint: i },
           }
         })
       } else if (i == 2) {
@@ -245,8 +261,10 @@ export default React.memo(function LineSegment(props) {
             point2coords: pointCoords.current,
             transient: true,
             skippable: true,
+            sourceDetails: { endpoint: i },
           }
         })
+
       } else {
         calculatePointPositions(e);
         callAction({
@@ -263,6 +281,11 @@ export default React.memo(function LineSegment(props) {
 
     lineSegmentJXG.current.point1.coords.setCoordinates(JXG.COORDS_BY_USER, lastPositionsFromCore.current[0]);
     lineSegmentJXG.current.point2.coords.setCoordinates(JXG.COORDS_BY_USER, lastPositionsFromCore.current[1]);
+    if (i == 1) {
+      board.updateInfobox(lineSegmentJXG.current.point1)
+    } else if (i == 2) {
+      board.updateInfobox(lineSegmentJXG.current.point2)
+    }
 
   }
 
@@ -339,7 +362,19 @@ export default React.memo(function LineSegment(props) {
       lineSegmentJXG.current.point1.coords.setCoordinates(JXG.COORDS_BY_USER, SVs.numericalEndpoints[0]);
       lineSegmentJXG.current.point2.coords.setCoordinates(JXG.COORDS_BY_USER, SVs.numericalEndpoints[1]);
 
-      let visible = !SVs.hidden;
+      if (sourceOfUpdate.sourceInformation &&
+        name in sourceOfUpdate.sourceInformation
+      ) {
+        let ind = sourceOfUpdate.sourceInformation[name].endpoint;
+        if (ind === 1) {
+          board.updateInfobox(lineSegmentJXG.current.point1)
+        } else if (ind === 2) {
+          board.updateInfobox(lineSegmentJXG.current.point2)
+        }
+      }
+
+
+      let visible = !SVs.hidden && validCoords;
 
       if (validCoords) {
         let actuallyChangedVisibility = lineSegmentJXG.current.visProp["visible"] !== visible;
@@ -359,17 +394,24 @@ export default React.memo(function LineSegment(props) {
       }
 
       let fixed = !SVs.draggable || SVs.fixed;
+      let endpointsFixed = !SVs.endpointsDraggable || SVs.fixed;
+      let endpointsVisible = !endpointsFixed && visible;
+
+      point1JXG.current.visProp["visible"] = endpointsVisible;
+      point1JXG.current.visPropCalc["visible"] = endpointsVisible;
+      point2JXG.current.visProp["visible"] = endpointsVisible;
+      point2JXG.current.visPropCalc["visible"] = endpointsVisible;
 
       lineSegmentJXG.current.visProp.fixed = fixed;
       lineSegmentJXG.current.visProp.highlight = !fixed;
 
-      let layer = 10 * SVs.layer + 7;
+      let layer = 10 * SVs.layer + LINE_LAYER_OFFSET;
       let layerChanged = lineSegmentJXG.current.visProp.layer !== layer;
 
       if (layerChanged) {
         lineSegmentJXG.current.setAttribute({ layer });
-        point1JXG.current.setAttribute({ layer: layer + 1 });
-        point2JXG.current.setAttribute({ layer: layer + 1 });
+        point1JXG.current.setAttribute({ layer: 10 * SVs.layer + VERTEX_LAYER_OFFSET });
+        point2JXG.current.setAttribute({ layer: 10 * SVs.layer + VERTEX_LAYER_OFFSET });
       }
 
       if (lineSegmentJXG.current.visProp.strokecolor !== SVs.selectedStyle.lineColor) {

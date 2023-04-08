@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import useDoenetRender from './useDoenetRenderer';
-import { BoardContext } from './graph';
+import { BoardContext, POINT_LAYER_OFFSET } from './graph';
 import { MathJax } from 'better-react-mathjax';
 
 export default React.memo(function Point(props) {
@@ -60,7 +60,7 @@ export default React.memo(function Point(props) {
       visible: !SVs.hidden,
       withlabel,
       fixed: true,
-      layer: 10 * SVs.layer + 9,
+      layer: 10 * SVs.layer + POINT_LAYER_OFFSET,
       fillColor: fillColor,
       strokeColor,
       strokeOpacity: SVs.selectedStyle.lineOpacity,
@@ -151,10 +151,8 @@ export default React.memo(function Point(props) {
       jsxPointAttributes['visible'] = false;
     }
 
-    let newPointJXG = board.create('point', coords, jsxPointAttributes);
 
     let shadowPointAttributes = { ...jsxPointAttributes };
-    shadowPointAttributes.layer--;
     shadowPointAttributes.fixed = fixed;
     shadowPointAttributes.showInfoBox = false;
     shadowPointAttributes.withlabel = false;
@@ -163,6 +161,8 @@ export default React.memo(function Point(props) {
 
     let newShadowPointJXG = board.create('point', coords, shadowPointAttributes);
 
+    let newPointJXG = board.create('point', coords, jsxPointAttributes);
+
 
     newShadowPointJXG.on('down', function (e) {
       pointerAtDown.current = [e.x, e.y];
@@ -170,7 +170,9 @@ export default React.memo(function Point(props) {
       dragged.current = false;
       shadowPointJXG.current.visProp.fillopacity = pointJXG.current.visProp.fillopacity;
       shadowPointJXG.current.visProp.strokeopacity = pointJXG.current.visProp.strokeopacity;
-
+      callAction({
+        action: actions.mouseDownOnPoint
+      });
     });
 
     newShadowPointJXG.on('up', function (e) {
@@ -262,7 +264,7 @@ export default React.memo(function Point(props) {
       //if values update
       let fillColor = useOpenSymbol ? "var(--canvas)" : SVs.selectedStyle.markerColor;
       let strokeColor = useOpenSymbol ? SVs.selectedStyle.markerColor : "none";
-      
+
       if (pointJXG.current.visProp.fillcolor !== fillColor) {
         pointJXG.current.visProp.fillcolor = fillColor;
       }
@@ -307,11 +309,12 @@ export default React.memo(function Point(props) {
         // pointJXG.current.setAttribute({visible: false})
       }
 
-      let layer = 10 * SVs.layer + 9;
+      let layer = 10 * SVs.layer + POINT_LAYER_OFFSET;
       let layerChanged = pointJXG.current.visProp.layer !== layer;
 
       if (layerChanged) {
         pointJXG.current.setAttribute({ layer });
+        shadowPointJXG.current.setAttribute({ layer });
       }
 
       let fixed = !SVs.draggable || SVs.fixed;
@@ -447,8 +450,8 @@ function normalizeSize(size, style) {
   } else if (style === "plus") {
     return size * 1.2;
   } else if (style === "square") {
-      return size * 1.1;
-  } else if (style.substring(0,8) === "triangle") {
+    return size * 1.1;
+  } else if (style.substring(0, 8) === "triangle") {
     return size * 1.5;
   } else return size;
 }
