@@ -87,28 +87,11 @@ function ActivityCard({
           <MenuList>
             {carouselGroups.map((carouselItem) => {
               return (
-                <MenuItem
-                  key={carouselItem.groupName}
-                  as={Link}
-                  to={`/portfolio/${doenetId}/settings`}
-                >
+                <MenuItem key={carouselItem.groupName} onClick={() => {}}>
                   Move to group "{carouselItem.groupName}"
                 </MenuItem>
               );
             })}
-            <MenuItem
-              onClick={() => {
-                fetcher.submit(
-                  { _action: 'Delete', doenetId },
-                  { method: 'post' },
-                );
-              }}
-            >
-              Delete
-            </MenuItem>
-            <MenuItem as={Link} to={`/portfolio/${doenetId}/settings`}>
-              Settings
-            </MenuItem>
           </MenuList>
         </Menu>
       </CardFooter>
