@@ -3,8 +3,19 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Divider,
+  Heading,
   Image,
   Icon,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -15,6 +26,7 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import { useLoaderData } from 'react-router';
+import { GoKebabVertical } from 'react-icons/go';
 import styled from 'styled-components';
 import { Carousel } from '../../../_reactComponents/PanelHeaderComponents/Carousel';
 import Searchbar from '../../../_reactComponents/PanelHeaderComponents/SearchBar';
@@ -28,12 +40,62 @@ export async function loader({ request }) {
     //Show search results
     const response = await fetch(`/api/searchPublicActivities.php?q=${q}`);
     const respObj = await response.json();
-    return { q, searchResults: respObj.searchResults };
+    const carouselDataGroups = await fetch(
+      `/api/loadPromotedContentGroups.php`,
+    );
+    const { carouselGroups } = await carouselDataGroups.json();
+    console.log('loading groups', carouselGroups);
+    return { q, searchResults: respObj.searchResults, carouselGroups };
   } else {
     const response = await fetch('/api/getHPCarouselData.php');
     const { carouselData } = await response.json();
     return { carouselData };
   }
+}
+
+function ActivityCardNew({
+  doenetId,
+  imagePath,
+  label,
+  fullName,
+  carouselGroups,
+}) {
+  if (!imagePath) {
+    imagePath = '/activity_default.jpg';
+  }
+  console.log('carouselGroups', carouselGroups);
+  let isPublic = true;
+  return (
+    <Card maxW="sm" size="sm">
+      <CardBody>
+        <Image src={imagePath} alt={label} borderRadius="lg" />
+        {/* <Stack mt="6" spacing="3">
+          <Heading size="sm">{label}</Heading>
+          <Text>???</Text>
+        </Stack> */}
+      </CardBody>
+      <Divider />
+      <CardFooter>
+        <Button variant="solid" colorScheme="blue">
+          See Inside
+        </Button>
+        <Menu>
+          <MenuButton>
+            <Icon color="#949494" as={GoKebabVertical} boxSize={6} />
+          </MenuButton>
+          <MenuList>
+            {carouselGroups.map((carouselItem) => {
+              return (
+                <MenuItem key={carouselItem.groupName} onClick={() => {}}>
+                  Move to group "{carouselItem.groupName}"
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </Menu>
+      </CardFooter>
+    </Card>
+  );
 }
 
 function ActivityCard({ doenetId, imagePath, label, fullName }) {
@@ -144,6 +206,7 @@ function AuthorCard({ fullName, portfolioCourseId }) {
   );
 }
 
+/*
 function Heading(props) {
   return (
     <div
@@ -164,6 +227,7 @@ function Heading(props) {
     </div>
   );
 }
+*/
 
 const CarouselSection = styled.div`
   display: flex;
@@ -177,7 +241,7 @@ const CarouselSection = styled.div`
 `;
 
 export function Community() {
-  const { carouselData, q, searchResults } = useLoaderData();
+  const { carouselData, q, searchResults, carouselGroups } = useLoaderData();
   const [currentTab, setCurrentTab] = useState(0);
 
   if (q) {
@@ -291,6 +355,7 @@ export function Community() {
                     const { doenetId, imagePath, label, fullName } = itemObj;
                     return (
                       <ActivityCard
+                        carouselGroups={carouselGroups}
                         key={doenetId}
                         doenetId={doenetId}
                         imagePath={imagePath}
@@ -340,6 +405,7 @@ export function Community() {
                   //{ activityLink, doenetId, imagePath, label, fullName }
                   return (
                     <ActivityCard
+                      carouselGroups={carouselGroups}
                       key={doenetId}
                       doenetId={doenetId}
                       imagePath={imagePath}
@@ -432,8 +498,11 @@ export function Community() {
       <Heading heading="Community Public Content" />
 
       <CarouselSection>
-        <Carousel title="College Math" data={carouselData[0]} />
-        <Carousel title="Science & Engineering" data={carouselData[1]} />
+        <Carousel title="College Math" data={carouselData.Homepage} />
+        <Carousel
+          title="Science & Engineering"
+          data={carouselData['College Math']}
+        />
         <Carousel title="K-12 Math" data={carouselData[2]} />
       </CarouselSection>
     </>

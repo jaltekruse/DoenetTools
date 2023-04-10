@@ -20,7 +20,7 @@ if ($userId == '') {
 $response_arr;
 try {
     $sql = 
-        "select groupName, currentlyFeatured, homepage,
+        "select groupName, currentlyFeatured, homepage
         from promoted_content_groups pcg";
 
     $result = $conn->query($sql);
@@ -33,9 +33,8 @@ try {
         }
     }
     $response_arr = [
-        'success' => $success,
-        'message' => $message,
-        'promotedGroups' => $promotedGroups 
+        'success' => true,
+        'carouselGroups' => $promotedGroups 
     ];
     // set response code - 200 OK
     http_response_code(200);
