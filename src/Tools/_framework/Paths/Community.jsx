@@ -2,7 +2,19 @@ import React, { useState } from 'react';
 import {
   Badge,
   Box,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Divider,
+  Heading,
+  Image,
   Icon,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -13,6 +25,7 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import { useLoaderData } from 'react-router';
+import { GoKebabVertical } from 'react-icons/go';
 import styled from 'styled-components';
 import { Carousel } from '../../../_reactComponents/PanelHeaderComponents/Carousel';
 import Searchbar from '../../../_reactComponents/PanelHeaderComponents/SearchBar';
@@ -28,7 +41,12 @@ export async function loader({ request }) {
     //Show search results
     const response = await fetch(`/api/searchPublicActivities.php?q=${q}`);
     const respObj = await response.json();
-    return { q, searchResults: respObj.searchResults };
+    const carouselDataGroups = await fetch(
+      `/api/loadPromotedContentGroups.php`,
+    );
+    const { carouselGroups } = await carouselDataGroups.json();
+    console.log('loading groups', carouselGroups);
+    return { q, searchResults: respObj.searchResults, carouselGroups };
   } else {
     const response = await fetch('/api/getHPCarouselData.php');
     const { carouselData } = await response.json();
@@ -36,6 +54,160 @@ export async function loader({ request }) {
   }
 }
 
+function ActivityCardNew({
+  doenetId,
+  imagePath,
+  label,
+  fullName,
+  carouselGroups,
+}) {
+  if (!imagePath) {
+    imagePath = '/activity_default.jpg';
+  }
+  console.log('carouselGroups', carouselGroups);
+  let isPublic = true;
+  return (
+    <Card maxW="sm" size="sm">
+      <CardBody>
+        <Image src={imagePath} alt={label} borderRadius="lg" />
+        {/* <Stack mt="6" spacing="3">
+          <Heading size="sm">{label}</Heading>
+          <Text>???</Text>
+        </Stack> */}
+      </CardBody>
+      <Divider />
+      <CardFooter>
+        <Button variant="solid" colorScheme="blue">
+          See Inside
+        </Button>
+        <Menu>
+          <MenuButton>
+            <Icon color="#949494" as={GoKebabVertical} boxSize={6} />
+          </MenuButton>
+          <MenuList>
+            {carouselGroups.map((carouselItem) => {
+              return (
+                <MenuItem key={carouselItem.groupName} onClick={() => {}}>
+                  Move to group "{carouselItem.groupName}"
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </Menu>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function ActivityCard({ doenetId, imagePath, label, fullName }) {
+  if (!imagePath) {
+    imagePath = '/activity_default.jpg';
+  }
+  const activityLink = `/portfolioviewer/${doenetId}`;
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      height="180px"
+      width="180px"
+      background="black"
+      overflow="hidden"
+      margin="10px"
+      border="2px solid #949494"
+      borderRadius="6px"
+    >
+      <Box height="130px">
+        <Link to={activityLink}>
+          <Image
+            width="100%"
+            height="100%"
+            objectFit="contain"
+            src={imagePath}
+            alt="Activity Card"
+          />
+        </Link>
+      </Box>
+      <Box
+        height="50px"
+        display="flex"
+        justifyContent="flex-start"
+        padding="2px"
+        color="black"
+        background="white"
+      >
+        <Box
+          width="40px"
+          display="flex"
+          alignContent="center"
+          justifyContent="center"
+          alignItems="center"
+          position="relative"
+        >
+          <Avatar size="sm" name={fullName} />
+          <Box position="absolute" width="100px" left="8px" bottom="0px">
+            <Text fontSize="10px">{fullName}</Text>
+          </Box>
+        </Box>
+        <Box>
+          <Text fontSize="sm" lineHeight="1" noOfLines={2}>
+            {label}
+          </Text>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+function AuthorCard({ fullName, portfolioCourseId }) {
+  // function AuthorCard({ doenetId, imagePath, label, fullName }) {
+
+  const authorLink = `/publicportfolio/${portfolioCourseId}`;
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      height="180px"
+      width="180px"
+      background="black"
+      overflow="hidden"
+      margin="10px"
+      border="2px solid #949494"
+      borderRadius="6px"
+    >
+      <Box
+        height="130px"
+        display="flex"
+        alignContent="center"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Link to={authorLink}>
+          <Avatar w="100px" h="100px" fontSize="60pt" name={fullName} />
+        </Link>
+      </Box>
+      <Box
+        height="50px"
+        display="flex"
+        padding="2px"
+        color="black"
+        background="white"
+        alignContent="center"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Box>
+          <Text fontSize="sm" lineHeight="1" noOfLines={2}>
+            {fullName}
+          </Text>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+/*
 function Heading(props) {
   return (
     <div
@@ -56,6 +228,7 @@ function Heading(props) {
     </div>
   );
 }
+*/
 
 const CarouselSection = styled.div`
   display: flex;
@@ -69,7 +242,7 @@ const CarouselSection = styled.div`
 `;
 
 export function Community() {
-  const { carouselData, q, searchResults } = useLoaderData();
+  const { carouselData, q, searchResults, carouselGroups } = useLoaderData();
   const [currentTab, setCurrentTab] = useState(0);
 
   if (q) {
@@ -185,6 +358,7 @@ export function Community() {
 
                     return (
                       <ActivityCard
+                        carouselGroups={carouselGroups}
                         key={doenetId}
                         imageLink={imageLink}
                         imagePath={imagePath}
@@ -237,6 +411,7 @@ export function Community() {
 
                   return (
                     <ActivityCard
+                      carouselGroups={carouselGroups}
                       key={doenetId}
                       imageLink={imageLink}
                       imagePath={imagePath}
@@ -330,8 +505,11 @@ export function Community() {
       <Heading heading="Community Public Content" />
 
       <CarouselSection>
-        <Carousel title="College Math" data={carouselData[0]} />
-        <Carousel title="Science & Engineering" data={carouselData[1]} />
+        <Carousel title="College Math" data={carouselData.Homepage} />
+        <Carousel
+          title="Science & Engineering"
+          data={carouselData['College Math']}
+        />
         <Carousel title="K-12 Math" data={carouselData[2]} />
       </CarouselSection>
     </>

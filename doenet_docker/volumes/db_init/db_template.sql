@@ -983,10 +983,11 @@ ENGINE = InnoDB;
 -- Table `doenet_local`.`promoted_content`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `doenet_local`.`promoted_content` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `promoted_content_groups_id` INT NOT NULL,
   `doenetId` VARCHAR(255) NOT NULL,
-  `positionInGroup` INT NOT NULL,
-  PRIMARY KEY (`promoted_content_groups_id`),
+  `sortOrder` INT NOT NULL,
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_promoted_content_promoted_content_groups1`
     FOREIGN KEY (`promoted_content_groups_id`)
     REFERENCES `doenet_local`.`promoted_content_groups` (`id`)
@@ -999,11 +1000,10 @@ ENGINE = InnoDB;
 -- Table `doenet_local`.`community_admins`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `doenet_local`.`community_admins` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL,
   `userId` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
-
 
 LOCK TABLES `user_device` WRITE;
 /*!40000 ALTER TABLE `user_device` DISABLE KEYS */;

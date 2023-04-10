@@ -1,7 +1,7 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: access');
-header('Access-Control-Allow-Methods: GET');
+header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');
 
@@ -17,17 +17,14 @@ if ($userId == '') {
 }
 */
 
+$donetId = mysqli_real_escape_string($conn,$_POST["doenetId"]);
+$groupId = mysqli_real_escape_string($conn,$_POST["groupId"]);
+
 $response_arr;
 try {
     $sql = 
-        "
-        insert into user (userId, screenName, email, lastName, firstName, profilePicture, trackingConsent, canUpload)
-        values ('74lCwiI7G56tyrdMg84YQ', 'jaltekruse', 'a@a.com', 'Altekruse', 'Jason', '', 1, 1)
-        ";
-
-    $sql = 
         "select groupName, currentlyFeatured, homepage,
-                pc.sortOrder, doenetId, course_content.label, 
+                positionInGroup, doenetId, label, 
                 screenName, email, lastName, firstName, 
                 profilePicture, trackingConsent, canUpload
         from promoted_content_groups pcg
@@ -52,8 +49,9 @@ try {
         }
     }
     $response_arr = [
-        'success' => true,
-        'carouselData' => $promotedGroups
+        'success' => $success,
+        'message' => $message,
+        'promotedGroups' => $promotedGroups
     ];
     // set response code - 200 OK
     http_response_code(200);
