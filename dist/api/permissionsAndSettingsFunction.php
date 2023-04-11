@@ -36,7 +36,6 @@ function getpermissionsAndSettings($conn, $userId)
       ON c.courseId = cu.courseId
       WHERE cu.userId = '$userId'
       AND c.isDeleted = '0'
-      AND c.portfolioCourseForUserId IS NULL
       ORDER BY c.id DESC
       ";
 
