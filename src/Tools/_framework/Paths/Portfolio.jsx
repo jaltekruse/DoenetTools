@@ -259,6 +259,9 @@ function Card({
               <MenuItem as={Link} to={`/portfolio/${doenetId}/settings`}>
                 Settings
               </MenuItem>
+              <MenuItem as={Link} to={`/portfolio/${doenetId}/settings`}>
+                Other Settings
+              </MenuItem>
             </MenuList>
           </Menu>
         </Box>

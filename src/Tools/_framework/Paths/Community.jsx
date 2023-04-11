@@ -53,7 +53,7 @@ export async function loader({ request }) {
   }
 }
 
-function ActivityCard({
+function ActivityCardNew({
   doenetId,
   imagePath,
   label,
@@ -66,22 +66,21 @@ function ActivityCard({
   console.log('carouselGroups', carouselGroups);
   let isPublic = true;
   return (
-    <Card maxW="sm">
+    <Card maxW="sm" size="sm">
       <CardBody>
         <Image src={imagePath} alt={label} borderRadius="lg" />
-        <Stack mt="6" spacing="3">
-          <Heading size="md">{label}</Heading>
+        {/* <Stack mt="6" spacing="3">
+          <Heading size="sm">{label}</Heading>
           <Text>???</Text>
-        </Stack>
+        </Stack> */}
       </CardBody>
       <Divider />
       <CardFooter>
         <Button variant="solid" colorScheme="blue">
-          now
+          See Inside
         </Button>
         <Menu>
           <MenuButton>
-            {/* <MenuButton as={Button} > */}
             <Icon color="#949494" as={GoKebabVertical} boxSize={6} />
           </MenuButton>
           <MenuList>
@@ -99,7 +98,7 @@ function ActivityCard({
   );
 }
 
-function ActivityCardOld({ doenetId, imagePath, label, fullName }) {
+function ActivityCard({ doenetId, imagePath, label, fullName }) {
   if (!imagePath) {
     imagePath = '/activity_default.jpg';
   }
