@@ -26,7 +26,7 @@ export default function ActivityCard({
     <Card width="180px" height="180px" p="0" m="0">
       <Link to={imageLink}>
         <Image
-          maxHeight="120px"
+          height="120px"
           maxWidth="180px"
           src={imagePath}
           alt="Activity Card Image"
@@ -60,7 +60,6 @@ export default function ActivityCard({
               <MenuItem>one</MenuItem>
               <MenuItem>two</MenuItem>
               <MenuItem>three</MenuItem>
-              <MenuItem>four</MenuItem>
             </MenuList>
           </Menu>
         </Flex>
