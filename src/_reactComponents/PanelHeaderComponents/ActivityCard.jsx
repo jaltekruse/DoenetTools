@@ -66,7 +66,6 @@ export default function ActivityCard({
               <MenuItem>one</MenuItem>
               <MenuItem>two</MenuItem>
               <MenuItem>three</MenuItem>
-              <MenuItem>four</MenuItem>
             </MenuList>
           </Menu> */}
         </Flex>
