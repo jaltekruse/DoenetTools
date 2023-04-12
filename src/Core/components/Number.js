@@ -2,11 +2,24 @@ import InlineComponent from './abstract/InlineComponent';
 import me from 'math-expressions';
 import { getFromText, mathStateVariableFromNumberStateVariable, numberToMathExpression, roundForDisplay, textToAst } from '../utils/math';
 import { buildParsedExpression, evaluateLogic } from '../utils/booleanLogic';
+import { returnSelectedStyleStateVariableDefinition, returnTextStyleDescriptionDefinitions } from '../utils/style';
+import { moveGraphicalObjectWithAnchorAction, returnAnchorAttributes, returnAnchorStateVariableDefinition } from '../utils/graphical';
 
 export default class NumberComponent extends InlineComponent {
+  constructor(args) {
+    super(args);
+
+    Object.assign(this.actions, {
+      moveNumber: this.moveNumber.bind(this),
+      numberClicked: this.numberClicked.bind(this),
+      numberFocused: this.numberFocused.bind(this),
+    });
+
+  }
   static componentType = "number";
 
   static variableForPlainMacro = "value";
+  static plainMacroReturnsSameType = true;
 
   static createAttributesObject() {
     let attributes = super.createAttributesObject();
@@ -41,6 +54,25 @@ export default class NumberComponent extends InlineComponent {
       createStateVariable: "valueOnNaN",
       defaultValue: NaN,
     };
+
+    attributes.draggable = {
+      createComponentOfType: "boolean",
+      createStateVariable: "draggable",
+      defaultValue: true,
+      public: true,
+      forRenderer: true
+    };
+
+    attributes.layer = {
+      createComponentOfType: "number",
+      createStateVariable: "layer",
+      defaultValue: 0,
+      public: true,
+      forRenderer: true
+    };
+
+    Object.assign(attributes, returnAnchorAttributes())
+
     return attributes;
   }
 
@@ -87,6 +119,16 @@ export default class NumberComponent extends InlineComponent {
   static returnStateVariableDefinitions() {
 
     let stateVariableDefinitions = super.returnStateVariableDefinitions();
+
+    let selectedStyleDefinition = returnSelectedStyleStateVariableDefinition();
+    Object.assign(stateVariableDefinitions, selectedStyleDefinition);
+
+    let styleDescriptionDefinitions = returnTextStyleDescriptionDefinitions();
+    Object.assign(stateVariableDefinitions, styleDescriptionDefinitions);
+
+    let anchorDefinition = returnAnchorStateVariableDefinition();
+    Object.assign(stateVariableDefinitions, anchorDefinition);
+
 
     stateVariableDefinitions.displayDigits = {
       public: true,
@@ -693,7 +735,7 @@ export default class NumberComponent extends InlineComponent {
     stateVariableDefinitions.value = {
       public: true,
       shadowingInstructions: {
-        createComponentOfType: "number",
+        createComponentOfType: this.componentType,
         attributesToShadow: [
           "displayDigits", "displayDecimals", "displaySmallAsZero", "padZeros",
         ],
@@ -1276,5 +1318,49 @@ export default class NumberComponent extends InlineComponent {
     },
     "text"
   ];
+
+
+  async moveNumber({ x, y, z, transient, actionId,
+    sourceInformation = {}, skipRendererUpdate = false,
+  }) {
+
+    return await moveGraphicalObjectWithAnchorAction({
+      x, y, z, transient, actionId,
+      sourceInformation, skipRendererUpdate,
+      componentName: this.componentName,
+      componentType: this.componentType,
+      coreFunctions: this.coreFunctions
+    })
+
+  }
+
+  async numberClicked({ actionId, name, sourceInformation = {}, skipRendererUpdate = false }) {
+
+    await this.coreFunctions.triggerChainedActions({
+      triggeringAction: "click",
+      componentName: name,  // use name rather than this.componentName to get original name if adapted
+      actionId,
+      sourceInformation,
+      skipRendererUpdate,
+    })
+
+    this.coreFunctions.resolveAction({ actionId });
+
+  }
+
+  async numberFocused({ actionId, name, sourceInformation = {}, skipRendererUpdate = false }) {
+
+    await this.coreFunctions.triggerChainedActions({
+      triggeringAction: "focus",
+      componentName: name,  // use name rather than this.componentName to get original name if adapted
+      actionId,
+      sourceInformation,
+      skipRendererUpdate,
+    })
+
+    this.coreFunctions.resolveAction({ actionId });
+
+  }
+
 
 }
