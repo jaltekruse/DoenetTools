@@ -21,6 +21,7 @@ export default function ActivityCard({
   imagePath,
   label,
   fullName,
+  menuItems,
 }) {
   return (
     <Card width="180px" height="180px" p="0" m="0">
@@ -56,11 +57,7 @@ export default function ActivityCard({
             <MenuButton height="30px">
               <Icon color="#949494" as={GoKebabVertical} boxSize={4} />
             </MenuButton>
-            <MenuList zIndex="1000">
-              <MenuItem>one</MenuItem>
-              <MenuItem>two</MenuItem>
-              <MenuItem>three</MenuItem>
-            </MenuList>
+            <MenuList zIndex="1000">{menuItems}</MenuList>
           </Menu>
         </Flex>
       </CardBody>

@@ -257,6 +257,13 @@ export function Community() {
                         imagePath={imagePath}
                         label={label}
                         fullName={fullName}
+                        menuItems={
+                          <>
+                            <MenuItem>one changed</MenuItem>
+                            <MenuItem>two</MenuItem>
+                            <MenuItem>three</MenuItem>
+                          </>
+                        }
                       />
                     );
                   } else if (itemObj?.type == 'author') {
@@ -307,6 +314,13 @@ export function Community() {
                       imagePath={imagePath}
                       label={label}
                       fullName={fullName}
+                      menuItems={
+                        <>
+                          <MenuItem>one changed</MenuItem>
+                          <MenuItem>two</MenuItem>
+                          <MenuItem>three</MenuItem>
+                        </>
+                      }
                     />
                   );
                 })}
