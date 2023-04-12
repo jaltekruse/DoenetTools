@@ -168,6 +168,7 @@ export function MoveToGroupMenuItem({ doenetId }) {
               return (
                 <Button
                   size="sm"
+                  mergin="5px"
                   key={carouselItem.groupName}
                   onClick={() => {
                     const uploadData = { groupId: carouselItem.id, doenetId };
@@ -473,11 +474,10 @@ export function Community() {
       <Heading heading="Community Public Content" />
 
       <CarouselSection>
-        <Carousel title="Homepage" data={carouselData.Homepage} />
         <Carousel title="College Math" data={carouselData['College Math']} />
         <Carousel
           title="Science & Engineering"
-          data={carouselData['Science & Engineering']}
+          data={carouselData['Engineering']}
         />
         <Carousel title="K-12 Math" data={carouselData[2]} />
       </CarouselSection>
