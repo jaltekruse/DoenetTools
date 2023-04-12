@@ -140,10 +140,13 @@ export function Carousel({ title = '', data = [] }) {
                   <ActivityCard
                     {...cardObj}
                     menuItems={
+                      null
+                      /* z-index stacking issues, might be related to the carousel
                       <>
-                        <MenuItem>one changed</MenuItem>
-                        <MenuItem>two</MenuItem>
+                        <MenuItem>Move Left</MenuItem>
+                        <MenuItem>Move Right</MenuItem>
                       </>
+                    */
                     }
                   />
                 </SwiperSlide>

@@ -19,15 +19,10 @@ if ($userId == '') {
 
 $response_arr;
 try {
-    $sql = 
-        "
-        insert into user (userId, screenName, email, lastName, firstName, profilePicture, trackingConsent, canUpload)
-        values ('74lCwiI7G56tyrdMg84YQ', 'jaltekruse', 'a@a.com', 'Altekruse', 'Jason', '', 1, 1)
-        ";
 
     $sql = 
         "select groupName, currentlyFeatured, homepage,
-                pc.sortOrder, doenetId, course_content.label, 
+                pc.sortOrder, doenetId, course_content.label, course_content.imagePath,
                 screenName, email, lastName, firstName, 
                 profilePicture, trackingConsent, canUpload
         from promoted_content_groups pcg
