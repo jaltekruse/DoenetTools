@@ -21,7 +21,7 @@ export default function ActivityCard({
   imagePath,
   label,
   fullName,
-  //   menuItems,
+  menuItems,
 }) {
   if (!imagePath) {
     imagePath = '/activity_default.jpg';
@@ -58,16 +58,12 @@ export default function ActivityCard({
             </Text>
           </Box>
 
-          {/* <Menu>
+          <Menu>
             <MenuButton height="30px">
               <Icon color="#949494" as={GoKebabVertical} boxSize={4} />
             </MenuButton>
-            <MenuList zIndex="1000">
-              <MenuItem>one</MenuItem>
-              <MenuItem>two</MenuItem>
-              <MenuItem>three</MenuItem>
-            </MenuList>
-          </Menu> */}
+            <MenuList zIndex="1000">{menuItems}</MenuList>
+          </Menu>
         </Flex>
       </CardBody>
     </Card>
