@@ -13,7 +13,7 @@ $userId = $jwtArray['userId'];
 $response_arr;
 try {
     if ($userId == '') {
-        throw new Exception('You need to be logged in to do see the promoted materials groups.');
+        throw new Exception('You need to be logged in to see the promoted materials groups.');
     } else {
         $sql = 
             "select userId from community_admins
