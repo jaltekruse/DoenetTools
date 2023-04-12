@@ -385,11 +385,11 @@ export function Community() {
                       label={label}
                       fullName={fullName}
                       menuItems={
-                        <>
-                          <MenuItem>one changed</MenuItem>
-                          <MenuItem>two</MenuItem>
-                          <MenuItem>three</MenuItem>
-                        </>
+                        isAdmin ? (
+                          <>
+                            <MoveToGroupMenuItem doenetId={doenetId} />
+                          </>
+                        ) : null
                       }
                     />
                   );
