@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Avatar,
   Badge,
@@ -168,7 +169,19 @@ export function MoveToGroupMenuItem({ doenetId }) {
                 <Button
                   size="sm"
                   key={carouselItem.groupName}
-                  onClick={() => {}}
+                  onClick={() => {
+                    const uploadData = { groupId: carouselItem.id, doenetId };
+                    console.log('doenetId during request', uploadData);
+                    axios
+                      .post('/api/addPromotedContent.php', uploadData)
+                      .then(({ data }) => {
+                        onClose();
+                      })
+                      .catch((e) => {
+                        alert('Error saving new promoted activity');
+                        console.log(e);
+                      });
+                  }}
                 >
                   Move to group "{carouselItem.groupName}"
                 </Button>
@@ -312,7 +325,7 @@ export function Community() {
                         menuItems={
                           isAdmin ? (
                             <>
-                              <MoveToGroupMenuItem />
+                              <MoveToGroupMenuItem doenetId={doenetId} />
                             </>
                           ) : null
                         }
@@ -460,10 +473,11 @@ export function Community() {
       <Heading heading="Community Public Content" />
 
       <CarouselSection>
-        <Carousel title="College Math" data={carouselData.Homepage} />
+        <Carousel title="Homepage" data={carouselData.Homepage} />
+        <Carousel title="College Math" data={carouselData['College Math']} />
         <Carousel
           title="Science & Engineering"
-          data={carouselData['College Math']}
+          data={carouselData['Science & Engineering']}
         />
         <Carousel title="K-12 Math" data={carouselData[2]} />
       </CarouselSection>
