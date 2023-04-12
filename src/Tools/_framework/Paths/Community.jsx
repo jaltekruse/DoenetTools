@@ -3,29 +3,27 @@ import {
   Badge,
   Box,
   Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Divider,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
   Heading,
-  Image,
   Icon,
-  Menu,
-  MenuButton,
   MenuItem,
-  MenuList,
-  Stack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
   Text,
+  useDisclosure,
   Wrap,
   Flex,
 } from '@chakra-ui/react';
 import { useLoaderData } from 'react-router';
-import { GoKebabVertical } from 'react-icons/go';
 import styled from 'styled-components';
 import { Carousel } from '../../../_reactComponents/PanelHeaderComponents/Carousel';
 import Searchbar from '../../../_reactComponents/PanelHeaderComponents/SearchBar';
@@ -41,12 +39,19 @@ export async function loader({ request }) {
     //Show search results
     const response = await fetch(`/api/searchPublicActivities.php?q=${q}`);
     const respObj = await response.json();
-    const carouselDataGroups = await fetch(
-      `/api/loadPromotedContentGroups.php`,
-    );
-    const { carouselGroups } = await carouselDataGroups.json();
+    const isAdminResponse = await fetch(`/api/checkForCommunityAdmin.php`);
+    const { isAdmin } = await isAdminResponse.json();
+    console.log('QWERQERQWER', isAdmin);
+    let carouselGroups = [];
+    if (isAdmin) {
+      const carouselDataGroups = await fetch(
+        `/api/loadPromotedContentGroups.php`,
+      );
+      const responseGroups = await carouselDataGroups.json();
+      carouselGroups = responseGroups.carouselGroups;
+    }
     console.log('loading groups', carouselGroups);
-    return { q, searchResults: respObj.searchResults, carouselGroups };
+    return { q, searchResults: respObj.searchResults, carouselGroups, isAdmin };
   } else {
     const response = await fetch('/api/getHPCarouselData.php');
     const { carouselData } = await response.json();
@@ -136,8 +141,55 @@ const CarouselSection = styled.div`
   background: var(--mainGray);
 `;
 
+export function MoveToGroupMenuItem({ doenetId }) {
+  const { carouselGroups } = useLoaderData();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = React.useRef();
+
+  return (
+    <>
+      <MenuItem ref={btnRef} colorScheme="teal" onClick={onOpen}>
+        Promote on Community Page
+      </MenuItem>
+      <Drawer
+        isOpen={isOpen}
+        placement="right"
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Add Activity To Group</DrawerHeader>
+
+          <DrawerBody>
+            {carouselGroups.map((carouselItem) => {
+              return (
+                <Button
+                  size="sm"
+                  key={carouselItem.groupName}
+                  onClick={() => {}}
+                >
+                  Move to group "{carouselItem.groupName}"
+                </Button>
+              );
+            })}
+          </DrawerBody>
+
+          <DrawerFooter>
+            <Button variant="outline" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </>
+  );
+}
+
 export function Community() {
-  const { carouselData, q, searchResults, carouselGroups } = useLoaderData();
+  const { carouselData, q, searchResults, carouselGroups, isAdmin } =
+    useLoaderData();
   const [currentTab, setCurrentTab] = useState(0);
 
   if (q) {
@@ -260,11 +312,11 @@ export function Community() {
                         label={label}
                         fullName={fullName}
                         menuItems={
-                          <>
-                            <MenuItem>one changed</MenuItem>
-                            <MenuItem>two</MenuItem>
-                            <MenuItem>three</MenuItem>
-                          </>
+                          isAdmin ? (
+                            <>
+                              <MoveToGroupMenuItem />
+                            </>
+                          ) : null
                         }
                       />
                     );
