@@ -60,54 +60,6 @@ export async function loader({ request }) {
   }
 }
 
-function AuthorCard({ fullName, portfolioCourseId }) {
-  // function AuthorCard({ doenetId, imagePath, label, fullName }) {
-
-  const authorLink = `/publicportfolio/${portfolioCourseId}`;
-
-  return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      height="180px"
-      width="180px"
-      background="black"
-      overflow="hidden"
-      margin="10px"
-      border="2px solid #949494"
-      borderRadius="6px"
-    >
-      <Box
-        height="130px"
-        display="flex"
-        alignContent="center"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Link to={authorLink}>
-          <Avatar w="100px" h="100px" fontSize="60pt" name={fullName} />
-        </Link>
-      </Box>
-      <Box
-        height="50px"
-        display="flex"
-        padding="2px"
-        color="black"
-        background="white"
-        alignContent="center"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Box>
-          <Text fontSize="sm" lineHeight="1" noOfLines={2}>
-            {fullName}
-          </Text>
-        </Box>
-      </Box>
-    </Box>
-  );
-}
-
 /*
 function Heading(props) {
   return (
