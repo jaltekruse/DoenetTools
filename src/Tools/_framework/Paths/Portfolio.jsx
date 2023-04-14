@@ -165,7 +165,7 @@ export function Portfolio() {
           <Text fontSize="20px" fontWeight="700">
             Public
           </Text>
-          <Wrap p="10px" pb="110px">
+          <Wrap p="10px" overflow="visible">
             {data.publicActivities.length < 1 ? (
               <Flex
                 flexDirection="column"
@@ -202,7 +202,7 @@ export function Portfolio() {
           <Text fontSize="20px" fontWeight="700">
             Private
           </Text>
-          <Wrap p="10px" pb="110px">
+          <Wrap p="10px" overflow="visible">
             {data.privateActivities.length < 1 ? (
               <Flex
                 flexDirection="column"
