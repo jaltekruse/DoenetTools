@@ -52,6 +52,7 @@ if ($row['minutes'] > 10){
         SET signedIn='1' 
         WHERE email='$emailaddress' AND deviceName='$deviceName'";
         $result = $conn->query($sql);
+        $reason .= $sql;
 
         //Test if it's a new account
 
@@ -61,6 +62,9 @@ if ($row['minutes'] > 10){
         ";
         $result = $conn->query($sql);
         $row = $result->fetch_assoc();
+        
+        $reason .= "  " . $sql;
+        $reason .= "  " . print_r($row, true);
 
         if ($row["firstName"] != "" && $row["lastName"] != ""){
             $hasFullName = 1;

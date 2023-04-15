@@ -66,20 +66,28 @@ export default function SignIn(props) {
     }
   });
 
+  console.log('rendering part of login workflow', signInStage);
+
   //If already signed in go to course
   if (Object.keys(jwt).includes('JWT_JS')) {
+    console.log('about to load profile to check if we have a name');
     axios
       .get('/api/loadProfile.php', { params: {} })
       .then((resp) => {
         // if (resp.data.success === '1') {
         localStorage.setItem('Profile', JSON.stringify(resp.data.profile));
         const needsName = localStorage.getItem('Needs Name');
+        console.log(
+          'checking local storage if we need to set a name',
+          needsName,
+        );
 
         if (needsName) {
           setSignInStage('Need Name Entered');
         } else {
           location.href = '/';
           setSignInStage('Loading');
+          console.log('Set sign in stage to Loading');
           return null;
         }
         // navigate('/'); //Not sure why this doesn't work
@@ -132,7 +140,7 @@ export default function SignIn(props) {
 
   if (signInStage === 'check code') {
     //Ask Server for data which matches email address
-
+    console.log('check code stage');
     const data = {
       emailaddress: email,
       nineCode: nineCode,
@@ -153,11 +161,14 @@ export default function SignIn(props) {
           if (maxAge > 0) {
             stay = '1';
           }
+          console.log(JSON.stringify(resp));
 
           if (resp.data.hasFullName == 0) {
             localStorage.setItem('Needs Name', true);
+            console.log('set in local storage, DO need to set name');
           } else {
             localStorage.setItem('Needs Name', false);
+            console.log('set in local storage, DO NOT need to set name');
           }
 
           // console.log(`/api/jwt.php?emailaddress=${encodeURIComponent(email)}&nineCode=${encodeURIComponent(nineCode)}&deviceName=${deviceName}&newAccount=${newAccount}&stay=${stay}`)
@@ -184,6 +195,7 @@ export default function SignIn(props) {
   }
 
   if (signInStage === 'Need Name Entered') {
+    console.log('Need name entered stage');
     return (
       <div>
         <div
