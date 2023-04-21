@@ -26,7 +26,7 @@ $unit_test_classes = array();
 
 foreach( get_declared_classes() as $class ) {
     if (in_array('Unit_Tests', class_parents($class))) {
-      $unit_test_classes[] = new $class;
+      $unit_test_classes[] = $class;
     }
 }
 
@@ -48,7 +48,9 @@ $jwt = JWT::encode($payload, $key);
 $_COOKIE['JWT'] = $jwt;
 
 foreach ($unit_test_classes as $unit_tests) {
-    $reflection = new ReflectionClass($unit_tests);
+    echo "<h3>Running test class : " . $unit_tests . "</h3><br>\n";
+    $reflection = new ReflectionClass(new $unit_tests);
+    $unit_tests = new $unit_tests();
     try {
         $unit_tests->init($db_conn);
     } catch (Exception $ex){
