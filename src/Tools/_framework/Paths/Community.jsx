@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Badge,
   Box,
@@ -25,17 +25,17 @@ import {
   VStack,
   Checkbox,
   FormLabel,
-} from '@chakra-ui/react';
-import { useLoaderData } from 'react-router';
-import styled from 'styled-components';
-import { Carousel } from '../../../_reactComponents/PanelHeaderComponents/Carousel';
-import Searchbar from '../../../_reactComponents/PanelHeaderComponents/SearchBar';
-import { Form, useFetcher } from 'react-router-dom';
-import { RiEmotionSadLine } from 'react-icons/ri';
-import ActivityCard from '../../../_reactComponents/PanelHeaderComponents/ActivityCard';
-import AuthorCard from '../../../_reactComponents/PanelHeaderComponents/AuthorCard';
-import { ComponentListOfListsWithSelectableType } from '../../../Core/components/abstract/ComponentWithSelectableType';
-import { HiOutlineLockClosed } from 'react-icons/hi';
+} from "@chakra-ui/react";
+import { useLoaderData } from "react-router";
+import styled from "styled-components";
+import { Carousel } from "../../../_reactComponents/PanelHeaderComponents/Carousel";
+import Searchbar from "../../../_reactComponents/PanelHeaderComponents/SearchBar";
+import { Form, useFetcher } from "react-router-dom";
+import { RiEmotionSadLine } from "react-icons/ri";
+import ActivityCard from "../../../_reactComponents/PanelHeaderComponents/ActivityCard";
+import AuthorCard from "../../../_reactComponents/PanelHeaderComponents/AuthorCard";
+import { ComponentListOfListsWithSelectableType } from "../../../Core/components/abstract/ComponentWithSelectableType";
+import { HiOutlineLockClosed } from "react-icons/hi";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -48,28 +48,28 @@ export async function action({ request }) {
       return true;
     } catch (e) {
       console.log(e);
-      alert('Error - ' + e.response?.data?.message);
+      alert("Error - " + e.response?.data?.message);
       return false;
     }
   }
 
   switch (formObj?._action) {
-    case 'Ban Content':
-      return postApiAlertOnError('/api/markContentAsBanned.php', { doenetId });
-    case 'Remove Promoted Content':
-      return postApiAlertOnError('/api/removePromotedContent.php', {
+    case "Ban Content":
+      return postApiAlertOnError("/api/markContentAsBanned.php", { doenetId });
+    case "Remove Promoted Content":
+      return postApiAlertOnError("/api/removePromotedContent.php", {
         doenetId,
         groupId,
       });
-    case 'New Group':
-      return postApiAlertOnError('/api/addPromotedContentGroup.php', {
+    case "New Group":
+      return postApiAlertOnError("/api/addPromotedContentGroup.php", {
         groupName,
       });
-    case 'Promote Group':
+    case "Promote Group":
       // convert to real booleans
-      currentlyFeatured = currentlyFeatured == 'false' ? false : true;
-      homepage = homepage == 'false' ? false : true;
-      return postApiAlertOnError('/api/updatePromotedContentGroup.php', {
+      currentlyFeatured = currentlyFeatured == "false" ? false : true;
+      homepage = homepage == "false" ? false : true;
+      return postApiAlertOnError("/api/updatePromotedContentGroup.php", {
         groupName,
         currentlyFeatured,
         homepage,
@@ -79,7 +79,7 @@ export async function action({ request }) {
 
 export async function loader({ request }) {
   const url = new URL(request.url);
-  const q = url.searchParams.get('q');
+  const q = url.searchParams.get("q");
   if (q) {
     //Show search results
     const response = await fetch(`/api/searchPublicActivities.php?q=${q}`);
@@ -98,7 +98,7 @@ export async function loader({ request }) {
   } else {
     const isAdminResponse = await fetch(`/api/checkForCommunityAdmin.php`);
     const { isAdmin } = await isAdminResponse.json();
-    const response = await fetch('/api/loadPromotedContent.php');
+    const response = await fetch("/api/loadPromotedContent.php");
     const { carouselData } = await response.json();
     return { carouselData, isAdmin };
   }
@@ -108,11 +108,11 @@ function Heading(props) {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100px',
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100px",
       }}
     >
       <Text fontSize="24px" fontWeight="700">
@@ -156,10 +156,10 @@ export function MoveToGroupMenuItem({ doenetId, carouselGroups }) {
         ref={btnRef}
         colorScheme="teal"
         onClick={() => {
-          if (window.confirm('Are you sure you want to ban this content?')) {
+          if (window.confirm("Are you sure you want to ban this content?")) {
             fetcher.submit(
-              { _action: 'Ban Content', doenetId },
-              { method: 'post' },
+              { _action: "Ban Content", doenetId },
+              { method: "post" },
             );
           }
         }}
@@ -190,13 +190,13 @@ export function MoveToGroupMenuItem({ doenetId, carouselGroups }) {
                         doenetId,
                       };
                       axios
-                        .post('/api/addPromotedContent.php', uploadData)
+                        .post("/api/addPromotedContent.php", uploadData)
                         .then(({ data }) => {
                           onClose();
                         })
                         .catch((e) => {
                           console.log(e);
-                          alert('Error - ' + e.response.data.message);
+                          alert("Error - " + e.response.data.message);
                         });
                     }}
                   >
@@ -208,11 +208,11 @@ export function MoveToGroupMenuItem({ doenetId, carouselGroups }) {
               <Button
                 colorScheme="teal"
                 onClick={() => {
-                  const groupName = window.prompt('Enter a new group name');
+                  const groupName = window.prompt("Enter a new group name");
                   if (groupName) {
                     fetcher.submit(
-                      { _action: 'New Group', groupName },
-                      { method: 'post' },
+                      { _action: "New Group", groupName },
+                      { method: "post" },
                     );
                   }
                 }}
@@ -228,17 +228,17 @@ export function MoveToGroupMenuItem({ doenetId, carouselGroups }) {
                     return (
                       <Wrap key={group.groupId}>
                         <Checkbox
-                          isChecked={group.currentlyFeatured == '1'}
+                          isChecked={group.currentlyFeatured == "1"}
                           name={group.groupId}
                           onChange={(evt) => {
                             fetcher.submit(
                               {
-                                _action: 'Promote Group',
+                                _action: "Promote Group",
                                 groupName: group.groupName,
                                 currentlyFeatured: evt.target.checked,
                                 homepage: false,
                               },
-                              { method: 'post' },
+                              { method: "post" },
                             );
                           }}
                         />
@@ -274,15 +274,15 @@ export function Community() {
     let allMatches = [...searchResults?.activities, ...searchResults?.users];
     const tabs = [
       {
-        label: 'All Matches',
+        label: "All Matches",
         count: allMatches.length,
       },
       {
-        label: 'Activities',
+        label: "Activities",
         count: searchResults?.activities?.length,
       },
       {
-        label: 'Authors',
+        label: "Authors",
         count: searchResults?.users?.length,
       },
     ];
@@ -317,7 +317,7 @@ export function Community() {
           <Text fontSize="24px">
             Results for
             <Text as="span" fontSize="24px" fontWeight="700">
-              {' '}
+              {" "}
               {q}
             </Text>
           </Text>
@@ -354,7 +354,7 @@ export function Community() {
                   </Flex>
                 </Tab>
                 <Box
-                  display={currentTab !== index && 'none'}
+                  display={currentTab !== index && "none"}
                   position="absolute"
                   right={0}
                   top={0}
@@ -377,7 +377,7 @@ export function Community() {
                 alignItems="center"
               >
                 {allMatches.map((itemObj) => {
-                  if (itemObj?.type == 'activity') {
+                  if (itemObj?.type == "activity") {
                     const { doenetId, imagePath, label, fullName } = itemObj;
                     const imageLink = `/portfolioviewer/${doenetId}`;
 
@@ -400,7 +400,7 @@ export function Community() {
                         }
                       />
                     );
-                  } else if (itemObj?.type == 'author') {
+                  } else if (itemObj?.type == "author") {
                     const { courseId, firstName, lastName } = itemObj;
                     const imageLink = `/publicportfolio/${courseId}`;
 
@@ -559,8 +559,8 @@ export function Community() {
             return { activities: carouselData[groupName], groupName };
           })
           .sort((a, b) => {
-            if (a.activities[0].groupName == 'Homepage') return -1;
-            else if (b.activities[0].groupName == 'Homepage') return 1;
+            if (a.activities[0].groupName == "Homepage") return -1;
+            else if (b.activities[0].groupName == "Homepage") return 1;
             else
               return a.activities[0].currentlyFeatured >
                 b.activities[0].currentlyFeatured
@@ -571,15 +571,15 @@ export function Community() {
             let groupName = groupInfo.groupName;
             const group = groupInfo.activities;
             let notPromoted = false;
-            if (!isAdmin && group[0].groupName == 'Homepage') {
+            if (!isAdmin && group[0].groupName == "Homepage") {
               return null;
             }
             if (
               isAdmin &&
-              group[0].groupName != 'Homepage' &&
-              (group[0].currentlyFeatured == '0' || !group[0].currentlyFeatured)
+              group[0].groupName != "Homepage" &&
+              (group[0].currentlyFeatured == "0" || !group[0].currentlyFeatured)
             ) {
-              groupName += ' (Not currently featured on community page)';
+              groupName += " (Not currently featured on community page)";
               notPromoted = true;
             }
             return (
@@ -592,12 +592,12 @@ export function Community() {
                         onClick={() => {
                           fetcher.submit(
                             {
-                              _action: 'Promote Group',
+                              _action: "Promote Group",
                               groupName: groupInfo.groupName,
                               currentlyFeatured: true,
                               homepage: false,
                             },
-                            { method: 'post' },
+                            { method: "post" },
                           );
                         }}
                       >
@@ -608,12 +608,12 @@ export function Community() {
                         onClick={() => {
                           fetcher.submit(
                             {
-                              _action: 'Promote Group',
+                              _action: "Promote Group",
                               groupName: groupInfo.groupName,
                               currentlyFeatured: false,
                               homepage: false,
                             },
-                            { method: 'post' },
+                            { method: "post" },
                           );
                         }}
                       >
@@ -629,7 +629,7 @@ export function Community() {
                             {...cardObj}
                             key={`swipercard${i}`}
                             fullName={
-                              cardObj.firstName + ' ' + cardObj.lastName
+                              cardObj.firstName + " " + cardObj.lastName
                             }
                             imageLink={`/portfolioviewer/${cardObj.doenetId}`}
                             menuItems={
@@ -638,11 +638,11 @@ export function Community() {
                                   onClick={() => {
                                     fetcher.submit(
                                       {
-                                        _action: 'Remove Promoted Content',
+                                        _action: "Remove Promoted Content",
                                         doenetId: cardObj.doenetId,
                                         groupId: cardObj.promotedGroupId,
                                       },
-                                      { method: 'post' },
+                                      { method: "post" },
                                     );
                                   }}
                                 >
