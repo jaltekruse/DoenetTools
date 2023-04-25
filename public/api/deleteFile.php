@@ -8,6 +8,7 @@ header('Content-Type: application/json');
 include "db_connection.php";
 include "userQuotaBytesAvailable.php";
 include "getFilename.php";
+include_once "./models/user.php";
 
 $jwtArray = include "jwtArray.php";
 $userId = $jwtArray['userId'];
@@ -30,13 +31,8 @@ if ($doenetId == ""){
 
 //Test if user has permission to delete files
 $canUpload = FALSE;
-$sql = "
-SELECT canUpload 
-FROM user 
-WHERE userId = '$userId'
-";
-$result = $conn->query($sql);
-$row = $result->fetch_assoc();
+$row = User::userById($conn, $suerId);
+
 if ($row['canUpload'] == '1'){$canUpload = TRUE;}
 
 if (!$canUpload){

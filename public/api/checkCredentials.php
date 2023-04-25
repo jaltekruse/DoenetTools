@@ -6,6 +6,7 @@ header("Access-Control-Allow-Credentials: true");
 header('Content-Type: application/json');
 
 include "db_connection.php";
+include_once "./models/user.php";
 
 
 $emailaddress =  mysqli_real_escape_string($conn,$_REQUEST["emailaddress"]);  
@@ -55,12 +56,7 @@ if ($row['minutes'] > 10){
 
         //Test if it's a new account
 
-        $sql = "SELECT firstName,lastName, screenName 
-        FROM user 
-        WHERE email='$emailaddress'
-        ";
-        $result = $conn->query($sql);
-        $row = $result->fetch_assoc();
+        $row = User::userByEmail($conn, $emailaddress);
 
         if ($row["firstName"] != "" && $row["lastName"] != ""){
             $hasFullName = 1;

@@ -6,6 +6,7 @@ header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');
 
 include 'db_connection.php';
+include './models/user.php';
 include_once 'permissionsAndSettingsForOneCourseFunction.php';
 
 $success = true;
@@ -55,19 +56,10 @@ if ($roleId == '') {
 if ($success) {
     //TODO: Verify that this is the correct match strategy
     $email = trim($email);
-    $result = $conn->query(
-        "SELECT 
-            userId,
-            screenName,
-            firstName,
-            lastName
-        FROM user
-        WHERE email = '$email'
-    "
-    );
+    $row = User::userByEmail($conn, $email);
 
     //none match, so create new user
-    if ($result->num_rows < 1) {
+    if (!$row) {
         $toEnrollUserId = include 'randomId.php';
         $toEnrollFirstName = $firstName;
         $toEnrollLastName = $lastName;
@@ -98,8 +90,6 @@ if ($success) {
             $message = 'Internal Server Error; Could not create user';
         }
     } else {
-        $row = $result->fetch_assoc();
-
         $toEnrollUserId = $row['userId'];
         $toEnrollScreenName = $row['screenName'];
         $toEnrollFirstName = $row['firstName'];
