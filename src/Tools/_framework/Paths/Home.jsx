@@ -22,12 +22,14 @@ import {
 } from "@chakra-ui/react";
 import { HiOutlineMail } from "react-icons/hi";
 import { BsGithub, BsDiscord } from "react-icons/bs";
+import axios from "axios";
 // import { Link } from 'react-router-dom';
 // import RouterLogo from '../RouterLogo';
 
 export async function loader() {
-  const response = await fetch("/api/loadPromotedContent.php");
-  const data = await response.json();
+  const response = await axios.get("/api/loadPromotedContent.php");
+  console.log(response);
+  const data = response.data;
   return data;
 }
 

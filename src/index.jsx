@@ -148,6 +148,7 @@ const router = createBrowserRouter([
             </MathJaxContext>
           </DarkmodeController>
         ),
+        errorElement: <p>An Error happened</p>,
       },
       {
         path: "community",

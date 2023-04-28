@@ -13,6 +13,7 @@ $userId = $jwtArray['userId'];
 
 $response_arr;
 try {
+    throw new Exception("This is a simuilated error");
     $isAdmin = userIsAdmin($userId, $conn);
 
     $sql = 
