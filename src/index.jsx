@@ -47,6 +47,7 @@ import {
 } from "./Tools/_framework/Panels/NewSupportPanel";
 
 import "@fontsource/jost";
+import ErrorPanel from "./Tools/_framework/Panels/ErrorPanel";
 
 const theme = extendTheme({
   fonts: {
@@ -171,6 +172,11 @@ const router = createBrowserRouter([
         element: (
           <ChakraProvider theme={theme}>
             <Admin />
+          </ChakraProvider>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPanel />
           </ChakraProvider>
         ),
       },
