@@ -174,6 +174,11 @@ const router = createBrowserRouter([
             <Community />
           </ChakraProvider>
         ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPanel />
+          </ChakraProvider>
+        ),
       },
       {
         path: "admin",
