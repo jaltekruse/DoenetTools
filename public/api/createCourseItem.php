@@ -17,6 +17,11 @@ $message = "";
 
 $_POST = json_decode(file_get_contents('php://input'), true);
 
+$stmt = $pdo->prepare('SELECT * FROM user WHERE email = :email');
+$stmt->execute(['email' => 'a@a.com']);
+$user = $stmt->fetchAll();
+print_r($user);
+
 if (!array_key_exists('courseId', $_POST)) {
     $success = false;
     $message = 'Missing courseId';

@@ -52,4 +52,19 @@ if (!$conn->real_connect($dbhost, $username, $password, $database, 3306, null, M
     die('Database Connection failed: ' . mysqli_connect_error());
 }
 
+$charset = 'utf8mb4';
+
+$dsn = "mysql:host=$dbhost;dbname=$database;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+
+try {
+     $pdo = new PDO($dsn, $username, $password, $options);
+} catch (\PDOException $e) {
+     throw new \PDOException($e->getMessage(), (int)$e->getCode());
+}
+
 ?>

@@ -21,7 +21,7 @@ RUN apt-get install -y p7zip \
 RUN rm -rf /var/lib/apt/lists/* &&\
     apt-get -y autoremove && \
     apt-get clean
-RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install mysqli pdo_mysql
 
 WORKDIR /usr/local/apache2/htdocs/api/
 COPY ./src/Api .

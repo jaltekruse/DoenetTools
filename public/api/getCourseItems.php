@@ -12,6 +12,8 @@ include_once './models/baseModel.php';
 $jwtArray = include "jwtArray.php";
 $userId = $jwtArray['userId'];
 
+// TODO fix
+$conn = $pdo;
 $response_arr = [];
 try {
 	Base_Model::checkForRequiredInputs($_REQUEST, ["courseId"]);
@@ -167,6 +169,6 @@ try {
 	// make it json format
 	echo json_encode($response_arr);
 
-	$conn->close();
+	//$conn->close();
 }
 ?>

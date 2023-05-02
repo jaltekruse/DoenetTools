@@ -6,7 +6,7 @@
     "preview": "view preview",
     "build": "vite build",
     "dc": "docker compose -f ./docker-compose.yml -f ./.devcontainer/docker-compose.extend.yml",
-    "dbx:b": "docker buildx build --platform linux/arm64,linux/amd64",
+    "dbx:b": "docker buildx build --platform linux/amd64",
     "deploy:local": "npm run dc up -- -d --no-deps --build apache",
     "deploy:development": "npm run build -- --mode development --outDir dist --minify false",
     "deploy:dev": "npm run deploy:development",
