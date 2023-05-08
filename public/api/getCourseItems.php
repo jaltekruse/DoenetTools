@@ -13,7 +13,7 @@ $jwtArray = include "jwtArray.php";
 $userId = $jwtArray['userId'];
 
 // TODO fix
-$conn = $pdo;
+$conn;
 $response_arr = [];
 try {
 	Base_Model::checkForRequiredInputs($_REQUEST, ["courseId"]);
@@ -28,7 +28,7 @@ try {
 	//Can the user View Unassigned Content?
 	if ($permissions["canViewUnassignedContent"] == '1'){
 		//Yes then all items and json
-		$rows = Base_Model::queryFetchAssoc($conn, 
+		$rows = Base_Model::queryFetchAssoc($pdo, 
 		"
 			SELECT * from assignment_detail
 			WHERE courseId='$courseId'
@@ -57,7 +57,7 @@ try {
 			array_push($items,$item);
 		}
 		foreach($containingDoenetIds as $containingDoenetId){
-			$rows = Base_Model::queryFetchAssoc($conn, 
+			$rows = Base_Model::queryFetchAssoc($pdo, 
 			"
 				SELECT 
 				doenetId,
@@ -76,7 +76,7 @@ try {
 		}
 		//page links
 		foreach($activityDoenetIds as $activityDoenetId){
-			$rows = Base_Model::queryFetchAssoc($conn, 
+			$rows = Base_Model::queryFetchAssoc($pdo, 
 			"
 				SELECT 
 				doenetId,
@@ -169,6 +169,6 @@ try {
 	// make it json format
 	echo json_encode($response_arr);
 
-	//$conn->close();
+	$conn->close();
 }
 ?>

@@ -6,7 +6,7 @@ class Base_Model {
      */
     public static function queryFetchAssocAsPreparedStatement($pdo, $params, $query) {
 
-        echo $query;
+        //echo $query;
         $stmt = $pdo->prepare($query);
         /*
         $stmt->fetch(PDO::FETCH_ASSOC);
@@ -17,14 +17,14 @@ class Base_Model {
         try {
             $stmt->execute();
             $result = true;
-            echo " executed statements DAFSADFASDFASDFASDFASDF";
+            //echo " executed statements DAFSADFASDFASDFASDFASDF";
         } catch (Exception $ex) {
             // TODO - clean this up
-            echo " exception DAFSADFASDFASDFASDFASDF";
+            //echo " exception DAFSADFASDFASDFASDFASDF";
             throw $ex;
         }
         if (!$result) {
-            echo " no results DAFSADFASDFASDFASDFASDF";
+            //echo " no results DAFSADFASDFASDFASDFASDF";
             $errorId = uniqid();
             error_log("Error occurred " . $errorId  .
                       //"\n " . $conn->error .
@@ -32,12 +32,12 @@ class Base_Model {
             throw new Exception(
                 "Unexpected internal error occurred, please provide this error id to the doenet team " . $errorId);
         } else {
-            echo " get results DAFSADFASDFASDFASDFASDF";
+            //echo " get results DAFSADFASDFASDFASDFASDF";
             //
             //$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $rows = $stmt->fetchAll();
 
-            print_r($rows);
+            //print_r($rows);
             /*
             while ($row = $stmt->fetch()) {
                 $rows[] = $row;
