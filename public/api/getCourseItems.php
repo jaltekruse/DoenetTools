@@ -102,11 +102,15 @@ try {
 	}else if($permissions != false){
 		//TODO: check that user is in the course
 
-		$sql = "
+		$rows = Base_Model::queryFetchAssocAsPreparedStatement($pdo, 
+		['courseId' => $courseId,
+		 'userId' => $userId
+		],
+		"
 			SELECT * from assigned_assignment_detail
-			WHERE courseId='$courseId'
-			AND userId = '$userId'
-		";
+			WHERE courseId = :courseId
+			AND userId = :userId
+		");
 
 		$items = [];
         foreach($rows as $row) {
