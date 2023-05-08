@@ -28,10 +28,11 @@ try {
 	//Can the user View Unassigned Content?
 	if ($permissions["canViewUnassignedContent"] == '1'){
 		//Yes then all items and json
-		$rows = Base_Model::queryFetchAssoc($pdo, 
+		$rows = Base_Model::queryFetchAssocAsPreparedStatement($pdo, 
+		['courseId' => $courseId],
 		"
 			SELECT * from assignment_detail
-			WHERE courseId='$courseId'
+			WHERE courseId=:courseId
 		");
 		//TODO: Emilio and Kevin Discuss default behavior on undefine server keys
 
@@ -57,7 +58,8 @@ try {
 			array_push($items,$item);
 		}
 		foreach($containingDoenetIds as $containingDoenetId){
-			$rows = Base_Model::queryFetchAssoc($pdo, 
+			$rows = Base_Model::queryFetchAssocAsPreparedStatement($pdo,
+			['containignDoenetId' => $containingDoenetId],
 			"
 				SELECT 
 				doenetId,
@@ -76,7 +78,8 @@ try {
 		}
 		//page links
 		foreach($activityDoenetIds as $activityDoenetId){
-			$rows = Base_Model::queryFetchAssoc($pdo, 
+			$rows = Base_Model::queryFetchAssocAsPreparedStatement($pdo, 
+			['containingDoenetId' => $activityDoenetId],
 			"
 				SELECT 
 				doenetId,
@@ -87,7 +90,7 @@ try {
 				timeOfLastUpdate,
 				label
 				FROM link_pages
-				WHERE containingDoenetId = '$activityDoenetId'
+				WHERE containingDoenetId = :containingDoenetId
 			");
         	foreach($rows as $item) {
 				$item["type"] = "pageLink";

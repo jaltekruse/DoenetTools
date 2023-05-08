@@ -8,12 +8,10 @@ class Base_Model {
 
         //echo $query;
         $stmt = $pdo->prepare($query);
-        /*
-        $stmt->fetch(PDO::FETCH_ASSOC);
+        //$stmt->fetch(PDO::FETCH_ASSOC);
         foreach ($params as $key => &$val) {
-            $conn->bindParam($key, $val);
+            $stmt->bindParam($key, $val);
         }
-        */
         try {
             $stmt->execute();
             $result = true;
@@ -21,16 +19,16 @@ class Base_Model {
         } catch (Exception $ex) {
             // TODO - clean this up
             //echo " exception DAFSADFASDFASDFASDFASDF";
+            $errorId = uniqid();
+            error_log("Error occurred " . $errorId  .
+                      "\n " . $ex->getMessage() .
+                      "\n" . $query);
+            throw new Exception(
+                "Unexpected internal error occurred, please provide this error id to the doenet team " . $errorId);
             throw $ex;
         }
         if (!$result) {
             //echo " no results DAFSADFASDFASDFASDFASDF";
-            $errorId = uniqid();
-            error_log("Error occurred " . $errorId  .
-                      //"\n " . $conn->error .
-                      "\n" . $query);
-            throw new Exception(
-                "Unexpected internal error occurred, please provide this error id to the doenet team " . $errorId);
         } else {
             //echo " get results DAFSADFASDFASDFASDFASDF";
             //
