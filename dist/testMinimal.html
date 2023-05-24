@@ -1,0 +1,84 @@
+
+<html>
+    <head>
+        <title>React Hello World</title>
+        <script src="https://unpkg.com/react@15/dist/react.js"></script>
+        <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script type="module" crossorigin src="/assets/main-3bcc86fc.js"></script>
+        <link rel="modulepreload" crossorigin href="/assets/PageViewer-d914b069.js">
+        <script>
+            window.onload = function()
+            {
+                /*
+                class Greetings extends React.Component
+                {
+                    render()
+                    {
+                        return React.createElement('h1', null, 'Greetings, ' + this.props.name + '!');
+                    }
+                }
+
+                ReactDOM.render(
+                    React.createElement(Greetings, { name : 'Chris' }),
+                    document.getElementById('root')
+                );
+              <PageViewer
+                key={`HPpageViewer`}
+                doenetML={doenetML}
+                flags={{
+                  showCorrectness: true,
+                  solutionDisplayMode: true,
+                  showFeedback: true,
+                  showHints: true,
+                  autoSubmit: false,
+                  allowLoadState: false,
+                  allowSaveState: false,
+                  allowLocalState: false,
+                  allowSaveSubmissions: false,
+                  allowSaveEvents: false,
+                }}
+                // doenetId={doenetId}
+                attemptNumber={1}
+                generatedVariantCallback={variantCallback} //TODO:Replace
+                requestedVariantIndex={variantInfo.index}
+                // setIsInErrorState={setIsInErrorState}
+                pageIsActive={true}
+              />
+                */
+                            var doenetML = "<p>Hello there</p>";
+            window.setTimeout(function() {
+              ReactDOM.render(
+                React.createElement(PageViewer, { 
+                    key:`HPpageViewer`,
+                    doenetML: doenetML,
+                    flags: {
+                      showCorrectness: true,
+                      solutionDisplayMode: true,
+                      showFeedback: true,
+                      showHints: true,
+                      autoSubmit: false,
+                      allowLoadState: false,
+                      allowSaveState: false,
+                      allowLocalState: false,
+                      allowSaveSubmissions: false,
+                      allowSaveEvents: false,
+                    },
+                    // doenetId={doenetId}
+                    attemptNumber:1,
+                    generatedVariantCallback: function() {}, //TODO:Replace
+                    requestedVariantIndex: 1,
+                    // setIsInErrorState={setIsInErrorState}
+                    pageIsActive: true
+                }),
+                document.getElementById('root')
+              );
+                            
+            
+                        }, 2000)}
+        </script>
+    </body>
+</html>
