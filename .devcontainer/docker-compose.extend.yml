@@ -55,7 +55,7 @@ services:
     restart: on-failure
   apache:
     ports:
-      - 8080:80
+      - 80:80
     build:
       context: ./
       dockerfile: ./doenet_docker/apache/Dockerfile
