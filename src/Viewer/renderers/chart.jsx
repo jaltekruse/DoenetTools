@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, createContext } from "react";
 import { sizeToCSS } from "./utils/css";
 import useDoenetRender from "../useDoenetRenderer";
-import Plotly from "plotly.js-basic-dist";
+import Plotly from "plotly.js-cartesian-dist-min";
 import VisibilitySensor from "react-visibility-sensor-v2";
 
 export const BoardContext = createContext();

@@ -26,6 +26,11 @@ export default class Chart extends BlockComponent {
       createStateVariable: "type",
       defaultValue: "histogram",
       toLowerCase: true,
+      //The cartesian partial bundle contains trace modules
+      //bar, box, contour, heatmap, histogram, histogram2d, histogram2dcontour,
+      //image, pie, scatter, scatterternary and violin.
+      // it appears pltly doesn't have a dotplot, but I think scatter is what we want for that
+      // but only box and histogram appear in our renderer so far
       validValues: ["histogram", "dotplot", "frequencytable", "box", "bar"],
       forRenderer: true,
     };
