@@ -1018,8 +1018,11 @@ function RootController(props) {
     isPageChange = true;
     if (nextPageToolView.tool === "") {
       //Load default
-      nextMenusAndPanels = navigationObj[nextPageToolView.page].default;
-      if (Object.keys(nextMenusAndPanels).includes("defaultTool")) {
+      nextMenusAndPanels = navigationObj[nextPageToolView.page]?.default;
+      if (
+        nextMenusAndPanels &&
+        Object.keys(nextMenusAndPanels).includes("defaultTool")
+      ) {
         const url =
           window.location.pathname +
           location.pathname +

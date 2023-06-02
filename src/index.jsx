@@ -306,28 +306,28 @@ const router = createBrowserRouter([
       </MathJaxContext>
     ),
   },
-  // {
-  //   path: "*",
-  //   // errorElement: <div>Error!</div>,
-  //   element: (
-  //     <MathJaxContext
-  //       version={2}
-  //       config={mathjaxConfig}
-  //       onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
-  //     >
-  //       <ToolRoot />
-  //     </MathJaxContext>
-  //   ),
-  //   // TODO - probably not a good idea long term, this is to populate the site header
-  //   // on the 404 page, but this results in extra network requests when loading
-  //   // ToolRoot content
-  //   loader: siteLoader,
-  //   errorElement: (
-  //     <ChakraProvider theme={theme}>
-  //       <SiteHeader childComponent={<ErrorPage />} />
-  //     </ChakraProvider>
-  //   ),
-  // },
+  {
+    path: "*",
+    // errorElement: <div>Error!</div>,
+    element: (
+      <MathJaxContext
+        version={2}
+        config={mathjaxConfig}
+        onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
+      >
+        <ToolRoot />
+      </MathJaxContext>
+    ),
+    // TODO - probably not a good idea long term, this is to populate the site header
+    // on the 404 page, but this results in extra network requests when loading
+    // ToolRoot content
+    loader: siteLoader,
+    errorElement: (
+      <ChakraProvider theme={theme}>
+        <SiteHeader childComponent={<ErrorPage />} />
+      </ChakraProvider>
+    ),
+  },
 ]);
 
 const root = createRoot(document.getElementById("root"));
