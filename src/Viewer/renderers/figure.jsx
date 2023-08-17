@@ -219,42 +219,6 @@ var Axes = function (params) {
       params.axisLabelSpace = 0.08;
     }
   }
-  const geometry = new THREE.BufferGeometry();
-  const material = new THREE.LineBasicMaterial({ vertexColors: true });
-
-  const positions = [];
-  const colors = [];
-
-  const r = 800;
-  let t = 0;
-  const segments = 200;
-  for (let i = 0; i < segments; i++) {
-    const x = Math.random() * r - r / 2;
-    const y = Math.random() * r - r / 2;
-    const z = Math.random() * r - r / 2;
-
-    // positions
-
-    positions.push(x, y, z);
-
-    // colors
-
-    colors.push(x / r + 0.5);
-    colors.push(y / r + 0.5);
-    colors.push(z / r + 0.5);
-  }
-
-  geometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(positions, 3),
-  );
-  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-
-  geometry.computeBoundingSphere();
-
-  let line = new THREE.Line(geometry, material);
-  return line;
-  /*
 
   //Overall geometry, containing all vectors for standard and/or box axes
   var bufferGeometry = new THREE.BufferGeometry();
@@ -464,7 +428,42 @@ var Axes = function (params) {
         }
       }
     }
+  }
 
+  const material = new THREE.LineBasicMaterial({ vertexColors: true });
+
+  const positions = [];
+  const colors = [];
+
+  const r = 800;
+  let t = 0;
+  const segments = 200;
+  for (const vertex of geometry.vertices) {
+    console.log(vertex);
+    positions.push(vertex.x, vertex.y, vertex.z);
+
+    // colors
+
+    colors.push(0.1);
+    colors.push(0.1);
+    colors.push(0.1);
+  }
+
+  bufferGeometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(positions, 3),
+  );
+  bufferGeometry.setAttribute(
+    "color",
+    new THREE.Float32BufferAttribute(colors, 3),
+  );
+
+  bufferGeometry.computeBoundingSphere();
+
+  let line = new THREE.Line(bufferGeometry, material);
+  return line;
+
+  /*
     let positions = [];
     for (const vertex of geometry.vertices) {
       console.log(vertex);
@@ -487,7 +486,7 @@ var Axes = function (params) {
 
   THREE.Line.call(this, geometry, material, THREE.LinePieces);
 
-
+  /*
   // standard axes
   else {
     geometry.vertices.push(
