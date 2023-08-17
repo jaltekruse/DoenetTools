@@ -54,14 +54,22 @@ export default React.memo(function Figure(props) {
   //axes.position.z -= Math.PI;
 
   return (
-    <Canvas>
-      <ambientLight />
-      <pointLight position={[10, 10, 10]} />
-      <Box position={[-1.2, 0, 0]} />
-      <Box position={[1.2, 0, 0]} />
-      <primitive object={axes} />
-      <OrbitControls />
-    </Canvas>
+    <div
+      style={{
+        height: "600px",
+        width: "100%",
+      }}
+    >
+      <Canvas size={{ width: "500px", height: "500px" }}>
+        Z
+        <ambientLight />
+        <pointLight position={[10, 10, 10]} />
+        <Box position={[-1.2, 0, 0]} />
+        <Box position={[1.2, 0, 0]} />
+        <primitive object={axes} />
+        <OrbitControls />
+      </Canvas>
+    </div>
   );
 });
 
