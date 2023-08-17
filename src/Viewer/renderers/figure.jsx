@@ -460,7 +460,7 @@ var Axes = function (params) {
 
   bufferGeometry.computeBoundingSphere();
 
-  let line = new THREE.Line(bufferGeometry, material);
+  let line = new THREE.LineSegments(bufferGeometry, material);
   return line;
 
   /*
