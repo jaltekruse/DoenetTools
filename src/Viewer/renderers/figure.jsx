@@ -38,7 +38,7 @@ export default React.memo(function Figure(props) {
   var axesParams = {
     size: new THREE.Vector3(3.1, 2.1, 2 * Math.PI),
     negSize: new THREE.Vector3(-3.1, -2.1, 0),
-    showBoxAxes: true,
+    showBoxAxes: false,
     showAxisTicks: true,
     showAxisTickLabels: true,
     axisTickIncrement: new THREE.Vector3(1, 1, 2),
@@ -429,64 +429,6 @@ var Axes = function (params) {
       }
     }
   }
-
-  const material = new THREE.LineBasicMaterial({ vertexColors: true });
-
-  const positions = [];
-  const colors = [];
-
-  const r = 800;
-  let t = 0;
-  const segments = 200;
-  for (const vertex of geometry.vertices) {
-    console.log(vertex);
-    positions.push(vertex.x, vertex.y, vertex.z);
-
-    // colors
-
-    colors.push(0.1);
-    colors.push(0.1);
-    colors.push(0.1);
-  }
-
-  bufferGeometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(positions, 3),
-  );
-  bufferGeometry.setAttribute(
-    "color",
-    new THREE.Float32BufferAttribute(colors, 3),
-  );
-
-  bufferGeometry.computeBoundingSphere();
-
-  let line = new THREE.LineSegments(bufferGeometry, material);
-  return line;
-
-  /*
-    let positions = [];
-    for (const vertex of geometry.vertices) {
-      console.log(vertex);
-      positions.push(vertex.x, vertex.y, vertex.z);
-    }
-
-    bufferGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(new Float32Array(), 3),
-    );
-  }
-
-  var material = new THREE.LineBasicMaterial({
-    color: params.color,
-    linewidth: params.axisWidth,
-  });
-  let line = new THREE.Line(bufferGeometry, material);
-
-  return line;
-
-  THREE.Line.call(this, geometry, material, THREE.LinePieces);
-
-  /*
   // standard axes
   else {
     geometry.vertices.push(
@@ -558,6 +500,41 @@ var Axes = function (params) {
       }
     }
   }
+
+  const material = new THREE.LineBasicMaterial({ vertexColors: true });
+
+  const positions = [];
+  const colors = [];
+
+  const r = 800;
+  let t = 0;
+  const segments = 200;
+  for (const vertex of geometry.vertices) {
+    console.log(vertex);
+    positions.push(vertex.x, vertex.y, vertex.z);
+
+    // colors
+
+    colors.push(0.1);
+    colors.push(0.1);
+    colors.push(0.1);
+  }
+
+  bufferGeometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(positions, 3),
+  );
+  bufferGeometry.setAttribute(
+    "color",
+    new THREE.Float32BufferAttribute(colors, 3),
+  );
+
+  bufferGeometry.computeBoundingSphere();
+
+  let line = new THREE.LineSegments(bufferGeometry, material);
+  return line;
+
+  /*
 
   var material = new THREE.LineBasicMaterial({
     color: params.color,
