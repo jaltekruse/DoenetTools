@@ -50,6 +50,7 @@
     "@react-spring/web": "^9.4.5",
     "@react-three/drei": "^9.80.3",
     "@react-three/fiber": "^8.13.7",
+    "@seregpie/three.text-texture": "^3.2.1",
     "@types/three": "^0.155.0",
     "@use-gesture/react": "^10.2.22",
     "axios": "^0.27.2",

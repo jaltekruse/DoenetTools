@@ -117,7 +117,8 @@ export default React.memo(function Graph(props) {
     labelz: "t",
   };
 
-  var axes = new Axes(axesParams);
+  var axes = Axes(axesParams);
+  console.log(axes);
 
   let instance = new TextSprite({
     alignment: "left",
@@ -125,13 +126,11 @@ export default React.memo(function Graph(props) {
     fontFamily: '"Times New Roman", Times, serif',
     fontSize: 8,
     fontStyle: "italic",
-    text: [
-      "Twinkle, twinkle, little star,",
-      "How I wonder what you are!",
-      "Up above the world so high,",
-      "Like a diamond in the sky.",
-    ].join("\n"),
+    text: ["4"].join("\n"),
   });
+
+  console.log(instance);
+  console.log(axes.sprites[0]);
 
   return (
     <div style={{ width: "400px", height: "400px", border: "2px solid black" }}>
@@ -141,9 +140,9 @@ export default React.memo(function Graph(props) {
         {children}
         <primitive object={axes.lines} />
         <primitive object={instance} />
-        {/* axes.sprites.forEach((element) => {
+        {axes.sprites.forEach((element) => {
           <primitive object={element} />;
-        }) */}
+        })}
 
         <OrbitControls />
         <cylinderGeometry attach="geometry" args={[2, 2, 2]} />
@@ -181,36 +180,17 @@ var TextLabel = function (message, parameters) {
     ? parameters["fontWeight"]
     : "Bold ";
 
-  const canvas = new OffscreenCanvas(400, 350);
-  var context = canvas.getContext("2d");
-  // TODO - fix this hack, preserving an object called canas with width and height
-  // but this isn't a real canvas attached to the DOM, because we made an OffscreenCanvas
-  // see above the start of this function/constructor
-  this.context.font = fontWeight + fontSize + "px " + fontFace;
-
-  this.context.fillStyle = textColor;
-
-  this.context.textAlign = "center";
-  this.context.textBaseline = "middle";
-  this.context.fillText(
-    message,
-    this.canvas.width / 2,
-    this.canvas.height / 2,
-    this.canvas.width,
-  );
-
-  // canvas contents will be used for a texture
-  this.texture = new THREE.Texture(this.canvas);
-  this.texture.needsUpdate = true;
-
-  var material = new THREE.SpriteMaterial({ map: this.texture });
-
-  THREE.Sprite.call(this, material);
-
-  this.scale.set(scale, scale, 1);
+  console.log(message);
+  console.log([message].join("\n"));
+  return new TextSprite({
+    alignment: "left",
+    color: textColor,
+    fontFamily: fontFace,
+    fontSize: fontSize,
+    fontStyle: "italic",
+    text: [message].join("\n"),
+  });
 };
-
-TextLabel.prototype = Object.create(THREE.Sprite.prototype);
 
 // change the text label to a new message
 /*
@@ -259,7 +239,7 @@ TextLabel.prototype.set = (function (message) {
  * tickLabelDigits: number of digits to round tick labels, defaults to 1
  */
 
-var Axes = function (params) {
+function Axes(params) {
   if (params === undefined) {
     var params = {};
   }
@@ -699,8 +679,7 @@ var Axes = function (params) {
 
   let sprites = [];
 
-  return { sprites, lines };
-  /*
+  return { lines, sprites };
 
   if (params.showBoxAxes === true) {
     if (params.showAxisTickLabels) {
@@ -1014,6 +993,7 @@ var Axes = function (params) {
             textColor: params.labelColor,
             fontWeight: "",
           });
+          console.log(sprite);
           sprite.position.set(
             x,
             (params.size.y - params.negSize.y) * params.tickLabelSpace,
@@ -1121,7 +1101,8 @@ var Axes = function (params) {
       sprites.push(spriteOverallLabel);
     }
   }
-};
+  return { sprites, lines };
+}
 
 Axes.prototype = Object.create(THREE.Line.prototype);
 
@@ -1334,6 +1315,7 @@ var Axes2D = function (params) {
       }
     }
   }
-  return { sprites, lines };
-  */
+  let ret = { sprites: sprites, lines: lines };
+  console.log(ret);
+  return ret;
 };
