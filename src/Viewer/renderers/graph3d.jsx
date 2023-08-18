@@ -1,14 +1,43 @@
-import React, { useEffect, useState, useRef, createContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  createContext,
+  useMemo,
+  Suspense,
+} from "react";
 import { sizeToCSS } from "./utils/css";
 import useDoenetRenderer from "../useDoenetRenderer";
 import me from "math-expressions";
 import VisibilitySensor from "react-visibility-sensor-v2";
 import { cesc } from "../../_utils/url";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, extend } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
+extend({ TextGeometry });
 import * as THREE from "three";
 
 import TextTexture from "@seregpie/three.text-texture";
+
+//import bold from "./bold.blob";
+
+export function Text({ str, size = 1, ...props }, children) {
+  //const font = useLoader(THREE.FontLoader, bold);
+  const config = () => ({
+    size: 24,
+    height: 0,
+    curveSegments: 32,
+  });
+  const mesh = useRef([str]);
+  return (
+    <Suspense fallback={null}>
+      <mesh ref={mesh} scale={[0.1 * size, 0.1 * size, 0.1]} {...props}>
+        <textGeometry attach="geometry" args={[str, config]} />
+        <meshNormalMaterial attach="material" color="black" />
+      </mesh>
+    </Suspense>
+  );
+}
 
 //https://github.com/SeregPie/THREE.TextSprite/blob/main/src/index.js
 let TextSprite = class extends THREE.Sprite {
@@ -106,7 +135,7 @@ export default React.memo(function Graph(props) {
     size: new THREE.Vector3(SVs.xmax, SVs.ymax, SVs.zmax),
     negSize: new THREE.Vector3(SVs.xmin, SVs.ymin, SVs.zmin),
     axisWidth: 10,
-    showBoxAxes: false,
+    showBoxAxes: true,
     showAxisTicks: true,
     showAxisTickLabels: true,
     axisTickIncrement: new THREE.Vector3(4, 4, 4),
@@ -129,6 +158,17 @@ export default React.memo(function Graph(props) {
     text: ["4"].join("\n"),
   });
 
+  let instance2 = new TextSprite({
+    alignment: "left",
+    color: "#24ff00",
+    fontFamily: '"Times New Roman", Times, serif',
+    fontSize: 8,
+    fontStyle: "italic",
+    text: ["5"].join("\n"),
+  });
+
+  instance2.position.set(2, 5, 0);
+
   console.log(instance);
   console.log(axes.sprites[0]);
 
@@ -139,11 +179,13 @@ export default React.memo(function Graph(props) {
         <directionalLight color="red" position={[0, 4, 5]} />
         {children}
         <primitive object={axes.lines} />
-        <primitive object={instance} />
-        {axes.sprites.forEach((element) => {
-          <primitive object={element} />;
+        <Text position={[0, 0, 0]} str="3D" size={1.3} />
+        {/* <primitive object={instance} /> */}
+        {/* <primitive object={instance2} /> */}
+        <primitive object={axes.sprites[0]} />
+        {axes.sprites.map((element) => {
+          return <primitive key={Math.random()} object={element} />;
         })}
-
         <OrbitControls />
         <cylinderGeometry attach="geometry" args={[2, 2, 2]} />
       </Canvas>
@@ -185,8 +227,8 @@ var TextLabel = function (message, parameters) {
   return new TextSprite({
     alignment: "left",
     color: textColor,
-    fontFamily: fontFace,
-    fontSize: fontSize,
+    fontFamily: '"Times New Roman", Times, serif',
+    fontSize: fontSize / 20,
     fontStyle: "italic",
     text: [message].join("\n"),
   });
@@ -679,8 +721,6 @@ function Axes(params) {
 
   let sprites = [];
 
-  return { lines, sprites };
-
   if (params.showBoxAxes === true) {
     if (params.showAxisTickLabels) {
       var tickMinInd = Math.ceil(params.negSize.x / params.axisTickIncrement.x);
@@ -691,6 +731,7 @@ function Axes(params) {
         var xRound =
           Math.round(x * params.tickLabelRescale.x * tickLabelRoundFactor) /
           tickLabelRoundFactor;
+
         var sprite = new TextLabel(xRound.toString(), {
           fontSize: params.axisTickLabelFontSize,
           scale: params.labelScale,
@@ -1105,217 +1146,3 @@ function Axes(params) {
 }
 
 Axes.prototype = Object.create(THREE.Line.prototype);
-
-// two-dimensional axes
-var Axes2D = function (params) {
-  if (params === undefined) {
-    var params = {};
-  }
-
-  if (!isNaN(params)) {
-    //i.e. if params is a number, convert it to object format
-    var incomingSize = params;
-    params = {};
-    params.size = incomingSize;
-  }
-
-  if (params.size === undefined) {
-    params.size = new THREE.Vector2(1, 1);
-  } else if (!(params.size instanceof THREE.Vector2)) {
-    params.size = new THREE.Vector2(params.size, params.size);
-  }
-
-  if (params.negSize === undefined) {
-    params.negSize = params.size.clone().negate();
-  } else if (!(params.negSize instanceof THREE.Vector2)) {
-    params.negSize = new THREE.Vector3(params.negSize, params.negSize);
-  }
-
-  if (params.label === undefined) {
-    params.label = "";
-  }
-  if (params.labelx === undefined) {
-    params.labelx = "x";
-  }
-  if (params.labely === undefined) {
-    params.labely = "y";
-  }
-  if (params.showLabels === undefined) {
-    params.showLabels = true;
-  }
-  if (params.color === undefined) {
-    params.color = 0x000000;
-  }
-  if (params.labelFontSize === undefined) {
-    params.labelFontSize = 120;
-  }
-  if (params.labelScale === undefined) {
-    params.labelScale = 2;
-  }
-  if (params.labelColor === undefined) {
-    params.labelColor = "#000000";
-  }
-  if (params.axisWidth === undefined) {
-    params.axisWidth = 5;
-  }
-
-  if (params.showAxisTicks === undefined) {
-    params.showAxisTicks = false;
-  }
-  if (params.axisTickSize === undefined) {
-    params.axisTickSize = 0.03;
-  }
-  if (params.axisTickIncrement === undefined) {
-    params.axisTickIncrement = new THREE.Vector2(1, 1);
-  } else if (!(params.axisTickIncrement instanceof THREE.Vector2)) {
-    params.axisTickIncrement = new THREE.Vector2(
-      params.axisTickIncrement,
-      params.axisTickIncrement,
-    );
-  }
-  if (params.showAxisTickLabels === undefined) {
-    params.showAxisTickLabels = false;
-  }
-  if (params.axisTickLabelFontSize === undefined) {
-    params.axisTickLabelFontSize = params.labelFontSize;
-  }
-  if (params.showZeroTickLabels === undefined) {
-    params.showZeroTickLabels = false;
-  }
-  if (params.tickLabelDigits === undefined) {
-    params.tickLabelDigits = 1;
-  }
-  var tickLabelRoundFactor = Math.pow(10, params.tickLabelDigits);
-
-  var geometry = new THREE.Geometry();
-
-  geometry.vertices.push(
-    new THREE.Vector3(),
-    new THREE.Vector3(params.size.x, 0, 0),
-    new THREE.Vector3(),
-    new THREE.Vector3(0, params.size.y, 0),
-    new THREE.Vector3(),
-    new THREE.Vector3(params.negSize.x, 0, 0),
-    new THREE.Vector3(),
-    new THREE.Vector3(0, params.negSize.y, 0),
-  );
-
-  if (params.showAxisTicks) {
-    var tickMinInd = Math.ceil(params.negSize.x / params.axisTickIncrement.x);
-    var tickMaxInd = Math.floor(params.size.x / params.axisTickIncrement.x);
-
-    for (var i = tickMinInd; i <= tickMaxInd; i += 1) {
-      var x = i * params.axisTickIncrement.x;
-      geometry.vertices.push(
-        new THREE.Vector3(
-          x,
-          -(params.size.y - params.negSize.y) * params.axisTickSize,
-          0,
-        ),
-        new THREE.Vector3(
-          x,
-          (params.size.y - params.negSize.y) * params.axisTickSize,
-          0,
-        ),
-      );
-    }
-    tickMinInd = Math.ceil(params.negSize.y / params.axisTickIncrement.y);
-    tickMaxInd = Math.floor(params.size.y / params.axisTickIncrement.y);
-    for (var i = tickMinInd; i <= tickMaxInd; i += 1) {
-      var y = i * params.axisTickIncrement.y;
-      geometry.vertices.push(
-        new THREE.Vector3(
-          -(params.size.x - params.negSize.x) * params.axisTickSize,
-          y,
-          0,
-        ),
-        new THREE.Vector3(
-          (params.size.x - params.negSize.x) * params.axisTickSize,
-          y,
-          0,
-        ),
-      );
-    }
-  }
-  var material = new THREE.LineBasicMaterial({
-    color: params.color,
-    linewidth: params.axisWidth,
-  });
-
-  THREE.Line.call(this, geometry, material, THREE.LinePieces);
-
-  if (params.showLabels) {
-    var spritex = new TextLabel(params.labelx, {
-      fontSize: params.labelFontSize,
-      scale: params.labelScale,
-      textColor: params.labelColor,
-    });
-    spritex.position.set(
-      params.size.x + (params.size.x - params.negSize.x) * 0.05,
-      0,
-      0,
-    );
-    sprites.push(spritex);
-
-    var spritey = new TextLabel(params.labely, {
-      fontSize: params.labelFontSize,
-      scale: params.labelScale,
-      textColor: params.labelColor,
-    });
-    spritey.position.set(
-      0,
-      params.size.y + (params.size.y - params.negSize.y) * 0.05,
-      0,
-    );
-    sprites.push(spritey);
-  }
-  if (params.showAxisTickLabels) {
-    var tickMinInd = Math.ceil(params.negSize.x / params.axisTickIncrement.x);
-    var tickMaxInd = Math.floor(params.size.x / params.axisTickIncrement.x);
-
-    for (var i = tickMinInd; i <= tickMaxInd; i += 1) {
-      var x = i * params.axisTickIncrement.x;
-      var xRound = Math.round(x * tickLabelRoundFactor) / tickLabelRoundFactor;
-
-      if (i != 0 || params.showZeroTickLabels) {
-        var sprite = new TextLabel(xRound.toString(), {
-          fontSize: params.axisTickLabelFontSize,
-          scale: params.labelScale,
-          textColor: params.labelColor,
-          fontWeight: "",
-        });
-        sprite.position.set(
-          x,
-          -(params.size.y - params.negSize.y) * params.axisTickSize * 3,
-          0,
-        );
-        sprites.push(sprite);
-      }
-    }
-
-    tickMinInd = Math.ceil(params.negSize.y / params.axisTickIncrement.y);
-    tickMaxInd = Math.floor(params.size.y / params.axisTickIncrement.y);
-
-    for (var i = tickMinInd; i <= tickMaxInd; i += 1) {
-      var y = i * params.axisTickIncrement.y;
-      var yRound = Math.round(y * tickLabelRoundFactor) / tickLabelRoundFactor;
-      if (i != 0 || params.showZeroTickLabels) {
-        var sprite = new TextLabel(yRound.toString(), {
-          fontSize: params.axisTickLabelFontSize,
-          scale: params.labelScale,
-          textColor: params.labelColor,
-          fontWeight: "",
-        });
-        sprite.position.set(
-          -(params.size.x - params.negSize.x) * params.axisTickSize * 3,
-          y,
-          0,
-        );
-        sprites.push(sprite);
-      }
-    }
-  }
-  let ret = { sprites: sprites, lines: lines };
-  console.log(ret);
-  return ret;
-};
