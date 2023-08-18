@@ -66,7 +66,10 @@ export default React.memo(function Figure(props) {
         <pointLight position={[10, 10, 10]} />
         <Box position={[-1.2, 0, 0]} />
         <Box position={[1.2, 0, 0]} />
-        <primitive object={axes} />
+        <primitive object={axes.lines} />
+        {axes.sprites.forEach((element) => {
+          <primitive object={element} />;
+        })}
         <OrbitControls />
       </Canvas>
     </div>
@@ -74,7 +77,84 @@ export default React.memo(function Figure(props) {
 });
 
 ("use strict");
+// https://mathinsight.org/static/js/three/TextLabel.js
+// add text label
 
+// still need to work on getting the text to show up at a good size
+// If make font size small, then it shows up blurry.
+// Haven't figured out why the fontsize/scale seem to have
+// different effects in different contexts.
+
+const canvas = new OffscreenCanvas(400, 350);
+var context = canvas.getContext("2d");
+
+class TextLabel {
+  constructor(message, parameters) {
+  if (parameters === undefined) parameters = {};
+
+  var fontFace = parameters.hasOwnProperty("fontFace")
+    ? parameters["fontFace"]
+    : "Arial";
+
+  var fontSize = parameters.hasOwnProperty("fontSize")
+    ? parameters["fontSize"]
+    : 120;
+
+  var scale = parameters.hasOwnProperty("scale") ? parameters["scale"] : 2;
+
+  var textColor = parameters.hasOwnProperty("textColor")
+    ? parameters["textColor"]
+    : "#000000";
+
+  var fontWeight = parameters.hasOwnProperty("fontWeight")
+    ? parameters["fontWeight"]
+    : "Bold ";
+
+  this.context = context;
+  // TODO - fix this hack, preserving an object called canas with width and height
+  // but this isn't a real canvas attached to the DOM, because we made an OffscreenCanvas
+  // see above the start of this function/constructor
+  this.canvas = canvas;
+  this.context.font = fontWeight + fontSize + "px " + fontFace;
+
+  this.context.fillStyle = textColor;
+
+  this.context.textAlign = "center";
+  this.context.textBaseline = "middle";
+  this.context.fillText(
+    message,
+    this.canvas.width / 2,
+    this.canvas.height / 2,
+    this.canvas.width,
+  );
+
+  // canvas contents will be used for a texture
+  this.texture = new THREE.Texture(this.canvas);
+  this.texture.needsUpdate = true;
+
+  var material = new THREE.SpriteMaterial({ map: this.texture });
+
+  THREE.Sprite.call(this, material);
+
+  this.scale.set(scale, scale, 1);
+}
+
+TextLabel.prototype = Object.create(THREE.Sprite.prototype);
+
+// change the text label to a new message
+TextLabel.prototype.set = (function (message) {
+  //this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+  this.context.fillText(
+    message,
+    canvas.width / 2,
+    canvas.height / 2,
+    canvas.width,
+  );
+  this.texture.needsUpdate = true;
+})("use strict");
+
+// https://mathinsight.org/static/js/three/Axes.js
 // This file contains options for standard 3D axes, box 3D axes, and 2D axes.
 // Standard and box axes are accessed through Axes, 2D is accessed through Axes2D
 
@@ -539,18 +619,9 @@ var Axes = function (params) {
 
   bufferGeometry.computeBoundingSphere();
 
-  let line = new THREE.LineSegments(bufferGeometry, material);
-  return line;
+  let lines = new THREE.LineSegments(bufferGeometry, material);
 
-  /*
-
-  var material = new THREE.LineBasicMaterial({
-    color: params.color,
-    linewidth: params.axisWidth,
-  });
-
-  THREE.Line.call(this, geometry, material, THREE.LinePieces);
-
+  let sprites = [];
   if (params.showBoxAxes === true) {
     if (params.showAxisTickLabels) {
       var tickMinInd = Math.ceil(params.negSize.x / params.axisTickIncrement.x);
@@ -567,7 +638,7 @@ var Axes = function (params) {
           textColor: params.labelColor,
           fontWeight: "",
         });
-        this.add(sprite);
+        sprites.push(sprite);
 
         if (params.boxAxisTicksXSide == 1) {
           sprite.position.set(
@@ -619,7 +690,7 @@ var Axes = function (params) {
           textColor: params.labelColor,
           fontWeight: "",
         });
-        this.add(sprite);
+        sprites.push(sprite);
 
         if (params.boxAxisTicksYSide == 1) {
           sprite.position.set(
@@ -671,7 +742,7 @@ var Axes = function (params) {
           textColor: params.labelColor,
           fontWeight: "",
         });
-        this.add(sprite);
+        sprites.push(sprite);
 
         if (params.boxAxisTicksZSide == 1) {
           sprite.position.set(
@@ -716,7 +787,7 @@ var Axes = function (params) {
         scale: params.labelScale,
         textColor: params.labelColor,
       });
-      this.add(spritex);
+      sprites.push(spritex);
       if (params.boxAxisTicksXSide == 1) {
         spritex.position.set(
           (params.size.x + params.negSize.x) / 2,
@@ -756,7 +827,7 @@ var Axes = function (params) {
         scale: params.labelScale,
         textColor: params.labelColor,
       });
-      this.add(spritey);
+      sprites.push(spritey);
 
       if (params.boxAxisTicksYSide == 1) {
         spritey.position.set(
@@ -797,7 +868,7 @@ var Axes = function (params) {
         scale: params.labelScale,
         textColor: params.labelColor,
       });
-      this.add(spritez);
+      sprites.push(spritez);
 
       if (params.boxAxisTicksZSide == 1) {
         spritez.position.set(
@@ -843,7 +914,7 @@ var Axes = function (params) {
         params.size.y * 1.1,
         params.size.z * 1.1,
       );
-      this.add(spriteOverallLabel);
+      sprites.push(spriteOverallLabel);
     }
   } else {
     // ticks for standard axes
@@ -868,7 +939,7 @@ var Axes = function (params) {
             (params.size.y - params.negSize.y) * params.tickLabelSpace,
             0,
           );
-          this.add(sprite);
+          sprites.push(sprite);
         }
       }
 
@@ -891,7 +962,7 @@ var Axes = function (params) {
             y,
             0,
           );
-          this.add(sprite);
+          sprites.push(sprite);
         }
       }
 
@@ -914,7 +985,7 @@ var Axes = function (params) {
             (params.size.y - params.negSize.y) * params.tickLabelSpace,
             z,
           );
-          this.add(sprite);
+          sprites.push(sprite);
         }
       }
     }
@@ -931,7 +1002,7 @@ var Axes = function (params) {
         0,
         0,
       );
-      this.add(spritex);
+      sprites.push(spritex);
 
       var spritey = new TextLabel(params.labely, {
         fontSize: params.labelFontSize,
@@ -943,7 +1014,7 @@ var Axes = function (params) {
         params.size.y + (params.size.y - params.negSize.y) * 0.05,
         0,
       );
-      this.add(spritey);
+      sprites.push(spritey);
 
       var spritez = new TextLabel(params.labelz, {
         fontSize: params.labelFontSize,
@@ -955,7 +1026,7 @@ var Axes = function (params) {
         0,
         params.size.z + (params.size.z - params.negSize.z) * 0.05,
       );
-      this.add(spritez);
+      sprites.push(spritez);
 
       var spriteOverallLabel = new TextLabel(params.label, {
         fontSize: params.labelFontSize,
@@ -967,7 +1038,7 @@ var Axes = function (params) {
         params.size.y * 1.1,
         params.size.z * 1.1,
       );
-      this.add(spriteOverallLabel);
+      sprites.push(spriteOverallLabel);
     }
   }
 };
@@ -1123,7 +1194,7 @@ var Axes2D = function (params) {
       0,
       0,
     );
-    this.add(spritex);
+    sprites.push(spritex);
 
     var spritey = new TextLabel(params.labely, {
       fontSize: params.labelFontSize,
@@ -1135,7 +1206,7 @@ var Axes2D = function (params) {
       params.size.y + (params.size.y - params.negSize.y) * 0.05,
       0,
     );
-    this.add(spritey);
+    sprites.push(spritey);
   }
   if (params.showAxisTickLabels) {
     var tickMinInd = Math.ceil(params.negSize.x / params.axisTickIncrement.x);
@@ -1157,7 +1228,7 @@ var Axes2D = function (params) {
           -(params.size.y - params.negSize.y) * params.axisTickSize * 3,
           0,
         );
-        this.add(sprite);
+        sprites.push(sprite);
       }
     }
 
@@ -1179,11 +1250,12 @@ var Axes2D = function (params) {
           y,
           0,
         );
-        this.add(sprite);
+        sprites.push(sprite);
       }
     }
   }
-  */
+
+  return { sprites, lines };
 };
 
 //Axes2D.prototype = Object.create(THREE.Line.prototype);
