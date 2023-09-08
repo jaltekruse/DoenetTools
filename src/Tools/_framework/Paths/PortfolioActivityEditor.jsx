@@ -79,7 +79,6 @@ import { useLocation, useNavigate } from "react-router";
 export async function action({ params, request }) {
   const formData = await request.formData();
   let formObj = Object.fromEntries(formData);
-  // console.log({ formObj });
 
   //Don't let label be blank
   let label = formObj?.label?.trim();
@@ -87,60 +86,64 @@ export async function action({ params, request }) {
     label = "Untitled";
   }
 
-  // console.log("formObj", formObj, params.doenetId);
-  if (formObj._action == "update label") {
-    let response = await fetch(
-      `/api/updatePortfolioActivityLabel.php?doenetId=${params.doenetId}&label=${label}`,
-    );
-    let respObj = await response.json();
-  }
+  try {
+    if (formObj._action == "update label") {
+      let response = await fetch(
+        `/api/updatePortfolioActivityLabel.php?doenetId=${params.doenetId}&label=${label}`,
+      );
+      let respObj = await response.json();
+    }
 
-  if (formObj._action == "update general") {
-    let learningOutcomes = JSON.parse(formObj.learningOutcomes);
-    let response = await axios.post(
-      "/api/updatePortfolioActivitySettings.php",
-      {
+    if (formObj._action == "update general") {
+      let learningOutcomes = JSON.parse(formObj.learningOutcomes);
+      let response = await axios.post(
+        "/api/updatePortfolioActivitySettings.php",
+        {
+          label,
+          imagePath: formObj.imagePath,
+          public: formObj.public,
+          doenetId: params.doenetId,
+          learningOutcomes,
+        },
+      );
+      return {
         label,
         imagePath: formObj.imagePath,
         public: formObj.public,
         doenetId: params.doenetId,
         learningOutcomes,
-      },
-    );
-    return {
-      label,
-      imagePath: formObj.imagePath,
-      public: formObj.public,
-      doenetId: params.doenetId,
-      learningOutcomes,
-    };
-  }
-  if (formObj._action == "update description") {
-    let { data } = await axios.get("/api/updateFileDescription.php", {
-      params: {
-        doenetId: formObj.doenetId,
-        cid: formObj.cid,
-        description: formObj.description,
-      },
-    });
-  }
-  if (formObj._action == "remove file") {
-    let resp = await axios.get("/api/deleteFile.php", {
-      params: { doenetId: formObj.doenetId, cid: formObj.cid },
-    });
+      };
+    }
+    if (formObj._action == "update description") {
+      let { data } = await axios.get("/api/updateFileDescription.php", {
+        params: {
+          doenetId: formObj.doenetId,
+          cid: formObj.cid,
+          description: formObj.description,
+        },
+      });
+    }
+    if (formObj._action == "remove file") {
+      let resp = await axios.get("/api/deleteFile.php", {
+        params: { doenetId: formObj.doenetId, cid: formObj.cid },
+      });
 
-    return {
-      _action: formObj._action,
-      fileRemovedCid: formObj.cid,
-      success: resp.data.success,
-    };
-  }
+      return {
+        _action: formObj._action,
+        fileRemovedCid: formObj.cid,
+        success: resp.data.success,
+      };
+    }
 
-  if (formObj._action == "noop") {
-    // console.log("noop");
-  }
+    if (formObj._action == "noop") {
+      // console.log("noop");
+    }
 
-  return { nothingToReturn: true };
+    return { nothingToReturn: true };
+  } catch (e) {
+    console.log(e);
+    window.alert("Error loading page");
+  }
   // let response = await fetch(
   //   `/api/duplicatePortfolioActivity.php?doenetId=${params.doenetId}`,
   // );
@@ -243,7 +246,10 @@ export async function loader({ params }) {
     if (e.response.data.message == "Redirect to public activity.") {
       return redirect(`/publiceditor/${params.doenetId}/${params.pageId}`);
     } else {
-      throw new Error(e);
+      console.log(e);
+      window.alert("Error - " + e?.response?.data?.message);
+      return redirect(`/`);
+      //throw new Error(e);
     }
     // console.log("response", response);
   }
