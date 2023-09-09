@@ -1,5 +1,5 @@
-import { expect, test, vi, beforeEach } from "vitest";
-import { mathStuff, Portfolio } from "./Portfolio";
+import { expect, test, vi, afterEach } from "vitest";
+import { Portfolio } from "./Portfolio";
 //import { enableFetchMocks } from "jest-fetch-mock";
 //enableFetchMocks();
 import React from "react";
@@ -9,7 +9,9 @@ import { RecoilRoot } from "recoil";
 
 //vi.mock("axios");
 
-beforeEach(cleanup);
+// this would happen automatically in Jest I believe, but with other runners we need it excplictly
+// https://github.com/testing-library/react-testing-library/issues/428
+afterEach(cleanup);
 
 function createRouterWithOutlet(
   component,
@@ -52,27 +54,4 @@ test("test rendering empty portfolio", async () => {
 
   expect(screen.getByText("No Public Activities")).exists;
   expect(screen.getByText("No Private Activities")).exists;
-});
-
-test("again test rendering empty portfolio", async () => {
-  const mockedLoaderData = { publicActivities: [], privateActivities: [] };
-  const outletContext = { signedIn: true };
-
-  const router = createRouterWithOutlet(
-    <Portfolio />,
-    mockedLoaderData,
-    outletContext,
-    "/portfolio",
-  );
-
-  render(<RouterProvider router={router} />);
-
-  await screen.findByRole("button", { name: "Add Activity" });
-
-  expect(screen.getByText("No Public Activities")).exists;
-  expect(screen.getByText("No Private Activities")).exists;
-});
-
-test("2+ 5 = 7", () => {
-  expect(mathStuff(2)).toBe(7);
 });
