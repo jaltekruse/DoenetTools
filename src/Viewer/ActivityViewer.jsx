@@ -30,8 +30,7 @@ import {
   getLineCharRange,
   printDoenetMLrange,
 } from "../Core/utils/logging";
-
-const sendAlert = (msg, type) => console.log(msg);
+import { AlertQueue } from "../Tools/_framework/ChakraBasedComponents/AlertQueue";
 
 export function ActivityViewer({
   doenetML: doenetMLFromProps,
@@ -66,9 +65,8 @@ export function ActivityViewer({
   addBottomPadding = true,
   scrollableContainer = window,
   darkMode,
+  sendAlert: sendAlertFromProps,
 }) {
-  const setPageToolView = useSetRecoilState(pageToolViewAtom);
-
   const [errMsg, setErrMsg] = useState(null);
 
   const [
@@ -143,6 +141,8 @@ export function ActivityViewer({
     waitingForPagesCore: null,
   });
 
+  let [alerts, setAlerts] = useState([]);
+
   const [renderedPages, setRenderedPages] = useState([]);
   const allPagesRendered = useRef(false);
 
@@ -161,6 +161,7 @@ export function ActivityViewer({
 
   const errorsAndWarningsByPage = useRef([]);
   const errorsActivitySpecific = useRef([]);
+  const sendAlert = useRef(null);
 
   let activityPrefix = "";
   let activityPrefixUnescaped = "";
@@ -214,6 +215,28 @@ export function ActivityViewer({
     variantsByPage,
     itemWeights,
   ]);
+
+  useEffect(() => {
+    if (typeof sendAlertFromProps === "function") {
+      sendAlert.current = sendAlertFromProps;
+    } else {
+      sendAlert.current = function ({
+        message,
+        alertType,
+        id = "defaultAlertId",
+      }) {
+        setAlerts((prev) => {
+          let next = prev.filter((x) => x.id !== id);
+          next.push({
+            type: alertType,
+            id,
+            title: message,
+          });
+          return next;
+        });
+      };
+    }
+  }, [sendAlertFromProps]);
 
   function scrollListener() {
     // find page that is at the top
@@ -364,10 +387,13 @@ export function ActivityViewer({
 
     if (newAttemptNumber !== attemptNumber) {
       if (updateAttemptNumber) {
-        sendAlert(
-          `Reverted activity as attempt number changed on other device`,
-          "info",
-        );
+        // TODO: this seems to be happening when it wasn't supposed to so removed it for now.
+        // Make sure this happens only in this case and then add the alert back
+
+        // sendAlert.current({
+        //   message: `Reverted activity as attempt number changed on other device`,
+        //   alertType: "info",
+        // });
         updateAttemptNumber(newAttemptNumber);
       } else {
         // what do we do in this case?
@@ -384,7 +410,7 @@ export function ActivityViewer({
       // we ignore the change
     }
 
-    // sendAlert(`Reverted page to state saved on device ${changedOnDevice}`, "error");
+    // sendAlert.current(`Reverted page to state saved on device ${changedOnDevice}`, "error");
   }
 
   async function calculateCidDefinition() {
@@ -504,7 +530,7 @@ export function ActivityViewer({
         newVariantIndex = localInfo.variantIndex;
         setVariantIndex(newVariantIndex);
         setNPages(newActivityInfo.orderWithCids.length);
-        setOrder(newActivityInfo.orderWithCids);
+        setOrder(await normalizeLoadedOrder(newActivityInfo.orderWithCids));
         setVariantsByPage(newActivityInfo.variantsByPage);
         setItemWeights(newActivityInfo.itemWeights);
         newItemWeights = newActivityInfo.itemWeights;
@@ -574,7 +600,7 @@ export function ActivityViewer({
         newVariantIndex = resp.data.variantIndex;
         setVariantIndex(newVariantIndex);
         setNPages(newActivityInfo.orderWithCids.length);
-        setOrder(newActivityInfo.orderWithCids);
+        setOrder(await normalizeLoadedOrder(newActivityInfo.orderWithCids));
         setVariantsByPage(newActivityInfo.variantsByPage);
         setItemWeights(newActivityInfo.itemWeights);
         newItemWeights = newActivityInfo.itemWeights;
@@ -632,6 +658,23 @@ export function ActivityViewer({
     }
 
     return { newItemWeights, newVariantIndex, loadedFromInitialState };
+  }
+
+  async function normalizeLoadedOrder(order) {
+    // In case we load an order from the data base that was created before Sept 1, 2023,
+    // we need to check if the page has a doneetML attribute,
+    // and load the doenetML if needed
+
+    let newOrder = [];
+
+    for (let page of order) {
+      if (page.doenetML === undefined) {
+        page.doenetML = await retrieveTextFileForCid(page.cid, "doenet");
+      }
+      newOrder.push(page);
+    }
+
+    return newOrder;
   }
 
   async function saveLoadedLocalStateToDatabase(localInfo) {
@@ -822,10 +865,10 @@ export function ActivityViewer({
       console.log(
         `sending sendAlert: Error synchronizing data.  Changes not saved to the server.`,
       );
-      sendAlert(
-        "Error synchronizing data.  Changes not saved to the server.",
-        "error",
-      );
+      sendAlert.current({
+        message: "Error synchronizing data.  Changes not saved to the server.",
+        alertType: "error",
+      });
       return;
     }
 
@@ -835,10 +878,11 @@ export function ActivityViewer({
       console.log(
         `sending sendAlert: Error synchronizing data.  Changes not saved to the server.  Are you connected to the internet?`,
       );
-      sendAlert(
-        "Error synchronizing data.  Changes not saved to the server.  Are you connected to the internet?",
-        "error",
-      );
+      sendAlert.current({
+        message:
+          "Error synchronizing data.  Changes not saved to the server.  Are you connected to the internet?",
+        alertType: "error",
+      });
       return;
     }
 
@@ -846,7 +890,7 @@ export function ActivityViewer({
 
     if (!data.success) {
       console.log(`sending sendAlert: ${data.message}`);
-      sendAlert(data.message, "error");
+      sendAlert.current({ message: data.message, alertType: "error" });
       return;
     }
 
@@ -893,21 +937,21 @@ export function ActivityViewer({
         });
 
         if (resp.status === null) {
-          sendAlert(
-            `Could not initialize assignment tables.  Are you connected to the internet?`,
-            "error",
-          );
+          sendAlert.current({
+            message: `Could not initialize assignment tables.  Are you connected to the internet?`,
+            alertType: "error",
+          });
         } else if (!resp.data.success) {
-          sendAlert(
+          sendAlert.current(
             `Could not initialize assignment tables: ${resp.data.message}.`,
             "error",
           );
         }
       } catch (e) {
-        sendAlert(
-          `Could not initialize assignment tables: ${e.message}.`,
-          "error",
-        );
+        sendAlert.current({
+          message: `Could not initialize assignment tables: ${e.message}.`,
+          alertType: "error",
+        });
       }
     }
   }
@@ -1075,43 +1119,7 @@ export function ActivityViewer({
 
     await saveState({ overrideThrottle: true });
 
-    setActivityAsCompleted?.(itemWeights);
-
-    // TODO: the below should be moved into setActivityAsCompleted
-    // so we dn't hardcode URIs here
-
-    // console.log("activityInfo here",activityInfo)
-
-    //Clear out history of exam if canViewAfterCompleted setting set as false
-    if (!activityInfo.canViewAfterCompleted) {
-      // console.log("CLEAR state from viewer and cache")
-      //Simple answer for now - lose all state info
-      //TODO: When should we clear this
-      //await idb_clear();
-    }
-    //Set assignment as completed for the user in the Data Base and Recoil
-    let resp = await axios.get(apiURLs.saveCompleted, {
-      params: { activityId, isCompleted: true },
-    });
-    // console.log("resp",resp.data)
-    if (resp.data.success) {
-      //Mark activity as completed in Recoil
-      setActivityAsCompleted?.();
-
-      //Go to end exam for the specific page
-      setPageToolView((prev) => {
-        return {
-          page: prev.page,
-          tool: "endExam",
-          view: "",
-          params: {
-            activityId,
-            attemptNumber,
-            itemWeights: itemWeights.join(","),
-          },
-        };
-      });
-    }
+    setActivityAsCompleted?.();
   }
 
   function setPageErrorsAndWarningsCallback(errorsAndWarnings, pageind) {
@@ -1352,6 +1360,7 @@ export function ActivityViewer({
           }
           updateCreditAchievedCallback={updateCreditAchievedCallback}
           setIsInErrorState={setIsInErrorState}
+          sendAlert={sendAlert.current}
           updateAttemptNumber={updateAttemptNumber}
           saveStateCallback={receivedSaveFromPage}
           updateDataOnContentChange={updateDataOnContentChange}
@@ -1557,6 +1566,7 @@ export function ActivityViewer({
 
   return (
     <div style={paddingStyle} id={`${activityPrefix}top`} ref={nodeRef}>
+      <AlertQueue alerts={alerts} setAlerts={setAlerts} />
       {activityErrors}
       {pageControlsTop}
       {title}
