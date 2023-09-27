@@ -13,10 +13,6 @@ import Papa from "papaparse";
 
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Box,
   Button,
   ButtonGroup,
@@ -72,6 +68,7 @@ import {
 } from "@chakra-ui/react";
 import {
   CloseIcon,
+  CopyIcon,
   ExternalLinkIcon,
   QuestionOutlineIcon,
   WarningTwoIcon,
@@ -84,6 +81,8 @@ import { RxUpdate } from "react-icons/rx";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import copyToClipboard from "copy-to-clipboard";
+
 import { GoKebabVertical } from "react-icons/go";
 import { useSaveDraft } from "../../../_utils/hooks/useSaveDraft";
 import { cidFromText } from "../../../Core/utils/cid";
@@ -180,9 +179,13 @@ export async function loader({ request, params }) {
     if (e.response.data.message == "Redirect to public activity.") {
       return redirect(`/publiceditor/${params.doenetId}/${params.pageId}`);
     } else {
-      throw new Error(e);
+      let message = e.message;
+      //If php provides a message pass it along
+      if (e.response?.data?.message) {
+        message = e.response?.data?.message;
+      }
+      throw new Error(message);
     }
-    // console.log("response", response);
   }
 }
 
@@ -603,7 +606,7 @@ function SupportFilesControls({
 
           let fileNameNoExtension = file.fileName.split(".")[0];
 
-          let doenetMLCode = `<image source='doenet:cid=${fileNameNoExtension}' description='${file.description}' asfilename='${file.asFileName}' width='${file.width}' height='${file.height}' mimeType='${file.fileType}' />`;
+          let doenetMLCode = `<image source='doenet:cid=${fileNameNoExtension}' description='${file.description}' asfilename='${file.asFileName}' width='${file.width}' mimeType='${file.fileType}' />`;
 
           if (file.fileType == "text/csv") {
             previewImagePath = "/activity_default.jpg";
@@ -2498,6 +2501,8 @@ export function GeneralActivityControls({
   setAlerts = () => {},
   setSuccessMessage,
   setKeyToUpdateState,
+  pageId,
+  currentDoenetML,
 }) {
   let {
     isPublic,
@@ -3072,6 +3077,43 @@ export function GeneralActivityControls({
         </FormControl>
         <input type="hidden" name="imagePath" value={imagePath} />
       </Form>
+
+      <Button
+        mt="10px"
+        size="sm"
+        colorScheme="blue"
+        leftIcon={<BsClipboardPlus />}
+        data-test="Copy DoenetML embed link"
+        onClick={async () => {
+          let params = {
+            doenetML: currentDoenetML,
+            pageId,
+            courseId,
+            saveAsCid: true,
+          };
+
+          const { data } = await axios.post("/api/saveDoenetML.php", params);
+          if (!data.success) {
+            throw Error(data.message);
+          }
+
+          let pageCid = data.cid;
+
+          copyToClipboard(
+            `<copy uri="doenet:activityId=${doenetId}&cid=${pageCid}" />`,
+          );
+
+          setAlerts([
+            {
+              type: "success",
+              id: pageCid,
+              title: "Embed Link Copied to Clipboard",
+            },
+          ]);
+        }}
+      >
+        Copy DoenetML embed link to clipboard
+      </Button>
     </>
   );
 }
@@ -3488,6 +3530,7 @@ function CourseActivitySettingsDrawer({
   fetcher,
   setActivityByDoenetId,
   setPageByDoenetId,
+  currentDoenetML,
 }) {
   const { courseId, doenetId, pageId, activityData } = useLoaderData();
 
@@ -3598,6 +3641,7 @@ function CourseActivitySettingsDrawer({
                     setSuccessMessage={setSuccessMessage}
                     setKeyToUpdateState={setKeyToUpdateState}
                     fetcher={fetcher}
+                    currentDoenetML={currentDoenetML}
                   />
                 </TabPanel>
                 <TabPanel>
@@ -4068,6 +4112,7 @@ export function CourseActivityEditor() {
               fetcher={fetcher}
               setActivityByDoenetId={setActivityByDoenetId}
               setPageByDoenetId={setPageByDoenetId}
+              currentDoenetML={textEditorDoenetML.current}
             />
           )}
 
