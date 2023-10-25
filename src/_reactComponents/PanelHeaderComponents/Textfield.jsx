@@ -35,6 +35,48 @@ const TextfieldStyling = styled.input`
   }
 `;
 
+export function TextfieldNew(props) {
+  const labelVisible = props.label ? "static" : "none";
+  const align = props.vertical ? "initial" : "flex";
+  const [cursorStart, setCursorStart] = useState(0);
+  const [cursorEnd, setCursorEnd] = useState(0);
+  const inputRef = useRef(null);
+  //Assume small
+
+  var textfieldValue = {
+    value: `${props.value}`,
+  };
+  var label = {
+    value: "Label:",
+    fontSize: "14px",
+    display: `${labelVisible}`,
+    marginRight: "5px",
+    marginBottom: `${align == "flex" ? "none" : "2px"}`,
+  };
+  if (props.label) {
+    label.value = props.label;
+  }
+  function handleChange(e) {
+    if (props.onChange) props.onChange(e);
+    setCursorStart(e.target.selectionStart);
+    setCursorEnd(e.target.selectionEnd);
+  }
+  return (
+    <>
+      <div>
+        {label.value}
+        <input
+          style={{ display: "inline-block" }}
+          type="text"
+          onChange={(e) => {
+            handleChange(e);
+          }}
+        />
+      </div>
+    </>
+  );
+}
+
 export default function Textfield(props) {
   const labelVisible = props.label ? "static" : "none";
   const align = props.vertical ? "initial" : "flex";
