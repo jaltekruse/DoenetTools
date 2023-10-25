@@ -1679,6 +1679,8 @@ function AssignControlsAssigned({
 
   if (adDueDate != undefined) {
     adDueDate = UTCDateStringToLocalTimeChakraString(adDueDate);
+  } else if (!adDueDate) {
+    adDueDate = "";
   }
   const [dueDate, setDueDate] = useState(adDueDate);
   let statePinnedAfterDate = activityData.pinnedAfterDate;
@@ -1701,6 +1703,48 @@ function AssignControlsAssigned({
   const [proctorMakesAvailable, setProctorMakesAvailable] = useState(
     activityData.proctorMakesAvailable,
   );
+  const saveDate = (dateStr, dbColumn, inProgessSaveMsg, successMsg) => {
+    // Bug with Chakra shows the current date when the input is set to null in Safari.
+    // When clicking off the input without selecting a date it will call onBlur
+    // with an empty string.
+    if (!dateStr) {
+      setAlerts([
+        {
+          type: "error",
+          id: dbColumn,
+          title: "Invalid date selected.",
+        },
+      ]);
+      return;
+    }
+    let dbDate = DateToUTCDateString(new Date(dateStr));
+    let localDate = DateToDateString(new Date(dateStr));
+
+    //Alert Messages
+    setSuccessMessage(successMsg);
+    setKeyToUpdateState(dbColumn);
+    setAlerts([
+      {
+        type: "info",
+        id: dbColumn,
+        title: inProgessSaveMsg,
+      },
+    ]);
+
+    setActivityByDoenetId((item) => ({
+      ...item,
+      [dbColumn]: localDate,
+    }));
+    fetcher.submit(
+      {
+        _action: "update assignment via keyToUpdate",
+        keyToUpdate: dbColumn,
+        value: dbDate,
+        doenetId,
+      },
+      { method: "post" },
+    );
+  };
 
   return (
     <VStack alignItems="flex-start" spacing={5}>
@@ -1723,35 +1767,11 @@ function AssignControlsAssigned({
             setAssignedDate(e.target.value);
           }}
           onBlur={(e) => {
-            //Only save on blur
-            let dbAssignedDate = DateToUTCDateString(new Date(e.target.value));
-            let localAssignedDate = DateToDateString(new Date(e.target.value));
-
-            //Alert Messages
-            let title = `Attempting to set assigned date.`;
-            let nextSuccessMessage = `Assigned date set.`;
-            setSuccessMessage(nextSuccessMessage);
-            setKeyToUpdateState("assignedDate");
-            setAlerts([
-              {
-                type: "info",
-                id: "assignedDate",
-                title,
-              },
-            ]);
-
-            setActivityByDoenetId((item) => ({
-              ...item,
-              assignedDate: localAssignedDate,
-            }));
-            fetcher.submit(
-              {
-                _action: "update assignment via keyToUpdate",
-                keyToUpdate: "assignedDate",
-                value: dbAssignedDate,
-                doenetId,
-              },
-              { method: "post" },
+            saveDate(
+              e.target.value,
+              "assignedDate",
+              `Attempting to set assigned date.`,
+              `Assigned date set.`,
             );
           }}
         />
@@ -1775,35 +1795,11 @@ function AssignControlsAssigned({
             setDueDate(e.target.value);
           }}
           onBlur={(e) => {
-            //Only save on blur
-            let dbdueDate = DateToUTCDateString(new Date(e.target.value));
-            let localDueDate = DateToDateString(new Date(e.target.value));
-
-            //Alert Messages
-            let title = `Attempting to set due date.`;
-            let nextSuccessMessage = `Due date set.`;
-            setSuccessMessage(nextSuccessMessage);
-            setKeyToUpdateState("dueDate");
-            setAlerts([
-              {
-                type: "info",
-                id: "dueDate",
-                title,
-              },
-            ]);
-
-            setActivityByDoenetId((item) => ({
-              ...item,
-              dueDate: localDueDate,
-            }));
-            fetcher.submit(
-              {
-                _action: "update assignment via keyToUpdate",
-                keyToUpdate: "dueDate",
-                value: dbdueDate,
-                doenetId,
-              },
-              { method: "post" },
+            saveDate(
+              e.target.value,
+              "dueDate",
+              "Attempting to set due date.",
+              "Due date set.",
             );
           }}
         />
@@ -1942,38 +1938,11 @@ function AssignControlsAssigned({
                 setPinnedAfterDate(e.target.value);
               }}
               onBlur={(e) => {
-                //Only save on blur
-                let dbPinnedAfterDate = DateToUTCDateString(
-                  new Date(e.target.value),
-                );
-                let localPinnedAfterDate = DateToDateString(
-                  new Date(e.target.value),
-                );
-                //Alert Messages
-                let title = `Attempting to update pin after date`;
-                let nextSuccessMessage = `Pin after date updated.`;
-                setSuccessMessage(nextSuccessMessage);
-                setKeyToUpdateState("pinnedAfterDate");
-                setAlerts([
-                  {
-                    type: "info",
-                    id: "pinnedAfterDate",
-                    title,
-                  },
-                ]);
-
-                setActivityByDoenetId((item) => ({
-                  ...item,
-                  pinnedAfterDate: localPinnedAfterDate,
-                }));
-                fetcher.submit(
-                  {
-                    _action: "update assignment via keyToUpdate",
-                    keyToUpdate: "pinnedAfterDate",
-                    value: dbPinnedAfterDate,
-                    doenetId,
-                  },
-                  { method: "post" },
+                saveDate(
+                  e.target.value,
+                  "pinnedAfterDate",
+                  "Attempting to update pin after date.",
+                  "Pin after date updated.",
                 );
               }}
             />
@@ -1992,39 +1961,11 @@ function AssignControlsAssigned({
                 setPinnedUntilDate(e.target.value);
               }}
               onBlur={(e) => {
-                //Only save on blur
-                let dbPinnedUntilDate = DateToUTCDateString(
-                  new Date(e.target.value),
-                );
-                let localPinnedUntilDate = DateToDateString(
-                  new Date(e.target.value),
-                );
-
-                //Alert Messages
-                let title = `Attempting to update pin until date`;
-                let nextSuccessMessage = `Pin until date updated.`;
-                setSuccessMessage(nextSuccessMessage);
-                setKeyToUpdateState("pinnedUntilDate");
-                setAlerts([
-                  {
-                    type: "info",
-                    id: "pinnedUntilDate",
-                    title,
-                  },
-                ]);
-
-                setActivityByDoenetId((item) => ({
-                  ...item,
-                  pinnedUntilDate: localPinnedUntilDate,
-                }));
-                fetcher.submit(
-                  {
-                    _action: "update assignment via keyToUpdate",
-                    keyToUpdate: "pinnedUntilDate",
-                    value: dbPinnedUntilDate,
-                    doenetId,
-                  },
-                  { method: "post" },
+                saveDate(
+                  e.target.value,
+                  "pinnedUntilDate",
+                  "Attempting to update pin until date.",
+                  "Pin until date updated.",
                 );
               }}
             />
