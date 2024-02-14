@@ -1201,7 +1201,7 @@ function Row({
       key={`Row${doenetId}`}
       role="button"
       tabIndex={0}
-      className="navigationRow noselect nooutline"
+      className="navigationRow  nooutline"
       style={{
         cursor: "pointer",
         padding: "8px",
@@ -1254,40 +1254,17 @@ function Row({
               margin: "0px",
             }}
           >
-            {numbered ? (
-              <svg
-                style={{ verticalAlign: "middle" }}
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-              >
-                <circle
-                  cx="11"
-                  cy="11"
-                  r="12"
-                  stroke="var(--canvas)"
-                  strokeWidth="2"
-                  fill="var(--mainBlue)"
-                />
-                <text
-                  fontSize="14"
-                  fill="var(--canvas)"
-                  fontFamily="Verdana"
-                  textAnchor="middle"
-                  alignmentBaseline="baseline"
-                  x="11"
-                  y="16"
-                >
-                  {numbered}
-                </text>
-              </svg>
-            ) : null}
+            {'"' +
+              doenetId +
+              '",' +
+              (indentLevel > 0 ? '"",'.repeat(indentLevel) : "")}
+            {numbered ? "" : null}
             {openCloseIndicator}
             <span style={{ marginLeft: "8px" }} data-test="rowIcon">
               <FontAwesomeIcon icon={icon} />
             </span>
             <span style={{ marginLeft: "4px" }} data-test="rowLabel">
-              {label}{" "}
+              {'"' + label + '"'}{" "}
             </span>
           </p>
         </span>
@@ -1419,7 +1396,7 @@ function CourseNavigationHeader({
       {({ measureRef }) => (
         <div
           ref={measureRef}
-          className="noselect nooutline"
+          className=" nooutline"
           style={{
             padding: "8px",
             border: "0px",
