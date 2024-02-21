@@ -2,11 +2,16 @@ import React, { useRef } from "react";
 import {
   Button,
   Center,
+  Flex,
   Grid,
   GridItem,
-  Text,
-  useColorMode,
+  IconButton,
   HStack,
+  Image,
+  Link,
+  Text,
+  Tooltip,
+  useColorMode,
   Menu,
   MenuButton,
   MenuList,
@@ -15,6 +20,8 @@ import {
   VStack,
   ButtonGroup,
 } from "@chakra-ui/react";
+import { HiOutlineMail } from "react-icons/hi";
+import { BsGithub, BsDiscord } from "react-icons/bs";
 import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import { checkIfUserClearedOut } from "../../../_utils/applicationUtils";
@@ -186,36 +193,68 @@ export function SiteHeader(props) {
               </HStack>
             </GridItem>
             <GridItem area="rightHeader">
-              {signedIn ? (
-                <Center h="40px" mr="10px">
-                  <Menu>
-                    <MenuButton>
-                      <Avatar size="sm" name={`${firstName} ${lastName}`} />
-                    </MenuButton>
-                    <MenuList>
-                      <VStack mb="20px">
-                        <Avatar size="xl" name={`${firstName} ${lastName}`} />
-                        <Text>
-                          {firstName} {lastName}
-                        </Text>
-                        <Text>{email}</Text>
-                        <ButtonGroup size="sm" isAttached variant="outline">
-                          <Button
-                            leftIcon={<FaSun />}
-                            onClick={toggleColorMode}
-                            isDisabled={colorMode == "light"}
-                          >
-                            Light
-                          </Button>
-                          <Button
-                            leftIcon={<FaMoon />}
-                            onClick={toggleColorMode}
-                            isDisabled={colorMode == "dark"}
-                            // cursor="not-allowed"
-                          >
-                            Dark
-                          </Button>
-                          {/* <Button
+              <Flex columnGap="10px" m="10px">
+                <Link href="mailto:info@doenet.org">
+                  <Tooltip label="mailto:info@doenet.org">
+                    <IconButton
+                      colorScheme="blue"
+                      size="sm"
+                      fontSize="16pt"
+                      icon={<HiOutlineMail />}
+                    />
+                  </Tooltip>
+                </Link>
+
+                <Link href="https://github.com/Doenet/">
+                  <Tooltip label="Doenet Github">
+                    <IconButton
+                      colorScheme="blue"
+                      size="sm"
+                      fontSize="16pt"
+                      icon={<BsGithub />}
+                    />
+                  </Tooltip>
+                </Link>
+                <Link href="https://discord.gg/PUduwtKJ5h">
+                  <Tooltip label="Doenet Discord">
+                    <IconButton
+                      colorScheme="blue"
+                      size="sm"
+                      fontSize="16pt"
+                      icon={<BsDiscord />}
+                    />
+                  </Tooltip>
+                </Link>
+                {signedIn ? (
+                  <Center h="40px" mr="10px">
+                    <Menu>
+                      <MenuButton>
+                        <Avatar size="sm" name={`${firstName} ${lastName}`} />
+                      </MenuButton>
+                      <MenuList>
+                        <VStack mb="20px">
+                          <Avatar size="xl" name={`${firstName} ${lastName}`} />
+                          <Text>
+                            {firstName} {lastName}
+                          </Text>
+                          <Text>{email}</Text>
+                          <ButtonGroup size="sm" isAttached variant="outline">
+                            <Button
+                              leftIcon={<FaSun />}
+                              onClick={toggleColorMode}
+                              isDisabled={colorMode == "light"}
+                            >
+                              Light
+                            </Button>
+                            <Button
+                              leftIcon={<FaMoon />}
+                              onClick={toggleColorMode}
+                              isDisabled={colorMode == "dark"}
+                              // cursor="not-allowed"
+                            >
+                              Dark
+                            </Button>
+                            {/* <Button
                             leftIcon={<FaRobot />}
                             onClick={() => setColorMode("system")}
                             // isDisabled={colorMode == ""}
@@ -223,35 +262,36 @@ export function SiteHeader(props) {
                           >
                             Auto
                           </Button> */}
-                        </ButtonGroup>
-                      </VStack>
-                      <MenuItem as="a" href="/signout">
-                        Sign Out
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </Center>
-              ) : (
-                <Center h="40px" mr="10px">
-                  <Button
-                    data-test="Nav to signin"
-                    size="sm"
-                    // variant="ghost"
-                    variant="outline"
-                    onClick={() => {
-                      navigateTo.current = "/signin";
-                      setRecoilPageToolView({
-                        page: "signin",
-                        tool: "",
-                        view: "",
-                        params: {},
-                      });
-                    }}
-                  >
-                    Sign In
-                  </Button>
-                </Center>
-              )}
+                          </ButtonGroup>
+                        </VStack>
+                        <MenuItem as="a" href="/signout">
+                          Sign Out
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </Center>
+                ) : (
+                  <Center h="40px" mr="10px">
+                    <Button
+                      data-test="Nav to signin"
+                      size="sm"
+                      // variant="ghost"
+                      variant="outline"
+                      onClick={() => {
+                        navigateTo.current = "/signin";
+                        setRecoilPageToolView({
+                          page: "signin",
+                          tool: "",
+                          view: "",
+                          params: {},
+                        });
+                      }}
+                    >
+                      Sign In
+                    </Button>
+                  </Center>
+                )}
+              </Flex>
             </GridItem>
           </Grid>
         </GridItem>
