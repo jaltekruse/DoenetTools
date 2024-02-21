@@ -2,7 +2,11 @@ import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const HPVideo = styled.video`
-  height: 350px;
+  width: 100%;
+  margin-left: 20vw;
+  //transform: scale(1.3);
+  object-fit: cover;
+  object-position: 25% 25%;
   @media (max-width: 780px) {
     height: 240px;
   }
@@ -27,19 +31,21 @@ export default function HomeIntroVideo() {
   }, []);
 
   return (
-    <HPVideo
-      // height='420px'
-      fluid="false"
-      // src='/media/homepagevideo2.mp4'
-      // loop
-      muted
-      playsInline
-      alt="Demonstration video on making DoenetML content"
-      ref={videoEl}
-      // autoplay
-      controls
-    >
-      <source src="/homepagevideo.mp4" type="video/mp4" />
-    </HPVideo>
+    <div style={{ overflow: "hidden", width: "100%" }}>
+      <HPVideo
+        // height='420px'
+        fluid="false"
+        // src='/media/homepagevideo2.mp4'
+        loop
+        muted
+        playsInline
+        alt="Demonstration video on making DoenetML content"
+        ref={videoEl}
+        controls
+        zIndex="1"
+      >
+        <source src="/platnet_orbits_smooth.webm" type="video/webm" />
+      </HPVideo>
+    </div>
   );
 }
