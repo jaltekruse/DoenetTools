@@ -99,7 +99,7 @@ function NavLinkTab({ to, children, dataTest }) {
   );
 }
 
-export function SiteHeader(props) {
+export function SiteHeaderDark(props) {
   let { signedIn, portfolioCourseId, isAdmin, firstName, lastName, email } =
     useLoaderData();
   const { childComponent } = props;
@@ -136,8 +136,8 @@ export function SiteHeader(props) {
           as="header"
           width="100vw"
           m="0"
-          backgroundColor="#fff"
-          color="#000"
+          backgroundColor="black"
+          color="white"
           height="40px"
         >
           <Grid
@@ -145,7 +145,7 @@ export function SiteHeader(props) {
             position="fixed"
             top="0"
             zIndex="1200"
-            borderBottom="1px solid var(--mainGray)"
+            borderBottom="1px solid var(--darkGrey)"
             // paddingBottom="2px"
             width="100%"
             margin="0"
@@ -161,7 +161,9 @@ export function SiteHeader(props) {
                   TABS HERE
                 </Button> */}
                 <RouterLogo />
-                <Text ml={1}>Doenet</Text>
+                <Text fontSize={"1vw"} ml={1} mt="12px">
+                  Doenet
+                </Text>
               </Center>
             </GridItem>
             <GridItem area="menus">

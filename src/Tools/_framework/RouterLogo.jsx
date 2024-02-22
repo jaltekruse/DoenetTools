@@ -4,22 +4,22 @@ import styled from "styled-components";
 
 const LogoButton = styled.button`
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
-    url("/Doenet_Logo_cloud_only.png");
+    url("/Doenet_Logo_Frontpage_greyscale_minimal.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 50px 25px;
+  background-size: 70px 55px;
   transition: 300ms;
   background-color: var(--canvas);
-  width: 50px;
-  height: 25px;
+  width: 70px;
+  height: 55px;
   display: inline-block;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 2px;
   align-items: center;
   border-style: none;
   // border-radius: 50%;
-  // margin-top: 8px;
-  // margin-left: 90px;
+  margin-top: 20px;
+  margin-left: 10px;
   cursor: ${(props) => (props.hasLink ? "pointer" : "default")};
   &:focus {
     outline: 2px solid var(--canvastext);
