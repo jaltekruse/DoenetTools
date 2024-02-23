@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
 import {
+  useColorModeValue,
+  Box,
   Button,
   Center,
   Flex,
@@ -71,7 +73,7 @@ function NavLinkTab({ to, children, dataTest }) {
         // if (isPending) {
         //   spinner = <Spinner size="sm" />;
         // }
-        let color = "doenet.canvastext";
+        let color = "doenet.canvas";
         let borderBottomStyle = "none";
         let borderBottomWidth = "0px";
         if (isActive) {
@@ -127,9 +129,10 @@ export function SiteHeaderDark(props) {
       <Grid
         templateAreas={`"siteHeader" 
         "main"`}
-        gridTemplateRows="40px auto"
+        gridTemplateRows="70px auto"
         width="100vw"
         height="100vh"
+        backgroundColor="black"
       >
         <GridItem
           area="siteHeader"
@@ -138,14 +141,14 @@ export function SiteHeaderDark(props) {
           m="0"
           backgroundColor="black"
           color="white"
-          height="40px"
+          height="70px"
         >
           <Grid
-            height="40px"
+            height="70px"
             position="fixed"
             top="0"
             zIndex="1200"
-            borderBottom="1px solid var(--darkGrey)"
+            borderBottom="1px solid var(--mainGrey)"
             // paddingBottom="2px"
             width="100%"
             margin="0"
@@ -161,12 +164,9 @@ export function SiteHeaderDark(props) {
                   TABS HERE
                 </Button> */}
                 <RouterLogo />
-                <Text fontSize={"1vw"} ml={1} mt="12px">
-                  Doenet
-                </Text>
               </Center>
             </GridItem>
-            <GridItem area="menus">
+            <GridItem area="menus" mt="18px">
               <HStack spacing={8}>
                 <NavLinkTab to="/" dataTest="Home">
                   Home
@@ -199,7 +199,7 @@ export function SiteHeaderDark(props) {
                 <Link href="mailto:info@doenet.org">
                   <Tooltip label="mailto:info@doenet.org">
                     <IconButton
-                      mt="5px"
+                      mt="20px"
                       colorScheme="blue"
                       size="sm"
                       fontSize="16pt"
@@ -211,7 +211,7 @@ export function SiteHeaderDark(props) {
                 <Link href="https://github.com/Doenet/">
                   <Tooltip label="Doenet Github">
                     <IconButton
-                      mt="5px"
+                      mt="20px"
                       colorScheme="blue"
                       size="sm"
                       fontSize="16pt"
@@ -222,7 +222,7 @@ export function SiteHeaderDark(props) {
                 <Link href="https://discord.gg/PUduwtKJ5h">
                   <Tooltip label="Doenet Discord">
                     <IconButton
-                      mt="5px"
+                      mt="20px"
                       colorScheme="blue"
                       size="sm"
                       fontSize="16pt"
@@ -230,36 +230,40 @@ export function SiteHeaderDark(props) {
                     />
                   </Tooltip>
                 </Link>
-                {signedIn ? (
-                  <Center h="40px" mr="10px">
-                    <Menu>
-                      <MenuButton>
-                        <Avatar size="sm" name={`${firstName} ${lastName}`} />
-                      </MenuButton>
-                      <MenuList>
-                        <VStack mb="20px">
-                          <Avatar size="xl" name={`${firstName} ${lastName}`} />
-                          <Text>
-                            {firstName} {lastName}
-                          </Text>
-                          <Text>{email}</Text>
-                          <ButtonGroup size="sm" isAttached variant="outline">
-                            <Button
-                              leftIcon={<FaSun />}
-                              onClick={toggleColorMode}
-                              isDisabled={colorMode == "light"}
-                            >
-                              Light
-                            </Button>
-                            <Button
-                              leftIcon={<FaMoon />}
-                              onClick={toggleColorMode}
-                              isDisabled={colorMode == "dark"}
-                              // cursor="not-allowed"
-                            >
-                              Dark
-                            </Button>
-                            {/* <Button
+                <Box mt="15px">
+                  {signedIn ? (
+                    <Center h="40px" mr="10px">
+                      <Menu>
+                        <MenuButton>
+                          <Avatar size="sm" name={`${firstName} ${lastName}`} />
+                        </MenuButton>
+                        <MenuList>
+                          <VStack mb="20px">
+                            <Avatar
+                              size="xl"
+                              name={`${firstName} ${lastName}`}
+                            />
+                            <Text>
+                              {firstName} {lastName}
+                            </Text>
+                            <Text>{email}</Text>
+                            <ButtonGroup size="sm" isAttached variant="outline">
+                              <Button
+                                leftIcon={<FaSun />}
+                                onClick={toggleColorMode}
+                                isDisabled={colorMode == "light"}
+                              >
+                                Light
+                              </Button>
+                              <Button
+                                leftIcon={<FaMoon />}
+                                onClick={toggleColorMode}
+                                isDisabled={colorMode == "dark"}
+                                // cursor="not-allowed"
+                              >
+                                Dark
+                              </Button>
+                              {/* <Button
                             leftIcon={<FaRobot />}
                             onClick={() => setColorMode("system")}
                             // isDisabled={colorMode == ""}
@@ -267,35 +271,36 @@ export function SiteHeaderDark(props) {
                           >
                             Auto
                           </Button> */}
-                          </ButtonGroup>
-                        </VStack>
-                        <MenuItem as="a" href="/signout">
-                          Sign Out
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </Center>
-                ) : (
-                  <Center h="40px" mr="10px">
-                    <Button
-                      data-test="Nav to signin"
-                      size="sm"
-                      // variant="ghost"
-                      variant="outline"
-                      onClick={() => {
-                        navigateTo.current = "/signin";
-                        setRecoilPageToolView({
-                          page: "signin",
-                          tool: "",
-                          view: "",
-                          params: {},
-                        });
-                      }}
-                    >
-                      Sign In
-                    </Button>
-                  </Center>
-                )}
+                            </ButtonGroup>
+                          </VStack>
+                          <MenuItem as="a" href="/signout">
+                            Sign Out
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    </Center>
+                  ) : (
+                    <Center h="40px" mr="10px">
+                      <Button
+                        data-test="Nav to signin"
+                        size="sm"
+                        // variant="ghost"
+                        variant="outline"
+                        onClick={() => {
+                          navigateTo.current = "/signin";
+                          setRecoilPageToolView({
+                            page: "signin",
+                            tool: "",
+                            view: "",
+                            params: {},
+                          });
+                        }}
+                      >
+                        Sign In
+                      </Button>
+                    </Center>
+                  )}
+                </Box>
               </Flex>
             </GridItem>
           </Grid>
