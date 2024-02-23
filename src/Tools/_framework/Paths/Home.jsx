@@ -129,11 +129,11 @@ export function Home() {
     });
   }
 
-  const grayColor = useColorModeValue("doenet.mainGray", "doenet.lightGray");
-  const blueColor = useColorModeValue("doenet.lightBlue", "doenet.mainBlue");
-  const blackColor = useColorModeValue("black", "white");
-  const whiteColor = useColorModeValue("white", "gray.900");
-  const textColor = useColorModeValue("doenet.canvas", "doenet.canvastext");
+  const grayColor = "doenet.lightGray";
+  const blueColor = "doenet.mainBlue";
+  const blackColor = "white";
+  const whiteColor = "gray.900";
+  const textColor = "doenet.canvas";
 
   //Don't do more processing if we don't know if we are signed in or not
   if (context.signedIn == null) {
@@ -142,7 +142,24 @@ export function Home() {
 
   return (
     <>
-      <Box styles={{ position: "relative" }}>
+      <Box
+        data-test="jason"
+        style={{
+          position: "relative",
+          backgroundColor: "black",
+          maxHeight: "800px",
+          overflow: "hidden",
+        }}
+      >
+        <Link
+          position="absolute"
+          bottom="10vh"
+          right="8vw"
+          href="https://www.doenet.org/portfolioeditor/_Pgmpw33WxJym0qOUyKaCG/_PhwPDWnOKA5YBKXCjGEBK"
+          zIndex="5"
+        >
+          How to Make this Animation
+        </Link>
         <Box width="60vw" position="absolute" top="8vw" left="8vw">
           {/* <Image
             height="150px"
@@ -150,14 +167,40 @@ export function Home() {
             src="/Doenet_Logo_Frontpage_greyscale_minimal.png"
           /> */}
 
-          <Text color="white" fontSize={"6vw"} fontWeight="700">
+          <Text color="white" fontSize={"5vw"} fontWeight="700">
             {/* <Text color="black" fontSize="60px" fontWeight="700"> */}
-            STEM is Cool!
+            Interactive activities to engage your students
           </Text>
           <Text color="white" fontSize={"2vw"} fontWeight="700">
             {/* <Text color="black" fontSize="60px" fontWeight="700"> */}
-            Interactive activities to engage your students.
+            Enhance your classroom with great OER resources, and learn how our
+            new authoring tools make it easy to create your own.
           </Text>
+          <Link href="https://www.doenet.org/portfolioeditor/_KfPv0YUsU1VoRNR7HCGA5/_VRU9SbxWNvTrUwUeJDfkb">
+            <Button
+              mt="40px"
+              p="10px"
+              colorScheme="blue"
+              w={["160px", "180px", "220px", "250px", "300px"]}
+              h={["20px", "30px", "40px", "50px", "60px"]}
+              fontSize={["10px", "14px", "18px", "22px", "26px"]}
+            >
+              Explore Activities
+            </Button>
+          </Link>
+          <br />
+          <Link href="https://www.doenet.org/portfolioeditor/_KfPv0YUsU1VoRNR7HCGA5/_VRU9SbxWNvTrUwUeJDfkb">
+            <Button
+              mt="40px"
+              p="10px"
+              colorScheme="blue"
+              w={["160px", "180px", "220px", "250px", "300px"]}
+              h={["20px", "30px", "40px", "50px", "60px"]}
+              fontSize={["10px", "14px", "18px", "22px", "26px"]}
+            >
+              Learn to Make Your Own
+            </Button>
+          </Link>
         </Box>
         <Suspense fallback={"Loading..."}>
           {/* Does this lazy loading do anything? */}

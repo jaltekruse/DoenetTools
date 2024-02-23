@@ -4,13 +4,13 @@ import styled from "styled-components";
 
 const LogoButton = styled.button`
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
-    url("/Doenet_Logo_Frontpage_greyscale_minimal.png");
+    url("/Doenet_Logo_Frontpage_minimal_text.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 70px 55px;
+  background-size: 160px 55px;
   transition: 300ms;
-  background-color: var(--canvas);
-  width: 70px;
+  /* background-color: var(--canvas); */
+  width: 160px;
   height: 55px;
   display: inline-block;
   justify-content: center;
@@ -18,7 +18,7 @@ const LogoButton = styled.button`
   align-items: center;
   border-style: none;
   // border-radius: 50%;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-left: 10px;
   cursor: ${(props) => (props.hasLink ? "pointer" : "default")};
   &:focus {
