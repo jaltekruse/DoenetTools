@@ -155,6 +155,7 @@ export function Home() {
           position="absolute"
           bottom="10vh"
           right="8vw"
+          color={textColor}
           href="https://www.doenet.org/portfolioeditor/_Pgmpw33WxJym0qOUyKaCG/_PhwPDWnOKA5YBKXCjGEBK"
           zIndex="5"
         >
