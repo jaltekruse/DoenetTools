@@ -19,11 +19,10 @@ if ($q == ""){
 
 $matchingUsers = [];
 $matchingActivities = [];
-$matchingPages = [];
 //Get Matching Activities 
 if ($success) {
 
-  // Show activities from portfolios and courses that have been marked public
+  // Doesn't show public from courses only portfolios
   $sql = "
   SELECT cc.doenetId,
   CAST(cc.jsonDefinition as CHAR) AS json,
@@ -41,7 +40,6 @@ if ($success) {
   LEFT JOIN user AS u 
     ON c.portfolioCourseForUserId = u.userId
   WHERE cc.label LIKE '%$q%'
-  AND cc.type = 'activity'
   AND cc.isPublic = 1
   AND cc.isDeleted = 0
   AND cc.isBanned = 0
@@ -104,46 +102,6 @@ if ($success) {
       ]);
     }
   }
-
-  // Show pages inside of collections/banks that have been marked public
-  $sql = "
-  SELECT pages.containingDoenetId,
-  pages.doenetId,
-  CAST(cc.jsonDefinition as CHAR) AS json,
-  pages.label,
-  pages.courseId,
-  concat(u.firstName, concat(' ', u.lastName)) as fullName,
-  c.portfolioCourseForUserId,
-  c.label AS courseLabel,
-  c.color AS courseColor,
-  c.image AS courseImage
-  FROM course_content AS cc
-  LEFT JOIN course AS c
-    ON c.courseId = cc.courseId
-  join pages
-    ON cc.doenetId = pages.containingDoenetId
-  LEFT JOIN user AS u 
-    ON c.portfolioCourseForUserId = u.userId
-  WHERE pages.label LIKE '%$q%'
-  AND cc.type = 'bank'
-  AND cc.isPublic = 1
-  AND cc.isDeleted = 0
-  AND cc.isBanned = 0
-  LIMIT 100
-  ";
-  
-  $result = $conn->query($sql); 
-  if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()){
-      $json = json_decode($row['json'], true);
-      $row['version'] = $json['version'];
-      $row['content'] = $json['content'];
-      $row['type'] ='page';
-      $row['public'] = '1';
-      $row['isUserPortfolio'] = is_null($row["portfolioCourseForUserId"]) ? "0" : "1";
-      array_push($matchingPages, $row);
-    }
-  }
 }
 
 
@@ -151,7 +109,7 @@ if ($success) {
 $response_arr = array(
   "success"=>$success,
   "message"=>$message,
-  "searchResults"=>["users"=>$matchingUsers,"activities"=>$matchingActivities, "pages"=>$matchingPages],
+  "searchResults"=>["users"=>$matchingUsers,"activities"=>$matchingActivities],
   );
 
 
