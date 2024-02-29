@@ -77,7 +77,7 @@ function NavLinkTab({ to, children, dataTest }) {
         let borderBottomStyle = "none";
         let borderBottomWidth = "0px";
         if (isActive) {
-          color = "doenet.mainBlue";
+          color = "doenet.lightBlue";
           borderBottomWidth = "2px";
           borderBottomStyle = "solid";
         }
@@ -129,7 +129,7 @@ export function SiteHeaderDark(props) {
       <Grid
         templateAreas={`"siteHeader" 
         "main"`}
-        gridTemplateRows="70px auto"
+        gridTemplateRows="60px auto"
         width="100vw"
         height="100vh"
         backgroundColor="black"
@@ -141,10 +141,10 @@ export function SiteHeaderDark(props) {
           m="0"
           backgroundColor="black"
           color="white"
-          height="70px"
+          height="60px"
         >
           <Grid
-            height="70px"
+            height="60px"
             position="fixed"
             top="0"
             zIndex="1200"
@@ -199,7 +199,7 @@ export function SiteHeaderDark(props) {
                 <Link href="mailto:info@doenet.org">
                   <Tooltip label="mailto:info@doenet.org">
                     <IconButton
-                      mt="20px"
+                      mt="15px"
                       colorScheme="blue"
                       size="sm"
                       fontSize="16pt"
@@ -211,7 +211,7 @@ export function SiteHeaderDark(props) {
                 <Link href="https://github.com/Doenet/">
                   <Tooltip label="Doenet Github">
                     <IconButton
-                      mt="20px"
+                      mt="15px"
                       colorScheme="blue"
                       size="sm"
                       fontSize="16pt"
@@ -222,7 +222,7 @@ export function SiteHeaderDark(props) {
                 <Link href="https://discord.gg/PUduwtKJ5h">
                   <Tooltip label="Doenet Discord">
                     <IconButton
-                      mt="20px"
+                      mt="15px"
                       colorScheme="blue"
                       size="sm"
                       fontSize="16pt"
@@ -230,7 +230,7 @@ export function SiteHeaderDark(props) {
                     />
                   </Tooltip>
                 </Link>
-                <Box mt="15px">
+                <Box mt="10px">
                   {signedIn ? (
                     <Center h="40px" mr="10px">
                       <Menu>

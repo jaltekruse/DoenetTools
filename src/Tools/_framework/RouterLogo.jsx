@@ -18,7 +18,7 @@ const LogoButton = styled.button`
   align-items: center;
   border-style: none;
   // border-radius: 50%;
-  margin-top: 10px;
+  margin-top: 5px;
   margin-left: 10px;
   cursor: ${(props) => (props.hasLink ? "pointer" : "default")};
   &:focus {
