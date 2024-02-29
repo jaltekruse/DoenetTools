@@ -241,7 +241,7 @@ function StudentSection({
           courseNavigatorProps={courseNavigatorProps}
           numberOfVisibleColumns={numberOfVisibleColumns}
           icon={faFolderTree}
-          label={itemInfo.label}
+          label={itemInfo}
           doenetId={doenetId}
           hasToggle={true}
           isOpen={itemInfo.isOpen}
@@ -258,7 +258,7 @@ function StudentSection({
         courseNavigatorProps={courseNavigatorProps}
         numberOfVisibleColumns={numberOfVisibleColumns}
         icon={faFolderTree}
-        label={itemInfo.label}
+        label={itemInfo}
         doenetId={doenetId}
         hasToggle={true}
         isOpen={itemInfo.isOpen}
@@ -291,7 +291,7 @@ function StudentActivity({
         columnsJSX={columnsJSX}
         numberOfVisibleColumns={numberOfVisibleColumns}
         icon={faFileCode}
-        label={itemInfo.label}
+        label={itemInfo}
         doenetId={doenetId}
         isSelected={itemInfo.isSelected}
         indentLevel={indentLevel}
@@ -323,6 +323,21 @@ function AuthorCourseNavigation({
     previousSections.current = [];
     definedForSectionId.current = sectionId;
   }
+
+  // let courseData = [];
+  // for (let courseItemId in authorItemOrder) {
+  //   let itemInfo = useRecoilValue(itemByDoenetId(courseItemId));
+
+  //   // section
+  //   let authorSectionItemOrder = useRecoilValue(
+  //     authorCourseItemOrderByCourseIdBySection({
+  //       courseId,
+  //       sectionId: itemInfo.doenetId,
+  //     }),
+  //   );
+  //   courseData.push(authorSectionItemOrder);
+  //   console.log(courseData);
+  // }
 
   let items = authorItemOrder.map((doenetId) => (
     <Item
@@ -452,7 +467,7 @@ function Section({
           isBeingCut={itemInfo.isBeingCut}
           numberOfVisibleColumns={numberOfVisibleColumns}
           icon={faFolderTree}
-          label={itemInfo.label}
+          label={itemInfo}
           doenetId={doenetId}
           hasToggle={true}
           isOpen={itemInfo.isOpen}
@@ -471,7 +486,7 @@ function Section({
         isBeingCut={itemInfo.isBeingCut}
         numberOfVisibleColumns={numberOfVisibleColumns}
         icon={faFolderTree}
-        label={itemInfo.label}
+        label={itemInfo}
         doenetId={doenetId}
         hasToggle={true}
         isOpen={itemInfo.isOpen}
@@ -512,7 +527,7 @@ function Bank({
           courseNavigatorProps={courseNavigatorProps}
           numberOfVisibleColumns={numberOfVisibleColumns}
           icon={faLayerGroup}
-          label={itemInfo.label}
+          label={itemInfo}
           doenetId={doenetId}
           hasToggle={true}
           isOpen={itemInfo.isOpen}
@@ -530,7 +545,7 @@ function Bank({
         courseNavigatorProps={courseNavigatorProps}
         numberOfVisibleColumns={numberOfVisibleColumns}
         icon={faLayerGroup}
-        label={itemInfo.label}
+        label={itemInfo}
         doenetId={doenetId}
         hasToggle={true}
         isOpen={itemInfo.isOpen}
@@ -570,7 +585,7 @@ function Activity({
           columnsJSX={columnsJSX}
           numberOfVisibleColumns={numberOfVisibleColumns}
           icon={faFileCode}
-          label={itemInfo.label}
+          label={itemInfo}
           doenetId={doenetId}
           isSelected={itemInfo.isSelected}
           indentLevel={indentLevel}
@@ -627,7 +642,7 @@ function Activity({
           columnsJSX={columnsJSX}
           numberOfVisibleColumns={numberOfVisibleColumns}
           icon={faFileCode}
-          label={itemInfo.label}
+          label={itemInfo}
           doenetId={doenetId}
           hasToggle={true}
           isOpen={itemInfo.isOpen}
@@ -647,7 +662,7 @@ function Activity({
           columnsJSX={columnsJSX}
           numberOfVisibleColumns={numberOfVisibleColumns}
           icon={faFileCode}
-          label={itemInfo.label}
+          label={itemInfo}
           doenetId={doenetId}
           hasToggle={true}
           isOpen={itemInfo.isOpen}
@@ -821,7 +836,7 @@ function Page({
       courseNavigatorProps={courseNavigatorProps}
       numberOfVisibleColumns={numberOfVisibleColumns}
       icon={faCode}
-      label={recoilPageInfo.label}
+      label={recoilPageInfo}
       doenetId={recoilPageInfo.doenetId}
       indentLevel={indentLevel}
       numbered={number}
@@ -892,7 +907,7 @@ function CollectionLink({
         isOpen={collectionLinkRecoilPageInfo.isOpen}
         numberOfVisibleColumns={numberOfVisibleColumns}
         icon={faLink}
-        label={collectionLinkRecoilPageInfo.label}
+        label={collectionLinkRecoilPageInfo}
         doenetId={doenetId}
         indentLevel={indentLevel}
         numbered={number}
@@ -920,7 +935,7 @@ function PageLink({
       courseNavigatorProps={courseNavigatorProps}
       numberOfVisibleColumns={numberOfVisibleColumns}
       icon={faLink}
-      label={`Link to ${recoilPageInfo.label}`}
+      label={recoilPageInfo}
       doenetId={doenetId}
       indentLevel={indentLevel}
       numbered={number}
@@ -947,6 +962,7 @@ function Row({
   courseNavigatorProps,
 }) {
   const setSelectionMenu = useSetRecoilState(selectedMenuPanelAtom);
+  console.log(label);
 
   let openCloseIndicator = null;
   let toggleOpenClosed = useRecoilCallback(
@@ -1292,7 +1308,26 @@ function Row({
     </div>
   );
 
-  return <>{activityJSX}</>;
+  let cleanedItemInfo = { ...label };
+  cleanedItemInfo.pages = null;
+  cleanedItemInfo.files = null;
+  cleanedItemInfo.content = null;
+  let itemInfoStr = JSON.stringify(cleanedItemInfo);
+  // TODO only leave open ended if need to render children below, for collections, activities, etc.
+  if (itemInfoStr.at(-1) != "}") {
+    console.log(
+      "ERROR, JSON string manipulation failing because last char wasn't a close curly brace",
+    );
+  } else if (["bank", "section"].find(cleanedItemInfo.type)) {
+    itemInfoStr = itemInfoStr.substring(0, itemInfoStr.length - 1);
+  }
+  // return <>{activityJSX}</>;
+  return (
+    <>
+      {itemInfoStr}
+      <br />
+    </>
+  );
 }
 
 function getColumnsCSS(numberOfVisibleColumns) {
