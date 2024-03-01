@@ -53,16 +53,16 @@ try {
         }
         $label = $row['label'];
         $json = json_decode($row["json"], true);
-    array_push($contributors, [
-        "courseId" => $row["courseId"],
-        "isUserPortfolio" => is_null($row["portfolioCourseForUserId"]) ? "0" : "1",
-        "courseLabel" => $row['courseLabel'],
-        "courseImage" => $row['image'],
-        "courseColor" => $row['color'],
-        "firstName" => $row['firstName'],
-        "lastName" => $row['lastName'],
-        "profilePicture" => $row['profilePicture'],
-    ]);
+        array_push($contributors, [
+            "courseId" => $row["courseId"],
+            "isUserPortfolio" => is_null($row["portfolioCourseForUserId"]) ? "0" : "1",
+            "courseLabel" => $row['courseLabel'],
+            "courseImage" => $row['image'],
+            "courseColor" => $row['color'],
+            "firstName" => $row['firstName'],
+            "lastName" => $row['lastName'],
+            "profilePicture" => $row['profilePicture'],
+        ]);
     
 
     }else{

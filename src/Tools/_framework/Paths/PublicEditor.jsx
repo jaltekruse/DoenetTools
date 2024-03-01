@@ -137,8 +137,15 @@ export async function loader({ params }) {
 }
 
 export function PublicEditor() {
-  const { success, message, platform, doenetId, doenetML, activityData } =
-    useLoaderData();
+  const {
+    success,
+    message,
+    platform,
+    doenetId,
+    pageId,
+    doenetML,
+    activityData,
+  } = useLoaderData();
 
   console.log("Rendering PublicEditor, has recoil stuff");
 
@@ -285,7 +292,7 @@ export function PublicEditor() {
                     colorScheme="blue"
                     onClick={async () => {
                       let resp = await axios.get(
-                        `/api/duplicatePortfolioActivity.php?doenetId=${doenetId}`,
+                        `/api/duplicatePortfolioActivity.php?doenetId=${doenetId}&pageId=${pageId}`,
                       );
                       const { nextActivityDoenetId, nextPageDoenetId } =
                         resp.data;
