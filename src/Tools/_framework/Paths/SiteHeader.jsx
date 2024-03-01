@@ -162,6 +162,9 @@ export function SiteHeader(props) {
                 <NavLinkTab to="/" dataTest="Home">
                   Home
                 </NavLinkTab>
+                <NavLinkTab to="library" dataTest="Library">
+                  Library
+                </NavLinkTab>
                 <NavLinkTab to="community" dataTest="Community">
                   Community
                 </NavLinkTab>
