@@ -17,6 +17,7 @@ import {
   Community,
 } from "./Tools/_framework/Paths/Community";
 import { loader as adminLoader, Admin } from "./Tools/_framework/Paths/Admin";
+import { SiteHeaderDark } from "./Tools/_framework/Paths/SiteHeaderDark";
 import {
   loader as libraryLoader,
   Library,
@@ -146,7 +147,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <ChakraProvider theme={theme}>
-          <SiteHeader />
+          <SiteHeaderDark />
         </ChakraProvider>
       </>
     ),
