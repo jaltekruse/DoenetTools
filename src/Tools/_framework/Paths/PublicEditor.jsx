@@ -67,15 +67,30 @@ export async function loader({ params }) {
       `/api/getPortfolioActivityView.php?doenetId=${params.doenetId}`,
     );
 
+    console.log("response for getPortfolioActivityVie", data2);
+
     const { data: activityML } = await axios.get(
       `/media/${data2.json.assignedCid}.doenet`,
     );
-    //Find the first page's doenetML
-    const regex = /<page\s+cid="(\w+)"\s+(label="[^"]+"\s+)?\/>/;
-    const pageIds = activityML.match(regex);
+
+    console.log("response for getting doenetML of resource", activityML);
+
+    let doenetML;
+    if (!pageId) {
+      //Find the first page's doenetML
+      const regex = /<page\s+cid="(\w+)"\s+(label="[^"]+"\s+)?\/>/;
+      const pageIds = activityML.match(regex);
+      pageId = pageIds[1];
+      const { data } = await axios.get(`/media/${pageId}.doenet`);
+      doenetML = data;
+    } else {
+      //http://localhost:8000/media/byPageId/_0DSz2UjD2tvBC1HTQ5Dmi.doenet
+      const { data } = await axios.get(`/media/byPageId/${pageId}.doenet`);
+      doenetML = data;
+    }
 
     //NEED AXIOS GET HERE!!!
-    const { data: doenetML } = await axios.get(`/media/${pageIds[1]}.doenet`);
+    console.log("get page content response", doenetML);
     const lastKnownCid = await cidFromText(doenetML);
 
     const supportingFileResp = await axios.get(
@@ -108,7 +123,12 @@ export async function loader({ params }) {
       supportingFileData,
     };
   } catch (e) {
-    return { success: false, message: e.response.data.message };
+    return {
+      success: false,
+      message: e,
+      // message: e.response,
+      //message: e.response?.data?.message,
+    };
   }
 }
 
@@ -116,7 +136,10 @@ export function PublicEditor() {
   const { success, message, platform, doenetId, doenetML, activityData } =
     useLoaderData();
 
+  console.log("Rendering PublicEditor, has recoil stuff");
+
   if (!success) {
+    console.log(message);
     throw new Error(message);
   }
 

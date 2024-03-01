@@ -53,13 +53,20 @@ export async function loader({ params }) {
       `/media/${data.json.assignedCid}.doenet`,
     );
 
-    //Find the first page's doenetML
-    const regex = /<page\s+cid="(\w+)"\s+(label="[^"]+"\s+)?\/>/;
-    const pageIds = activityML.match(regex);
-
-    let firstPage = findFirstPageIdInContent(data.json.content);
-
-    const { data: doenetML } = await axios.get(`/media/${pageIds[1]}.doenet`);
+    let pageId = params.pageId;
+    let doenetML;
+    if (!pageId) {
+      //Find the first page's doenetML
+      const regex = /<page\s+cid="(\w+)"\s+(label="[^"]+"\s+)?\/>/;
+      const pageIds = activityML.match(regex);
+      pageId = pageIds[1];
+      const { data } = await axios.get(`/media/${pageId}.doenet`);
+      doenetML = data;
+    } else {
+      //http://localhost:8000/media/byPageId/_0DSz2UjD2tvBC1HTQ5Dmi.doenet
+      const { data } = await axios.get(`/media/byPageId/${pageId}.doenet`);
+      doenetML = data;
+    }
 
     return {
       success: true,
@@ -68,7 +75,7 @@ export async function loader({ params }) {
       signedIn,
       label: data.label,
       contributors: data.contributors,
-      pageDoenetId: firstPage,
+      pageDoenetId: pageId,
     };
   } catch (e) {
     return { success: false, message: e.response.data.message };
