@@ -46,7 +46,7 @@ export async function loader({ params }) {
   }
   try {
     const { data } = await axios.get(
-      `/api/getPortfolioActivityView.php?doenetId=${params.doenetId}`,
+      `/api/getPortfolioActivityView.php?doenetId=${params.doenetId}&pageId=${params.pageId}`,
     );
 
     const { data: activityML } = await axios.get(
@@ -59,9 +59,10 @@ export async function loader({ params }) {
       //Find the first page's doenetML
       const regex = /<page\s+cid="(\w+)"\s+(label="[^"]+"\s+)?\/>/;
       const pageIds = activityML.match(regex);
-      pageId = pageIds[1];
-      const { data } = await axios.get(`/media/${pageId}.doenet`);
+      let pageCid = pageIds[1];
+      const { data } = await axios.get(`/media/${pageCid}.doenet`);
       doenetML = data;
+      pageId = "_";
     } else {
       //http://localhost:8000/media/byPageId/_0DSz2UjD2tvBC1HTQ5Dmi.doenet
       const { data } = await axios.get(`/media/byPageId/${pageId}.doenet`);
