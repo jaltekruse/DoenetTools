@@ -15,7 +15,7 @@ export async function loader() {
   // get html string or others string
   console.log(response.data);
   console.log(response);
-  const parsedData = Papa.parse(response.data, {
+  let parsedData = Papa.parse(response.data, {
     dynamicTyping: true,
   }).data;
   // columnTypes = parsedData
@@ -29,7 +29,7 @@ export async function loader() {
   //   }, "")
   //   .trim();
 
-  console.log(parsedData);
+  parsedData = parsedData.filter((row) => row[1] || row[4]);
   const isAdminResponse = await fetch(`/api/checkForCommunityAdmin.php`);
   const { isAdmin } = await isAdminResponse.json();
   let carouselGroups = [];
@@ -56,9 +56,8 @@ const PublicActivitiesSection = styled.div`
   padding: 10px 10px 10px 10px;
   margin: 0px;
   justify-content: flex-start;
+  padding-left: 200px;
 
-  align-items: center;
-  text-align: center;
   background: var(--lightBlue);
 `;
 
@@ -90,7 +89,7 @@ export function Library() {
           zIndex="1200"
         >
           <Text fontSize="24px" fontWeight="700">
-            Recent Public Activities
+            Vetted Public Problem Library
           </Text>
         </Box>
         <PublicActivitiesSection>
@@ -101,13 +100,21 @@ export function Library() {
               {libraryData.map((activity) => {
                 return (
                   <>
-                    <a
-                      key={activity[2]}
-                      href={`/portfolioviewer/${activity[3]}/${activity[2]}`}
-                    >
-                      {activity[5]}
-                    </a>
-                    <br />
+                    {activity[4] ? (
+                      <Text fontSize="20px" fontWeight="700">
+                        {activity[4]}
+                      </Text>
+                    ) : (
+                      <>
+                        <a
+                          key={activity[2]}
+                          href={`/portfolioviewer/${activity[3]}/${activity[2]}`}
+                        >
+                          {activity[5]}
+                        </a>
+                        <br />
+                      </>
+                    )}
                   </>
                 );
               })}
