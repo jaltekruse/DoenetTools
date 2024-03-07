@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Box, Text, Wrap } from "@chakra-ui/react";
-import React from "react";
+import { Box, Button, ButtonGroup, Text, Wrap } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import ActivityCard from "../../../_reactComponents/PanelHeaderComponents/ActivityCard";
@@ -88,6 +88,7 @@ export async function loader() {
       if (label.includes(":")) label = label.split(":")[1];
       // Note the spaces around this dash are important, we want to preserve other uses of dash
       if (label.includes(" - ")) label = label.split(" - ")[1];
+      label = label.trim();
       label = label.charAt(0).toUpperCase() + label.slice(1);
       return {
         doenetId: activityInfo[2],
@@ -173,6 +174,41 @@ const PortfolioGrid = styled.div`
   height: 100vh;
 `;
 
+export function Subsection({ label, activities }) {
+  let [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div key={label}>
+      <Text fontSize="20px" fontWeight="500">
+        <Button
+          size="xs"
+          style={{
+            margin: "5px",
+            visibility: activities.length > 0 ? "visible" : "hidden",
+          }}
+          onClick={() => setIsOpen(!isOpen)}
+        />
+        {label}
+      </Text>
+      {isOpen
+        ? activities.map((activity) => {
+            return (
+              <div key={activity.doenetId}>
+                <a
+                  key={activity.label}
+                  href={`/portfolioviewer/${activity.parentDoenetId}/${activity.doenetId}`}
+                >
+                  {activity.label}
+                </a>
+                <br />
+              </div>
+            );
+          })
+        : null}
+    </div>
+  );
+}
+
 export function Library() {
   const { carouselGroups, isAdmin, libraryData } = useLoaderData();
 
@@ -213,29 +249,12 @@ export function Library() {
                     }}
                     key={section.label}
                   >
-                    <Text fontSize="20px" fontWeight="700">
+                    <Text fontSize="22px" fontWeight="700">
                       {section.label}
                     </Text>
-                    {section.subsections.map((subSection) => {
+                    {section.subsections.map((subsection) => {
                       return (
-                        <div key={subSection.label}>
-                          <Text fontSize="20px" fontWeight="400">
-                            {subSection.label}
-                          </Text>
-                          {subSection.activities.map((activity) => {
-                            return (
-                              <>
-                                <a
-                                  key={activity.label}
-                                  href={`/portfolioviewer/${activity.parentDoenetId}/${activity.doenetId}`}
-                                >
-                                  {activity.label}
-                                </a>
-                                <br />
-                              </>
-                            );
-                          })}
-                        </div>
+                        <Subsection key={subsection.label} {...subsection} />
                       );
                     })}
                   </div>
