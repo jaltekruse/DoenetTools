@@ -6,6 +6,13 @@ import styled from "styled-components";
 import ActivityCard from "../../../_reactComponents/PanelHeaderComponents/ActivityCard";
 import { MoveToGroupMenuItem } from "./Community";
 import Papa from "papaparse";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+} from "@chakra-ui/react";
 
 export async function loader() {
   let libraryContent = axios.get(`/media/library_content.csv`, {
@@ -43,14 +50,12 @@ export async function loader() {
   let webworkSections = webworkTaxonomy.reduce((sections, sectionInfo) => {
     let { numPart, alphaPart } = parseSectionKey(String(sectionInfo[1]));
     let label = sectionInfo[0];
-    //console.log(sectionInfo);
     // If we hit a section that hasn't been added yet
     let sectionDetails = sections.find((a) => a.sectionNumber == numPart);
     if (!sectionDetails) {
       sectionDetails = { sectionNumber: numPart, label, subsections: [] };
       sections.push(sectionDetails);
     }
-    //console.log(sections);
     if (alphaPart) {
       sectionDetails.subsections.push({
         label,
@@ -61,25 +66,17 @@ export async function loader() {
     return sections;
   }, []);
 
-  console.log(webworkSections);
-
   libraryContent = libraryContent.filter((row) => {
     return row[1] && String(row[1]).match(/[0-9]+[a-zA-Z]*/);
   });
 
-  console.log(libraryContent);
-
   let groupedActivities = libraryContent.reduce((subsections, row) => {
-    console.log(subsections[row[1]]);
     if (!subsections[row[1]]) subsections[row[1]] = [];
     subsections[row[1]].push(row);
     return subsections;
   }, {});
 
-  console.log(groupedActivities);
-
   for (const [subsectionKey, activities] of Object.entries(groupedActivities)) {
-    console.log(`${subsectionKey}: ${activities}`);
     let { numPart, alphaPart } = parseSectionKey(String(subsectionKey));
     webworkSections[Number(numPart) - 1].subsections.find(
       (subSec) => subSec.subSecLetter == alphaPart,
@@ -99,43 +96,6 @@ export async function loader() {
   }
 
   console.log(webworkSections);
-
-  // groupedActivities;
-  // let regroupedData = groupedActivities.forEach((activityInfo) => {
-  //   let { numPart, alphaPart } = parseSectionKey(String(activityInfo[1]));
-  //   webworkSections[Number(numPart) - 1].subsections
-  //     .find((subSec) => subSec.subSecLetter == alphaPart)
-  //     .activities.push({
-  //       doenetId: activityInfo[2],
-  //       parentDoenetId: activityInfo[3],
-  //       label: activityInfo[5],
-  //     });
-  // });
-  // console.log(regroupedData);
-
-  // let sections = regroupedData.reduce((allSections, subsection) => {
-  //   return allSections;
-  // }, {});
-
-  [
-    {
-      sectionName: "Alg of reals",
-      sectionNumber: 1,
-      subsections: [
-        {
-          subSecName: "Alg Exprs",
-          subSecLetter: "b",
-          activities: [
-            {
-              parentDoenetId: "adsf",
-              doenetId: "1234",
-              label: "learn the thing",
-            },
-          ],
-        },
-      ],
-    },
-  ];
 
   const isAdminResponse = await fetch(`/api/checkForCommunityAdmin.php`);
   const { isAdmin } = await isAdminResponse.json();
@@ -178,34 +138,36 @@ export function Subsection({ label, activities }) {
   let [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div key={label}>
-      <Text fontSize="20px" fontWeight="500">
-        <Button
-          size="xs"
-          style={{
-            margin: "5px",
-            visibility: activities.length > 0 ? "visible" : "hidden",
-          }}
-          onClick={() => setIsOpen(!isOpen)}
-        />
-        {label}
-      </Text>
-      {isOpen
-        ? activities.map((activity) => {
-            return (
-              <div key={activity.doenetId}>
-                <a
-                  key={activity.label}
-                  href={`/portfolioviewer/${activity.parentDoenetId}/${activity.doenetId}`}
-                >
-                  {activity.label}
-                </a>
-                <br />
-              </div>
-            );
-          })
-        : null}
-    </div>
+    <AccordionItem>
+      <h2>
+        <AccordionButton>
+          <Box
+            as="span"
+            flex="1"
+            textAlign="left"
+            style={{ color: activities.length == 0 ? "#aaaaaa" : "black" }}
+          >
+            {label}
+          </Box>
+          <AccordionIcon />
+        </AccordionButton>
+      </h2>
+      <AccordionPanel pb={4}>
+        {activities.map((activity) => {
+          return (
+            <div key={activity.doenetId}>
+              <a
+                key={activity.label}
+                href={`/portfolioviewer/${activity.parentDoenetId}/${activity.doenetId}`}
+              >
+                {activity.label}
+              </a>
+              <br />
+            </div>
+          );
+        })}
+      </AccordionPanel>
+    </AccordionItem>
   );
 }
 
@@ -246,17 +208,20 @@ export function Library() {
                       border: "1px black",
                       padding: "10px",
                       margin: "10px",
+                      width: "400px",
                     }}
                     key={section.label}
                   >
                     <Text fontSize="22px" fontWeight="700">
                       {section.label}
                     </Text>
-                    {section.subsections.map((subsection) => {
-                      return (
-                        <Subsection key={subsection.label} {...subsection} />
-                      );
-                    })}
+                    <Accordion allowMultiple>
+                      {section.subsections.map((subsection) => {
+                        return (
+                          <Subsection key={subsection.label} {...subsection} />
+                        );
+                      })}
+                    </Accordion>
                   </div>
                 );
               })}
