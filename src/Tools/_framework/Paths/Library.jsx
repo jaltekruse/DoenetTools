@@ -8,28 +8,134 @@ import { MoveToGroupMenuItem } from "./Community";
 import Papa from "papaparse";
 
 export async function loader() {
-  const response = await axios.get(`/media/libraryContent.csv`, {
+  let libraryContent = axios.get(`/media/library_content.csv`, {
     responseType: "text",
     transformResponse: [(data) => data],
   });
-  // get html string or others string
-  console.log(response.data);
-  console.log(response);
-  let parsedData = Papa.parse(response.data, {
+  let webworkTaxonomy = axios.get(`/media/webwork_taxonomy_algebra.csv`, {
+    responseType: "text",
+    transformResponse: [(data) => data],
+  });
+
+  let responses = await Promise.all([libraryContent, webworkTaxonomy]);
+  libraryContent = responses[0].data;
+  webworkTaxonomy = responses[1].data;
+
+  libraryContent = Papa.parse(libraryContent, {
     dynamicTyping: true,
   }).data;
-  // columnTypes = parsedData
-  //   .slice(1)[0]
-  //   .reduce((acc, val) => {
-  //     if (typeof val === "number") {
-  //       return `${acc}Number `;
-  //     } else {
-  //       return `${acc}Text `;
-  //     }
-  //   }, "")
-  //   .trim();
 
-  parsedData = parsedData.filter((row) => row[1] || row[4]);
+  webworkTaxonomy = Papa.parse(webworkTaxonomy, {
+    dynamicTyping: true,
+  }).data;
+
+  let parseSectionKey = (key) => {
+    let numPart = key.match(/[0-9]+/)[0];
+    let alphaPart = key.match(/[a-zA-Z]+/);
+    if (alphaPart) alphaPart = alphaPart[0];
+    return { numPart, alphaPart };
+  };
+
+  webworkTaxonomy = webworkTaxonomy.filter((row) =>
+    String(row[1]).match(/[0-9]+[a-zA-Z]*/),
+  );
+
+  let webworkSections = webworkTaxonomy.reduce((sections, sectionInfo) => {
+    let { numPart, alphaPart } = parseSectionKey(String(sectionInfo[1]));
+    let label = sectionInfo[0];
+    //console.log(sectionInfo);
+    // If we hit a section that hasn't been added yet
+    let sectionDetails = sections.find((a) => a.sectionNumber == numPart);
+    if (!sectionDetails) {
+      sectionDetails = { sectionNumber: numPart, label, subsections: [] };
+      sections.push(sectionDetails);
+    }
+    //console.log(sections);
+    if (alphaPart) {
+      sectionDetails.subsections.push({
+        label,
+        subSecLetter: alphaPart,
+        activities: [],
+      });
+    }
+    return sections;
+  }, []);
+
+  console.log(webworkSections);
+
+  libraryContent = libraryContent.filter((row) => {
+    return row[1] && String(row[1]).match(/[0-9]+[a-zA-Z]*/);
+  });
+
+  console.log(libraryContent);
+
+  let groupedActivities = libraryContent.reduce((subsections, row) => {
+    console.log(subsections[row[1]]);
+    if (!subsections[row[1]]) subsections[row[1]] = [];
+    subsections[row[1]].push(row);
+    return subsections;
+  }, {});
+
+  console.log(groupedActivities);
+
+  for (const [subsectionKey, activities] of Object.entries(groupedActivities)) {
+    console.log(`${subsectionKey}: ${activities}`);
+    let { numPart, alphaPart } = parseSectionKey(String(subsectionKey));
+    webworkSections[Number(numPart) - 1].subsections.find(
+      (subSec) => subSec.subSecLetter == alphaPart,
+    ).activities = activities.map((activityInfo) => {
+      let label = activityInfo[5];
+      if (label.includes(":")) label = label.split(":")[1];
+      // Note the spaces around this dash are important, we want to preserve other uses of dash
+      if (label.includes(" - ")) label = label.split(" - ")[1];
+      label = label.charAt(0).toUpperCase() + label.slice(1);
+      return {
+        doenetId: activityInfo[2],
+        parentDoenetId: activityInfo[3],
+        label,
+      };
+    });
+  }
+
+  console.log(webworkSections);
+
+  // groupedActivities;
+  // let regroupedData = groupedActivities.forEach((activityInfo) => {
+  //   let { numPart, alphaPart } = parseSectionKey(String(activityInfo[1]));
+  //   webworkSections[Number(numPart) - 1].subsections
+  //     .find((subSec) => subSec.subSecLetter == alphaPart)
+  //     .activities.push({
+  //       doenetId: activityInfo[2],
+  //       parentDoenetId: activityInfo[3],
+  //       label: activityInfo[5],
+  //     });
+  // });
+  // console.log(regroupedData);
+
+  // let sections = regroupedData.reduce((allSections, subsection) => {
+  //   return allSections;
+  // }, {});
+
+  [
+    {
+      sectionName: "Alg of reals",
+      sectionNumber: 1,
+      subsections: [
+        {
+          subSecName: "Alg Exprs",
+          subSecLetter: "b",
+          activities: [
+            {
+              parentDoenetId: "adsf",
+              doenetId: "1234",
+              label: "learn the thing",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
   const isAdminResponse = await fetch(`/api/checkForCommunityAdmin.php`);
   const { isAdmin } = await isAdminResponse.json();
   let carouselGroups = [];
@@ -43,7 +149,7 @@ export async function loader() {
 
   return {
     fullName: "",
-    libraryData: parsedData,
+    libraryData: webworkSections,
     isAdmin,
     carouselGroups,
   };
@@ -97,13 +203,45 @@ export function Library() {
             <div>No Public Activities</div>
           ) : (
             <>
-              {libraryData.map((activity) => {
+              {libraryData.map((section) => {
                 return (
-                  <>
-                    {activity[4] ? (
-                      <Text fontSize="20px" fontWeight="700">
-                        {activity[4]}
-                      </Text>
+                  <div
+                    style={{
+                      border: "1px black",
+                      padding: "10px",
+                      margin: "10px",
+                    }}
+                    key={section.label}
+                  >
+                    <Text fontSize="20px" fontWeight="700">
+                      {section.label}
+                    </Text>
+                    {section.subsections.map((subSection) => {
+                      return (
+                        <div key={subSection.label}>
+                          <Text fontSize="20px" fontWeight="400">
+                            {subSection.label}
+                          </Text>
+                          {subSection.activities.map((activity) => {
+                            return (
+                              <>
+                                <a
+                                  key={activity.label}
+                                  href={`/portfolioviewer/${activity.parentDoenetId}/${activity.doenetId}`}
+                                >
+                                  {activity.label}
+                                </a>
+                                <br />
+                              </>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+              {/*activity[4] ? (
                     ) : (
                       <>
                         <a
@@ -114,10 +252,7 @@ export function Library() {
                         </a>
                         <br />
                       </>
-                    )}
-                  </>
-                );
-              })}
+                    ) */}
             </>
           )}
         </PublicActivitiesSection>
