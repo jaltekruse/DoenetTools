@@ -82,9 +82,21 @@ export async function loader() {
       (subSec) => subSec.subSecLetter == alphaPart,
     ).activities = activities.map((activityInfo) => {
       let label = activityInfo[5];
-      if (label.includes(":")) label = label.split(":")[1];
-      // Note the spaces around this dash are important, we want to preserve other uses of dash
-      if (label.includes(" - ")) label = label.split(" - ")[1];
+
+      // some of the problems start with a number followed by a colon or the string "Problem XX:",
+      // instead of a number followed by a period, strip that off first, so it doesn't mess up the
+      // search for another colon later in the string
+      if (label.match(/^[0-9]+:/) || label.match(/^problem [0-9]+:/i)) {
+        label = label.substring(label.indexOf(":") + 1);
+      }
+      // most of the problems have the MOLS collection name as a prefix, some have it with a colon
+      // after the section name, others have a dash surrounded by spaces
+      if (label.includes(":")) {
+        label = label.substring(label.indexOf(":") + 1);
+      } else if (label.includes(" - ")) {
+        // Note the spaces around this dash are important, we want to preserve other uses of dash
+        label = label.substring(label.indexOf(" - ") + 3);
+      }
       label = label.trim();
       label = label.charAt(0).toUpperCase() + label.slice(1);
       return {
