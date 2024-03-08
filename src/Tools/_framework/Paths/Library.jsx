@@ -12,6 +12,7 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Link,
 } from "@chakra-ui/react";
 
 export async function loader() {
@@ -135,8 +136,7 @@ const PortfolioGrid = styled.div`
 `;
 
 export function Subsection({ label, activities }) {
-  let [isOpen, setIsOpen] = useState(false);
-
+  activities = activities.filter((a) => a.label != "BA-Basics");
   return (
     <AccordionItem>
       <h2>
@@ -152,16 +152,16 @@ export function Subsection({ label, activities }) {
           <AccordionIcon />
         </AccordionButton>
       </h2>
-      <AccordionPanel pb={4}>
+      <AccordionPanel isExpanded="true" pb={4}>
         {activities.map((activity) => {
           return (
             <div key={activity.doenetId}>
-              <a
+              <Link
                 key={activity.label}
-                href={`/portfolioviewer/${activity.parentDoenetId}/${activity.doenetId}`}
+                href={`https://www.doenet.org/courseactivityeditor/${activity.parentDoenetId}/${activity.doenetId}`}
               >
                 {activity.label}
-              </a>
+              </Link>
               <br />
             </div>
           );
@@ -193,7 +193,7 @@ export function Library() {
           zIndex="1200"
         >
           <Text fontSize="24px" fontWeight="700">
-            Vetted Public Problem Library
+            Public Problem Library
           </Text>
         </Box>
         <PublicActivitiesSection>
