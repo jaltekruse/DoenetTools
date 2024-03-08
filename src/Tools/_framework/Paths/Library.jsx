@@ -1,10 +1,8 @@
 import axios from "axios";
-import { Box, Button, ButtonGroup, Text, Wrap } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Box, Text } from "@chakra-ui/react";
+import React from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
-import ActivityCard from "../../../_reactComponents/PanelHeaderComponents/ActivityCard";
-import { MoveToGroupMenuItem } from "./Community";
 import Papa from "papaparse";
 import {
   Accordion,
@@ -13,6 +11,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   Link,
+  SimpleGrid,
 } from "@chakra-ui/react";
 
 export async function loader() {
@@ -124,9 +123,9 @@ const PublicActivitiesSection = styled.div`
   padding: 10px 10px 10px 10px;
   margin: 0px;
   justify-content: flex-start;
-  padding-left: 200px;
+  padding-left: 100px;
 
-  background: var(--lightBlue);
+  background: #ffffff;
 `;
 
 const PortfolioGrid = styled.div`
@@ -197,35 +196,39 @@ export function Library() {
           </Text>
         </Box>
         <PublicActivitiesSection>
-          {libraryData.length < 1 ? (
-            <div>No Public Activities</div>
-          ) : (
-            <>
-              {libraryData.map((section) => {
-                return (
-                  <div
-                    style={{
-                      border: "1px black",
-                      padding: "10px",
-                      margin: "10px",
-                      width: "400px",
-                    }}
-                    key={section.label}
-                  >
-                    <Text fontSize="22px" fontWeight="700">
-                      {section.label}
-                    </Text>
-                    <Accordion allowMultiple>
-                      {section.subsections.map((subsection) => {
-                        return (
-                          <Subsection key={subsection.label} {...subsection} />
-                        );
-                      })}
-                    </Accordion>
-                  </div>
-                );
-              })}
-              {/*activity[4] ? (
+          <SimpleGrid columns={3} spacing={10}>
+            {libraryData.length < 1 ? (
+              <div>No Public Activities</div>
+            ) : (
+              <>
+                {libraryData.map((section) => {
+                  return (
+                    <Box
+                      style={{
+                        border: "1px black",
+                        padding: "10px",
+                        margin: "10px",
+                        width: "400px",
+                      }}
+                      key={section.label}
+                    >
+                      <Text fontSize="22px" fontWeight="700">
+                        {section.label}
+                      </Text>
+                      <Accordion allowMultiple>
+                        {section.subsections.map((subsection) => {
+                          return (
+                            <Subsection
+                              key={subsection.label}
+                              {...subsection}
+                            />
+                          );
+                        })}
+                      </Accordion>
+                    </Box>
+                  );
+                })}
+                {/*activity[4] ? (
                     ) : (
                       <>
                         <a
@@ -237,8 +240,9 @@ export function Library() {
                         <br />
                       </>
                     ) */}
-            </>
-          )}
+              </>
+            )}
+          </SimpleGrid>
         </PublicActivitiesSection>
       </PortfolioGrid>
     </>
