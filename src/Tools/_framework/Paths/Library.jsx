@@ -14,6 +14,299 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 
+function startsWith(str, maybePrefix) {
+  //https://stackoverflow.com/a/4579228
+  return str.lastIndexOf(maybePrefix, 0) === 0;
+}
+
+function onLoad(allResources) {
+  // polyfill
+  if (!String.prototype.includes) {
+    String.prototype.includes = function (search, start) {
+      "use strict";
+
+      if (search instanceof RegExp) {
+        throw TypeError("first argument must not be a RegExp");
+      }
+      if (start === undefined) {
+        start = 0;
+      }
+      return this.indexOf(search, start) !== -1;
+    };
+  }
+  var setCurrentList = function () {
+    var element = document.getElementById("resourceList");
+    var html = "";
+    var searchVal = document.getElementById("searchBox").value;
+    var alwaysFree = document.getElementById("alwaysFree").checked;
+    var subject = document.getElementById("subjectValue").value;
+    var level = document.getElementById("levelValue").value;
+    searchVal = searchVal + " " + subject;
+    searchVal = searchVal.toLowerCase().trim();
+
+    var allMatching;
+    // exactly matched whole search string
+    var veryTopMatches = [];
+    // exactly matched subject name
+    var topMatches = [];
+    // match (including prefix match) on one or more words in search string
+    var otherMatches = [];
+    var hitDisplayLimit = false;
+    if (
+      searchVal.trim() != "" ||
+      alwaysFree ||
+      subject ||
+      level ||
+      alwaysFree
+    ) {
+      let searchTerms = searchVal.split(" ");
+      searchTerms = searchTerms.map(function (e) {
+        return e.trim();
+      });
+      allResources.data.map(function (resource, index) {
+        if (
+          veryTopMatches.length + topMatches.length + otherMatches.length >
+          399
+        ) {
+          hitDisplayLimit = true;
+          return;
+        }
+        if (
+          alwaysFree &&
+          !(
+            resource["Free Service Offered"] &&
+            resource["Free Service Offered"]
+              .toLowerCase()
+              .includes("always free")
+          )
+        ) {
+          return;
+        }
+        // doing this instead by concatenating subject with search term
+        // enables finding products with a subject in the description but
+        // not the explicit field filled out
+        /*
+if (subject &&
+!(resource["Category/Subject"] &&
+resource["Category/Subject"]
+.toLowerCase().includes(subject.toLowerCase()))) {
+return;
+}
+              */
+        if (
+          level &&
+          !(
+            resource["Grade/Age Group"] &&
+            resource["Grade/Age Group"]
+              .toLowerCase()
+              .includes(level.toLowerCase())
+          )
+        ) {
+          return;
+        }
+        var searchSomeText = function (toSearch, searchVal, topMatches) {
+          if (toSearch == undefined || searchVal.trim() == "") {
+            return false;
+          }
+          searchVal = " " + searchVal.toLowerCase().trim() + " ";
+          // first do a check for the whole search string
+          toSearch = toSearch
+            .toLowerCase()
+            .replace(/,/g, " ")
+            .replace(/\//g, " ")
+            .replace(/\./g, " ")
+            .replace(/&/g, " ")
+            // most people use subtraction as dash
+            .replace(/-/g, " ")
+            // proper dash character
+            .replace(/–/g, " ")
+            .replace(/;/g, " ");
+          if (false || toSearch.includes(searchVal)) {
+            topMatches.push(resource);
+            return true;
+          } else {
+            // do a prefix match on the individual words in the search
+            var words = toSearch.split(" ");
+            var matches = false;
+            var numMatches = 0;
+            var term;
+            terms: for (var i = 0; i < searchTerms.length; i++) {
+              term = searchTerms[i];
+              if (term.trim() == "") continue;
+              for (var j = 0; j < words.length; j++) {
+                word = words[j];
+                if (word.trim() == "") {
+                  continue;
+                }
+                if (startsWith(word, term)) {
+                  numMatches++;
+                  matches = true;
+                  continue terms;
+                }
+              }
+            }
+            if (matches) {
+              resource.numMatches = numMatches;
+              otherMatches.push(resource);
+              return true;
+            } else {
+              return false;
+            }
+          }
+        };
+        // the use of one space at the begging and end and two between the sections
+        // is deliberate, it allows doing full exact matching on terms, by just doing
+        // a simple substring search for " searchString ", but for multi-word searches
+        // it won't match if description right next to company happens to produce the
+        // search term, the extra space between the different strings helps here
+        // example:
+        // Description - give away free materials
+        // company - science materials R US
+        // if description and company were put together with a single space, doing
+        // a substring for "materials science" would return this as a top result
+        // this is not desired
+        var twoSpaces = "  ";
+        var allText =
+          " " +
+          resource["Category/Subject"] +
+          twoSpaces +
+          resource["Grade/Age Group"] +
+          twoSpaces +
+          resource["Description"] +
+          twoSpaces +
+          resource["Company"] +
+          twoSpaces +
+          resource["Free Service Offered"] +
+          " ";
+
+        var matched = false;
+        // if someone typed in the box
+        if (
+          !(searchVal == undefined || searchVal.trim() == "") ||
+          !(subject == undefined || subject.trim() == "")
+        ) {
+          matched = searchSomeText(allText, searchVal, veryTopMatches);
+        } else if (subject == undefined || subject.trim() == "") {
+          // if nothing was typed in the box, or provided as a subject
+          // then we got down here because always free or grade level was
+          // provided and we already passed that filter
+          otherMatches.push(resource);
+          matches = true;
+        }
+        // if we haven't already matched, run a search for the subject
+        //if (!matched) {
+        //    matched = searchSomeText(allText, searchVal + ' ' + subject, topMatches);
+        //}
+      });
+      console.log(
+        "last very top match: " +
+          (veryTopMatches[veryTopMatches.length - 1]
+            ? veryTopMatches[veryTopMatches.length - 1]["Company"]
+            : "none"),
+      );
+      console.log(
+        "last top match: " +
+          (topMatches[topMatches.length - 1]
+            ? topMatches[topMatches.length - 1]["Company"]
+            : "none"),
+      );
+      console.log(
+        "first other Matches: " +
+          (otherMatches[0] ? otherMatches[0]["Company"] : "none"),
+      );
+      otherMatches = otherMatches.sort(function (a, b) {
+        return b.numMatches - a.numMatches;
+      });
+
+      allMatching = veryTopMatches.concat(topMatches.concat(otherMatches));
+    } else {
+      allMatching = allResources.data;
+    }
+    console.log(allMatching.length);
+    if (allMatching.length > 400) {
+      allMatching = allMatching.slice(0, 400);
+      hitDisplayLimit = true;
+    }
+    allMatching.map(function (resource, index) {
+      if (!resource["Link"]) {
+        return;
+      }
+      if (
+        !(
+          startsWith(resource["Link"], "http://") ||
+          startsWith(resource["Link"], "https://")
+        )
+      ) {
+        resource["Link"] = "http://" + resource["Link"];
+      }
+      html +=
+        '<a href="' +
+        resource["Link"] +
+        '" style="white-space: pre-wrap; white-space: -moz-pre-wrap; ' +
+        'white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;"><h2>' +
+        resource["Company"] +
+        "</h2></a>";
+      if (
+        resource["Category/Subject"] != undefined &&
+        resource["Category/Subject"].trim() != ""
+      ) {
+        html +=
+          "<b>Category/Subject</b> &nbsp;&nbsp" +
+          resource["Category/Subject"] +
+          "<br />";
+      }
+      if (
+        resource["Grade/Age Group"] != undefined &&
+        resource["Grade/Age Group"].trim() != ""
+      ) {
+        html +=
+          "<b>Grade/Age Group</b> &nbsp;&nbsp" +
+          resource["Grade/Age Group"] +
+          "<br />";
+      }
+      html += resource["Description"] + "<br />";
+      html +=
+        "<b>Free Service Offered</b> &nbsp;&nbsp" +
+        resource["Free Service Offered"] +
+        "<br /><br />";
+    });
+    if (hitDisplayLimit) {
+      html +=
+        "<h2>Showing top 400 results, to see others perform a more specific search.</h2>";
+    }
+    if (html == "") {
+      html = "No matches found for search";
+    }
+    element.innerHTML = html;
+  };
+  if (window.allResources) {
+    setCurrentList();
+  } else {
+    var xhr = new XMLHttpRequest();
+    xhr.open("get", "AmazingEducationalResouces.csv");
+    xhr.onload = function () {
+      if (this.readyState === 4) {
+        if (this.status == 200) {
+          try {
+            window.allResources = Papa.parse(this.responseText, {
+              header: true,
+            });
+            setCurrentList();
+          } catch (e) {
+            console.log(e);
+            alert("error reading resource list: " + this.responsetext);
+          }
+        } else {
+          alert(this.responsetext);
+        }
+      } else {
+        // ignore other events for request still in progress
+      }
+    };
+    xhr.send();
+  }
+}
+
 export async function loader() {
   let libraryContent = axios.get(`/media/library_content.csv`, {
     responseType: "text",
