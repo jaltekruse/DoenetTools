@@ -107,24 +107,8 @@ export async function loader() {
     });
   }
 
-  console.log(webworkSections);
-
-  const isAdminResponse = await fetch(`/api/checkForCommunityAdmin.php`);
-  const { isAdmin } = await isAdminResponse.json();
-  let carouselGroups = [];
-  if (isAdmin) {
-    const carouselDataGroups = await fetch(
-      `/api/loadPromotedContentGroups.php`,
-    );
-    const responseGroups = await carouselDataGroups.json();
-    carouselGroups = responseGroups.carouselGroups;
-  }
-
   return {
-    fullName: "",
     libraryData: webworkSections,
-    isAdmin,
-    carouselGroups,
   };
 }
 
@@ -183,7 +167,7 @@ export function Subsection({ label, activities }) {
 }
 
 export function Library() {
-  const { carouselGroups, isAdmin, libraryData } = useLoaderData();
+  const { libraryData } = useLoaderData();
 
   return (
     <>
