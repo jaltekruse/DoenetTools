@@ -1,15 +1,17 @@
 import axios from "axios";
 import { Box, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Papa from "papaparse";
+import Searchbar from "../../../_reactComponents/PanelHeaderComponents/SearchBar";
 import {
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Flex,
   Link,
   SimpleGrid,
 } from "@chakra-ui/react";
@@ -191,7 +193,7 @@ return;
           // then we got down here because always free or grade level was
           // provided and we already passed that filter
           otherMatches.push(resource);
-          matches = true;
+          matched = true;
         }
         // if we haven't already matched, run a search for the subject
         //if (!matched) {
@@ -462,28 +464,51 @@ export function Subsection({ label, activities }) {
 export function Library() {
   const { libraryData } = useLoaderData();
 
+  let [searchVal, setSearchVal] = useState("");
+
   return (
     <>
-      <PortfolioGrid>
-        <Box
-          as="header"
-          gridRow="1/2"
-          backgroundColor="#fff"
-          color="#000"
-          height="80px"
-          position="fixed"
-          width="100%"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          textAlign="center"
-          zIndex="1200"
-        >
-          <Text fontSize="24px" fontWeight="700">
-            Public Problem Library
-          </Text>
+      <Flex
+        flexDirection="column"
+        p={4}
+        mt="1rem"
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
+        height="20px"
+      ></Flex>
+      <Box
+        as="header"
+        gridRow="1/2"
+        backgroundColor="#fff"
+        color="#000"
+        height="80px"
+        position="fixed"
+        width="100%"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
+        zIndex="1200"
+      >
+        <Text margin="20px" fontSize="24px" fontWeight="700">
+          Public Problem Library
+        </Text>
+        <Box maxW={400} minW={200}>
+          <Box width="400px">
+            <Searchbar
+              defaultValue={searchVal}
+              dataTest="Search"
+              onChange={(val) => {
+                setSearchVal(val);
+              }}
+            />
+          </Box>
+          {/* <input type='text' width="400px" /> */}
         </Box>
+      </Box>
+      <PortfolioGrid>
         <PublicActivitiesSection>
           <SimpleGrid columns={3} spacing={10}>
             {libraryData.length < 1 ? (
