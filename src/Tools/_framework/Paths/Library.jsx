@@ -158,7 +158,7 @@ export function Subsection({ label, activities }) {
           <AccordionIcon />
         </AccordionButton>
       </h2>
-      <AccordionPanel isExpanded="true" pb={4}>
+      <AccordionPanel pb={4}>
         {activities.map((activity) => {
           return (
             <div key={activity.doenetId}>
@@ -222,7 +222,16 @@ export function Library() {
                       <Text fontSize="22px" fontWeight="700">
                         {section.label}
                       </Text>
-                      <Accordion allowMultiple>
+                      <Accordion
+                        allowMultiple
+                        defaultIndex={
+                          section.subsections.length > 0
+                            ? Array.from(
+                                Array(section.subsections.length).keys(),
+                              )
+                            : null
+                        }
+                      >
                         {section.subsections.map((subsection) => {
                           return (
                             <Subsection
