@@ -19,7 +19,7 @@ export async function loader() {
     responseType: "text",
     transformResponse: [(data) => data],
   });
-  let webworkTaxonomy = axios.get(`/media/webwork_taxonomy_algebra.csv`, {
+  let webworkTaxonomy = axios.get(`/media/webwork_taxonomy_all.csv`, {
     responseType: "text",
     transformResponse: [(data) => data],
   });
@@ -36,23 +36,18 @@ export async function loader() {
     dynamicTyping: true,
   }).data;
 
-  console.log(libraryContent);
-
-  // added a columns with URLs, strip off first column to make the indexes below still work
-  libraryContent = libraryContent.map((row) => row.slice(1));
-
-  console.log(libraryContent);
-
   let parseSectionKey = (key) => {
-    let numPart = key.match(/[0-9]+/)[0];
-    let alphaPart = key.match(/[a-zA-Z]+/);
+    let numPart = key.match(/[a-zA-Z]*[0-9]+/)[0];
+    let alphaPart = key.match(/[a-zA-Z]+$/);
     if (alphaPart) alphaPart = alphaPart[0];
     return { numPart, alphaPart };
   };
 
   webworkTaxonomy = webworkTaxonomy.filter((row) =>
-    String(row[1]).match(/^[0-9]+[a-zA-Z]*/),
+    String(row[1]).match(/[a-zA-Z]*[0-9]+[a-zA-Z]*/),
   );
+
+  console.log(webworkTaxonomy);
 
   let webworkSections = webworkTaxonomy.reduce((sections, sectionInfo) => {
     let { numPart, alphaPart } = parseSectionKey(String(sectionInfo[1]));
@@ -73,9 +68,28 @@ export async function loader() {
     return sections;
   }, []);
 
+  console.log(libraryContent);
+
+  // added a columns with URLs, strip off first column to make the indexes below still work
+  libraryContent = libraryContent.map((row) => row.slice(1));
+
+  console.log(libraryContent);
   libraryContent = libraryContent.filter((row) => {
-    return row[1] && String(row[1]).match(/^[0-9]+[a-zA-Z]*/);
+    return row[1] && String(row[1]).match(/[a-zA-Z]*[0-9]+[a-zA-Z]*/);
   });
+
+  libraryContent = libraryContent.flatMap((row) => {
+    console.log(row);
+    return row[1].includes(",")
+      ? row[1].split(",").map((val) => {
+          let newRow = [...row];
+          newRow[1] = val.trim();
+          return newRow;
+        })
+      : [row];
+  });
+
+  console.log(libraryContent);
 
   let groupedActivities = libraryContent.reduce((subsections, row) => {
     if (!subsections[row[1]]) subsections[row[1]] = [];
