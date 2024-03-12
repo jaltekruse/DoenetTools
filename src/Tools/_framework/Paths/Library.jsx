@@ -36,6 +36,13 @@ export async function loader() {
     dynamicTyping: true,
   }).data;
 
+  console.log(libraryContent);
+
+  // added 2 columns at the beginning to make the CSV easier to edit, strip those off
+  libraryContent = libraryContent.map((row) => row.slice(1));
+
+  console.log(libraryContent);
+
   let parseSectionKey = (key) => {
     let numPart = key.match(/[0-9]+/)[0];
     let alphaPart = key.match(/[a-zA-Z]+/);
@@ -44,7 +51,7 @@ export async function loader() {
   };
 
   webworkTaxonomy = webworkTaxonomy.filter((row) =>
-    String(row[1]).match(/[0-9]+[a-zA-Z]*/),
+    String(row[1]).match(/^[0-9]+[a-zA-Z]*/),
   );
 
   let webworkSections = webworkTaxonomy.reduce((sections, sectionInfo) => {
@@ -67,7 +74,7 @@ export async function loader() {
   }, []);
 
   libraryContent = libraryContent.filter((row) => {
-    return row[1] && String(row[1]).match(/[0-9]+[a-zA-Z]*/);
+    return row[1] && String(row[1]).match(/^[0-9]+[a-zA-Z]*/);
   });
 
   let groupedActivities = libraryContent.reduce((subsections, row) => {
@@ -78,6 +85,10 @@ export async function loader() {
 
   for (const [subsectionKey, activities] of Object.entries(groupedActivities)) {
     let { numPart, alphaPart } = parseSectionKey(String(subsectionKey));
+    console.log(subsectionKey);
+    console.log(numPart);
+    console.log(alphaPart);
+    console.log(webworkSections);
     webworkSections[Number(numPart) - 1].subsections.find(
       (subSec) => subSec.subSecLetter == alphaPart,
     ).activities = activities.map((activityInfo) => {
