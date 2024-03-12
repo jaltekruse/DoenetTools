@@ -38,7 +38,7 @@ export async function loader() {
 
   console.log(libraryContent);
 
-  // added 2 columns at the beginning to make the CSV easier to edit, strip those off
+  // added a columns with URLs, strip off first column to make the indexes below still work
   libraryContent = libraryContent.map((row) => row.slice(1));
 
   console.log(libraryContent);
