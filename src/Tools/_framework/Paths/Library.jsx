@@ -77,6 +77,17 @@ export async function loader() {
     return row[1] && String(row[1]).match(/^[0-9]+[a-zA-Z]*/);
   });
 
+  libraryContent = libraryContent.flatMap((row) => {
+    console.log(row);
+    return row[1].includes(",")
+      ? row[1].split(",").map((val) => {
+          let newRow = [...row];
+          newRow[1] = val.trim();
+          return newRow;
+        })
+      : [row];
+  });
+
   let groupedActivities = libraryContent.reduce((subsections, row) => {
     if (!subsections[row[1]]) subsections[row[1]] = [];
     subsections[row[1]].push(row);
