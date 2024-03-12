@@ -244,13 +244,11 @@ export function Library() {
                       </Box>
                       <Accordion
                         allowMultiple
-                        defaultIndex={
-                          section.subsections.length > 0
-                            ? Array.from(
-                                Array(section.subsections.length).keys(),
-                              )
-                            : null
-                        }
+                        defaultIndex={section.subsections.flatMap(
+                          (sub, index) => {
+                            return sub.activities.length > 0 ? index : null;
+                          },
+                        )}
                       >
                         {section.subsections.map((subsection) => {
                           return (
