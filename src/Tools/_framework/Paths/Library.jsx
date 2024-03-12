@@ -230,9 +230,18 @@ export function Library() {
                       }}
                       key={section.label}
                     >
-                      <Text fontSize="22px" fontWeight="700">
-                        {section.label}
-                      </Text>
+                      <Box
+                        style={{
+                          backgroundColor: "#2f76d9",
+                          color: "white",
+                          borderRadius: "5px",
+                          padding: "10px",
+                        }}
+                      >
+                        <Text fontSize="22px" fontWeight="700">
+                          {section.label}
+                        </Text>
+                      </Box>
                       <Accordion
                         allowMultiple
                         defaultIndex={
