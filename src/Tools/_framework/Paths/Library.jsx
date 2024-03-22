@@ -38,6 +38,69 @@ export async function loader() {
 
   console.log(libraryContent);
 
+  return {
+    libraryContent,
+    webworkTaxonomy,
+  };
+}
+
+const PublicActivitiesSection = styled.div`
+  grid-row: 2/3;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px 10px 10px;
+  margin: 0px;
+  justify-content: flex-start;
+  padding-left: 100px;
+
+  background: #ffffff;
+`;
+
+const PortfolioGrid = styled.div`
+  display: grid;
+  grid-template-rows: 80px auto;
+  height: 100vh;
+`;
+
+export function Subsection({ label, activities }) {
+  activities = activities.filter((a) => a.label != "BA-Basics");
+  return (
+    <AccordionItem>
+      <h2>
+        <AccordionButton>
+          <Box
+            as="span"
+            flex="1"
+            textAlign="left"
+            style={{ color: activities.length == 0 ? "#aaaaaa" : "black" }}
+          >
+            {label}
+          </Box>
+          <AccordionIcon />
+        </AccordionButton>
+      </h2>
+      <AccordionPanel pb={4}>
+        {activities.map((activity) => {
+          return (
+            <div key={activity.doenetId}>
+              <Link
+                key={activity.label}
+                href={`https://www.doenet.org/courseactivityeditor/${activity.parentDoenetId}/${activity.doenetId}`}
+              >
+                {activity.label}
+              </Link>
+              <br />
+            </div>
+          );
+        })}
+      </AccordionPanel>
+    </AccordionItem>
+  );
+}
+
+export function Library() {
+  let { libraryContent, webworkTaxonomy } = useLoaderData();
+
   // added a columns with URLs, strip off first column to make the indexes below still work
   libraryContent = libraryContent.map((row) => row.slice(1));
 
@@ -128,68 +191,7 @@ export async function loader() {
       };
     });
   }
-
-  return {
-    libraryData: webworkSections,
-  };
-}
-
-const PublicActivitiesSection = styled.div`
-  grid-row: 2/3;
-  display: flex;
-  flex-direction: column;
-  padding: 10px 10px 10px 10px;
-  margin: 0px;
-  justify-content: flex-start;
-  padding-left: 100px;
-
-  background: #ffffff;
-`;
-
-const PortfolioGrid = styled.div`
-  display: grid;
-  grid-template-rows: 80px auto;
-  height: 100vh;
-`;
-
-export function Subsection({ label, activities }) {
-  activities = activities.filter((a) => a.label != "BA-Basics");
-  return (
-    <AccordionItem>
-      <h2>
-        <AccordionButton>
-          <Box
-            as="span"
-            flex="1"
-            textAlign="left"
-            style={{ color: activities.length == 0 ? "#aaaaaa" : "black" }}
-          >
-            {label}
-          </Box>
-          <AccordionIcon />
-        </AccordionButton>
-      </h2>
-      <AccordionPanel pb={4}>
-        {activities.map((activity) => {
-          return (
-            <div key={activity.doenetId}>
-              <Link
-                key={activity.label}
-                href={`https://www.doenet.org/courseactivityeditor/${activity.parentDoenetId}/${activity.doenetId}`}
-              >
-                {activity.label}
-              </Link>
-              <br />
-            </div>
-          );
-        })}
-      </AccordionPanel>
-    </AccordionItem>
-  );
-}
-
-export function Library() {
-  const { libraryData } = useLoaderData();
+  let libraryData = webworkSections;
 
   return (
     <>
