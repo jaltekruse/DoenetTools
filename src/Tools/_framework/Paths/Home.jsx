@@ -207,6 +207,38 @@ export function Home() {
           {/* Does this lazy loading do anything? */}
           <HomeIntroVideo />
         </Suspense>
+        <Center w="100%" bg={grayColor}>
+          <HStack maxWidth="750px" w="100%" spacing={4}>
+            <Text
+              fontSize={["12px", "20px", "30px", "40px", "60px"]}
+              // fontSize="60px"
+              fontWeight="700"
+              color={blackColor}
+            >
+              Explore
+            </Text>
+            <Text
+              pt="24px"
+              fontSize={["8px", "10px", "12px", "18px", "24px"]}
+              // fontSize="20px"
+              fontWeight="700"
+              color={blackColor}
+            >
+              Interact with{" "}
+              <Link href="/community" textDecoration="underline">
+                our existing content
+              </Link>
+            </Text>
+          </HStack>
+        </Center>
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+          bg={grayColor}
+          p="60px 10px"
+        >
+          <Carousel title="Doenet Team Favorites" data={favorites} />
+        </Flex>
       </Box>
     </>
   );
