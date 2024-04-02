@@ -7,6 +7,7 @@ import {
   selectedCourseItems,
   useCourse,
 } from "../../../_reactComponents/Course/CourseActions";
+import { MakePublic } from "../../../_reactComponents/Activity/SettingComponents";
 import { effectivePermissionsByCourseId } from "../../../_reactComponents/PanelHeaderComponents/RoleDropdown";
 import Textfield from "../../../_reactComponents/PanelHeaderComponents/Textfield";
 import { searchParamAtomFamily } from "../NewToolRoot";
@@ -46,6 +47,12 @@ export default function SelectedBank() {
     }
   };
 
+  const sharedProps = {
+    courseId,
+    doenetId,
+    editable: canEditContent ?? "0",
+  };
+
   const addToast = useToast();
   let heading = (
     <h2 data-test="infoPanelItemLabel" style={{ margin: "16px 5px" }}>
@@ -78,6 +85,7 @@ export default function SelectedBank() {
             dataTest="Add Page"
           />
         </ButtonGroup>
+        <MakePublic {...sharedProps} />
         <br />
         <Button
           width="menu"

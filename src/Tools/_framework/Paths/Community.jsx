@@ -321,7 +321,11 @@ export function Community() {
   }, []);
 
   if (searchResults) {
-    let allMatches = [...searchResults?.activities, ...searchResults?.users];
+    let allMatches = [
+      ...searchResults?.activities,
+      ...searchResults?.users,
+      ...searchResults?.pages,
+    ];
     const tabs = [
       {
         label: "All Matches",
@@ -432,9 +436,10 @@ export function Community() {
                 data-test="Results All Matches"
               >
                 {allMatches.map((itemObj) => {
-                  if (itemObj?.type == "activity") {
+                  if (itemObj?.type == "activity" || itemObj?.type == "page") {
                     const {
                       doenetId,
+                      containingDoenetId,
                       imagePath,
                       label,
                       fullName,
@@ -443,7 +448,11 @@ export function Community() {
                       courseImage,
                       courseColor,
                     } = itemObj;
-                    const imageLink = `/portfolioviewer/${doenetId}`;
+                    console.log(itemObj);
+                    const imageLink =
+                      itemObj?.type == "activity"
+                        ? `/portfolioviewer/${doenetId}`
+                        : `/portfolioviewer/${containingDoenetId}/${doenetId}`;
 
                     return (
                       <ActivityCard
@@ -475,6 +484,27 @@ export function Community() {
                     return (
                       <AuthorCard
                         key={courseId}
+                        fullName={`${firstName} ${lastName}`}
+                        imageLink={imageLink}
+                      />
+                    );
+                  } else if (itemObj?.type == "page") {
+                    const {
+                      doenetId,
+                      imagePath,
+                      containingDoenetId,
+                      label,
+                      fullName,
+                      isUserPortfolio,
+                      courseLabel,
+                      courseImage,
+                      courseColor,
+                    } = itemObj;
+                    const imageLink = `/publicportfolio/${containingDoenetId}/${doenetId}`;
+
+                    return (
+                      <AuthorCard
+                        key={`${containingDoenetId}/${doenetId}`}
                         fullName={`${firstName} ${lastName}`}
                         imageLink={imageLink}
                       />

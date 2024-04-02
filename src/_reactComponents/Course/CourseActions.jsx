@@ -14,6 +14,7 @@ import { selectedMenuPanelAtom } from "../../Tools/_framework/Panels/NewMenuPane
 import { useToast, toastType } from "../../Tools/_framework/Toast";
 import { UTCDateStringToDate } from "../../_utils/dateUtilityFunction";
 import { useValidateEmail } from "../../_utils/hooks/useValidateEmail";
+import mockCourseItems from "./mockCourseItems";
 
 export const fileByCid = atomFamily({
   key: "fileByCid",
@@ -474,9 +475,10 @@ export function useInitCourseItems(courseId) {
         if (courseArrayTest.length == 0) {
           set(courseIdAtom, courseId);
 
-          const { data } = await axios.get("/api/getCourseItems.php", {
-            params: { courseId },
-          });
+          const data = mockCourseItems;
+          // const { data } = await axios.get("/api/getCourseItems.php", {
+          //   params: { courseId },
+          // });
           // console.log("getCourseItems.php data",data)
           if (data.success) {
             //DoenetIds depth first search and going into json structures

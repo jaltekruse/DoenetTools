@@ -11,13 +11,15 @@ $jwtArray = include 'jwtArray.php';
 $userId = $jwtArray['userId'];
 
 $doenetId = mysqli_real_escape_string($conn, $_REQUEST['doenetId']);
+$pageId = mysqli_real_escape_string($conn, $_REQUEST['pageId']);
 
 $response_arr;
 $contributors = [];
 try {
 
     $sql = "
-    SELECT cc.label,
+    SELECT
+    case when cc.type = 'activity' then cc.label else pages.label end as label,
     cc.courseId,
     cc.isBanned,
     CAST(cc.jsonDefinition as CHAR) AS json,
@@ -29,12 +31,17 @@ try {
     u.lastName,
     u.profilePicture
     FROM course_content AS cc
+    left join pages
+    on pages.containingDoenetId = cc.doenetId
+       and pages.doenetID = '$pageId'
+       and pages.isDeleted = '0'
     LEFT JOIN course AS c
         ON c.courseId = cc.courseId
     LEFT JOIN user As u
         ON u.userId = c.portfolioCourseForUserId
     WHERE cc.doenetId = '$doenetId'
     AND cc.isPublic = '1'
+    AND cc.isDeleted = '0'
     ";
     $result = $conn->query($sql);
 
@@ -46,16 +53,16 @@ try {
         }
         $label = $row['label'];
         $json = json_decode($row["json"], true);
-    array_push($contributors, [
-        "courseId" => $row["courseId"],
-        "isUserPortfolio" => is_null($row["portfolioCourseForUserId"]) ? "0" : "1",
-        "courseLabel" => $row['courseLabel'],
-        "courseImage" => $row['image'],
-        "courseColor" => $row['color'],
-        "firstName" => $row['firstName'],
-        "lastName" => $row['lastName'],
-        "profilePicture" => $row['profilePicture'],
-    ]);
+        array_push($contributors, [
+            "courseId" => $row["courseId"],
+            "isUserPortfolio" => is_null($row["portfolioCourseForUserId"]) ? "0" : "1",
+            "courseLabel" => $row['courseLabel'],
+            "courseImage" => $row['image'],
+            "courseColor" => $row['color'],
+            "firstName" => $row['firstName'],
+            "lastName" => $row['lastName'],
+            "profilePicture" => $row['profilePicture'],
+        ]);
     
 
     }else{

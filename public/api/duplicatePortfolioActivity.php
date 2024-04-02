@@ -15,6 +15,9 @@ $userId = $jwtArray['userId'];
 
 $prevActivityDoenetId = mysqli_real_escape_string($conn,$_REQUEST["doenetId"]);
 
+// set when duplicating a single page from withing a collection/bank in a course
+$prevPageDoenetId = mysqli_real_escape_string($conn,$_REQUEST["pageId"]);
+
 try {
     if ($prevActivityDoenetId == ""){
         throw new Exception("Internal Error: missing doenetId");
@@ -30,22 +33,24 @@ try {
     isAssigned,
     courseId
     FROM course_content
-    WHERE doenetId = '$prevActivityDoenetId'
+    WHERE doenetId = '_OUW7yntnCdORR5xwMPxyX'
     AND isDeleted='0'
     ";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $isPublic = $row['isPublic'];
-    $isAssigned = $row['isAssigned'];
-    $prevCourseId = $row['courseId'];
+        $row = $result->fetch_assoc();
+        $isPublic = $row['isPublic'];
+        $isAssigned = $row['isAssigned'];
+        $prevCourseId = $row['courseId'];
 
-    if ($isPublic != '1'){
-        throw new Exception("Internal Error: Activity is not public");
-    }else if ($isAssigned != '1'){
-        throw new Exception("Internal Error: Activity is not public");
-    }}else{
+        if ($isPublic != '1'){
+            throw new Exception("Internal Error: Activity is not public");
+        } else if ($isAssigned != '1'){
+            throw new Exception("Internal Error: Activity is not public");
+        }
+    } else {
+        echo $sql;
         throw new Exception("Internal Error: Activity is not available");
     }
 
@@ -81,13 +86,16 @@ try {
     $sql = "
     SELECT 
     type,
-    label,
+    case when cc.type = 'activity' then cc.label else pages.label end as label,
     sortOrder,
     CAST(jsonDefinition as CHAR) AS json,
     imagePath,
     CAST(learningOutcomes as CHAR) AS learningOutcomes
-    FROM course_content
-    WHERE doenetId='$prevActivityDoenetId'
+    FROM course_content cc
+    left join pages
+    on pages.containingDoenetId = cc.doenetId
+       and pages.doenetId = '$prevPageDoenetId'
+    WHERE cc.doenetId='$prevActivityDoenetId'
     ";
 
     $result = $conn->query($sql);
@@ -114,34 +122,83 @@ try {
     $activityJSON = json_decode($previous_activity_content['jsonDefinition'], true);
     $assignedCid = $activityJSON["assignedCid"];
 
-    $assignedActivity = file_get_contents("../media/$assignedCid.doenet");
+    //echo print_r($previous_activity_content, true);
+    if ($previous_activity_content["type"] == "bank") {
+        $sql = "
+        SELECT
+        case when cc.type = 'activity' then cc.label else pages.label end as label,
+        cc.courseId,
+        cc.isBanned,
+        CAST(cc.jsonDefinition as CHAR) AS json,
+        c.portfolioCourseForUserId,
+        c.label as courseLabel,
+        c.image,
+        c.color,
+        u.firstName,
+        u.lastName,
+        u.profilePicture
+        FROM course_content AS cc
+        left join pages
+        on pages.containingDoenetId = cc.doenetId
+        and pages.doenetID = '$prevPageDoenetId'
+        and pages.isDeleted = '0'
+        LEFT JOIN course AS c
+            ON c.courseId = cc.courseId
+        LEFT JOIN user As u
+            ON u.userId = c.portfolioCourseForUserId
+        WHERE cc.doenetId = '$prevActivityDoenetId'
+        AND cc.isPublic = '1'
+        AND cc.isDeleted = '0'
+        ";
+        $result = $conn->query($sql);
+        $renamedPages = [];
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $isBanned = $row['isBanned'];
+            $row['newPageId'] = include 'randomId.php';
+            $nextFirstPageDoenetId = $row['newPageId'];
+            if ($isBanned == '1'){
+                throw new Exception("Activity has been banned.");
+            }
+            $renamedPages["byPageId/$prevPageDoenetId"] = $row;
+        } else {
+            echo $db->error;
+        }
 
-    if($assignedActivity == FALSE) {
-        throw new Exception("Internal Error: Activity is not available");
+        $nextActivityJsonDefinition = ["files" => []];
+        $nextActivityJsonDefinition = json_encode($nextActivityJsonDefinition);
+
+    } else {
+        $assignedActivity = file_get_contents("../media/$assignedCid.doenet");
+
+        if($assignedActivity == FALSE) {
+            throw new Exception("Internal Error: Activity is not available");
+        }
+
+        $parse_results = parse_activity_definition_rename_pages($assignedActivity);
+
+        if(!$parse_results["success"]) {
+            $message = $parse_results["message"];
+            throw new Exception("Internal Error: $message");
+        }
+
+        $nextActivityJsonDefinition = $parse_results["activity_definition"];
+
+        $nextFirstPageDoenetId = $parse_results["first_page_id"];
+
+        // for now, just copy the list of files?
+        $nextActivityJsonDefinition["files"] = $activityJSON["files"];
+
+        $nextActivityJsonDefinition = json_encode($nextActivityJsonDefinition);
+        $renamedPages = $parse_results["renamed_pages"];
     }
-
-    $parse_results = parse_activity_definition_rename_pages($assignedActivity);
-
-    if(!$parse_results["success"]) {
-        $message = $parse_results["message"];
-        throw new Exception("Internal Error: $message");
-    }
-
-    $nextActivityJsonDefinition = $parse_results["activity_definition"];
-
-    $nextFirstPageDoenetId = $parse_results["first_page_id"];
-
-    // for now, just copy the list of files?
-    $nextActivityJsonDefinition["files"] = $activityJSON["files"];
-
-    $nextActivityJsonDefinition = json_encode($nextActivityJsonDefinition);
 
     $insert_to_pages = [];
 
-    foreach($parse_results["renamed_pages"] as $oldPageCid => $newPageInfo) {
+    foreach($renamedPages as $oldPageFilename => $newPageInfo) {
         $newPageId = $newPageInfo["newPageId"];
         $label = $newPageInfo["label"];
-        $sourceFile = "../media/$oldPageCid.doenet";
+        $sourceFile = "../media/$oldPageFilename.doenet";
         $destinationFile = "../media/byPageId/$newPageId.doenet";
 
         $dirname = dirname($destinationFile);
