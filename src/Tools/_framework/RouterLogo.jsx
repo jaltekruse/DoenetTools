@@ -4,14 +4,14 @@ import styled from "styled-components";
 
 const LogoButton = styled.button`
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
-    url("/Doenet_Logo_Frontpage_minimal_text.png");
+    url("/Doenet_Logo_Frontpage_color_small_text.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 160px 55px;
+  background-size: 130px 45px;
   transition: 300ms;
-  /* background-color: var(--canvas); */
-  width: 160px;
-  height: 55px;
+  background-color: var(--canvas);
+  width: 130px;
+  height: 35px;
   display: inline-block;
   justify-content: center;
   border-radius: 2px;
