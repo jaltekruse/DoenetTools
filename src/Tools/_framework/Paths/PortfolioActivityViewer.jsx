@@ -28,7 +28,7 @@ import ContributorsMenu from "../ChakraBasedComponents/ContributorsMenu";
 
 export async function action({ params }) {
   let { data } = await axios.get(
-    `/api/duplicatePortfolioActivity.php?doenetId=${params.doenetId}`,
+    `/api/duplicatePortfolioActivity.php?doenetId=${params.doenetId}&pageId=${params.pageId}`,
   );
 
   const { nextActivityDoenetId, nextPageDoenetId } = data;

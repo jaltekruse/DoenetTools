@@ -33,7 +33,7 @@ try {
     isAssigned,
     courseId
     FROM course_content
-    WHERE doenetId = '_OUW7yntnCdORR5xwMPxyX'
+    WHERE doenetId = '$prevActivityDoenetId'
     AND isDeleted='0'
     ";
     $result = $conn->query($sql);
