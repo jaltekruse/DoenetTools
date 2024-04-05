@@ -11,6 +11,7 @@ $jwtArray = include 'jwtArray.php';
 $userId = $jwtArray['userId'];
 
 $doenetId = mysqli_real_escape_string($conn, $_REQUEST['doenetId']);
+$pageId = mysqli_real_escape_string($conn, $_REQUEST['pageId']);
 $publicEditor = mysqli_real_escape_string($conn, $_REQUEST['publicEditor']);
 
 $response_arr;
@@ -49,16 +50,20 @@ if ($result->num_rows > 0) {
     $sql = "
     SELECT 
     type,
-    courseId,
+    cc.courseId,
     imagePath,
-    label,
+    case when cc.type = 'activity' then cc.label else pages.label end as label,
     isBanned,
     isPublic,
     CAST(jsonDefinition as CHAR) AS json,
     CAST(learningOutcomes as CHAR) AS learningOutcomes
-    FROM course_content
-    WHERE doenetId = '$doenetId'
-    AND isDeleted = '0'
+    FROM course_content cc
+    left join pages
+    on pages.containingDoenetId = cc.doenetId
+       and pages.doenetID = '$pageId'
+       and pages.isDeleted = '0'
+    WHERE cc.doenetId = '$doenetId'
+    AND cc.isDeleted = '0'
     ";
 $result = $conn->query($sql);
 

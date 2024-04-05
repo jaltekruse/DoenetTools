@@ -175,14 +175,17 @@ function findFirstPageIdInContent(content) {
 export async function loader({ params }) {
   try {
     const response = await axios.get("/api/getPortfolioEditorData.php", {
-      params: { doenetId: params.doenetId },
+      params: { doenetId: params.doenetId, pageId: params.pageId },
     });
+    console.log(params);
+    console.log(response);
     let data = response.data;
     const activityData = { ...data.activity };
     const courseId = data.courseId;
 
     let pageId = params.pageId;
     if (params.pageId == "_") {
+      console.log("Did I get here? page id is uderscore");
       //find pageId in data.content
       let pageId = findFirstPageIdInContent(activityData.content);
 

@@ -1,0 +1,4 @@
+<document xmlns="https://doenet.org/spec/doenetml/v0.1.0" type="activity" isSinglePage="true">
+  <page cid="bafkreibu6eyvds22fr26ao2oqrkwljybq7zxvngyfetbbm3snteupszk5a" label="a page" />
+  <page cid="bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku" label="second page" />
+</document>

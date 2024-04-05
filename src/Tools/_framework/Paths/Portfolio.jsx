@@ -122,13 +122,13 @@ export async function loader({ params }) {
   //Add pageDoenetId to all activities
   let publicActivities = [];
   data.publicActivities.map((activity) => {
-    const pageDoenetId = findFirstPageIdInContent(activity.content);
-    publicActivities.push({ ...activity, pageDoenetId });
+    //const pageDoenetId = findFirstPageIdInContent(activity.content);
+    publicActivities.push({ ...activity, pageDoenetId: "_" });
   });
   let privateActivities = [];
   data.privateActivities.map((activity) => {
-    const pageDoenetId = findFirstPageIdInContent(activity.content);
-    privateActivities.push({ ...activity, pageDoenetId });
+    //const pageDoenetId = findFirstPageIdInContent(activity.content);
+    privateActivities.push({ ...activity, pageDoenetId: "_" });
   });
 
   return {
