@@ -141,21 +141,6 @@ const theme = extendTheme({
 
 const router = createBrowserRouter([
   {
-    path: "/library",
-    loader: libraryLoader,
-    // sharing an action with the community page is somewhat intentional
-    // as it shows cards and admins have the same actions that they can perform
-    // on cards as they can on the community page
-    // TODO - determine if this is an okay way to share functionality across
-    // pages or a bad idea
-    action: communityAction,
-    element: (
-      <ChakraProvider theme={theme}>
-        <Library />
-      </ChakraProvider>
-    ),
-  },
-  {
     path: "/",
     loader: siteLoader,
     element: (
@@ -187,6 +172,21 @@ const router = createBrowserRouter([
             </ChakraProvider>
           </MathJaxContext>
           // </DarkmodeController>
+        ),
+      },
+      {
+        path: "/library",
+        loader: libraryLoader,
+        // sharing an action with the community page is somewhat intentional
+        // as it shows cards and admins have the same actions that they can perform
+        // on cards as they can on the community page
+        // TODO - determine if this is an okay way to share functionality across
+        // pages or a bad idea
+        action: communityAction,
+        element: (
+          <ChakraProvider theme={theme}>
+            <Library />
+          </ChakraProvider>
         ),
       },
       {
