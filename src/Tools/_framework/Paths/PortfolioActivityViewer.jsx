@@ -46,20 +46,28 @@ export async function loader({ params }) {
   }
   try {
     const { data } = await axios.get(
-      `/api/getPortfolioActivityView.php?doenetId=${params.doenetId}`,
+      `/api/getPortfolioActivityView.php?doenetId=${params.doenetId}&pageId=${params.pageId}`,
     );
 
     const { data: activityML } = await axios.get(
       `/media/${data.json.assignedCid}.doenet`,
     );
 
-    //Find the first page's doenetML
-    const regex = /<page\s+cid="(\w+)"\s+(label="[^"]+"\s+)?\/>/;
-    const pageIds = activityML.match(regex);
-
-    let firstPage = findFirstPageIdInContent(data.json.content);
-
-    const { data: doenetML } = await axios.get(`/media/${pageIds[1]}.doenet`);
+    let pageId = params.pageId;
+    let doenetML;
+    if (!pageId) {
+      //Find the first page's doenetML
+      const regex = /<page\s+cid="(\w+)"\s+(label="[^"]+"\s+)?\/>/;
+      const pageIds = activityML.match(regex);
+      let pageCid = pageIds[1];
+      const { data } = await axios.get(`/media/${pageCid}.doenet`);
+      doenetML = data;
+      pageId = "_";
+    } else {
+      //http://localhost:8000/media/byPageId/_0DSz2UjD2tvBC1HTQ5Dmi.doenet
+      const { data } = await axios.get(`/media/byPageId/${pageId}.doenet`);
+      doenetML = data;
+    }
 
     return {
       success: true,
@@ -68,7 +76,7 @@ export async function loader({ params }) {
       signedIn,
       label: data.label,
       contributors: data.contributors,
-      pageDoenetId: firstPage,
+      pageDoenetId: pageId,
     };
   } catch (e) {
     return { success: false, message: e.response.data.message };
