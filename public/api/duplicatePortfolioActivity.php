@@ -152,10 +152,15 @@ try {
         ";
         $result = $conn->query($sql);
         $renamedPages = [];
+        $newPageDoenetIds = [];
         if ($result && $result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $isBanned = $row['isBanned'];
             $row['newPageId'] = include 'randomId.php';
+            array_push(
+                $newPageDoenetIds,
+                $row['newPageId']
+            );
             $nextFirstPageDoenetId = $row['newPageId'];
             if ($isBanned == '1'){
                 throw new Exception("Activity has been banned.");
@@ -165,7 +170,7 @@ try {
             echo $db->error;
         }
 
-        $nextActivityJsonDefinition = ["files" => []];
+        $nextActivityJsonDefinition = ["files" => [], "content" => $newPageDoenetIds];
         $nextActivityJsonDefinition = json_encode($nextActivityJsonDefinition);
 
     } else {
