@@ -41,7 +41,7 @@ if ($success) {
   LEFT JOIN user AS u 
     ON c.portfolioCourseForUserId = u.userId
   WHERE cc.label LIKE '%$q%'
-  AND cc.type = 'activity'
+  -- AND cc.type = 'activity'
   AND cc.isPublic = 1
   AND cc.isDeleted = 0
   AND cc.isBanned = 0
