@@ -241,6 +241,10 @@ try {
     $escapedLabel = mysqli_real_escape_string($conn, $previous_activity_content['label']);
     $imagePath = $previous_activity_content['imagePath'];
     $type = $previous_activity_content['type'];
+    if ($type == 'bank') {
+        $type = 'activity';
+    }
+
     $str_insert_to_course_content = "('$type','$nextCourseId','$nextActivityDoenetId','$nextCourseId','$escapedLabel',NOW(),'0','0','0','1','n','$nextActivityJsonDefinition','$imagePath','$learningOutcomes',CONVERT_TZ(NOW(), @@session.time_zone, '+00:00'))";
     
     //INSERT the new activity into course_content
