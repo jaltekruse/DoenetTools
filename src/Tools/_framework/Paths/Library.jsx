@@ -163,10 +163,14 @@ export function Library() {
     console.log(numPart);
     console.log(alphaPart);
     console.log(webworkSections);
-    webworkSections[Number(numPart) - 1].subsections.find(
-      (subSec) => subSec.subSecLetter == alphaPart,
-    ).activities = activities.map((activityInfo) => {
-      let label = activityInfo[5];
+    console.log(webworkSections[Number(numPart) - 1]);
+
+    let matchingSubsection = webworkSections[
+      Number(numPart) - 1
+    ].subsections.find((subSec) => subSec.subSecLetter == alphaPart);
+    console.log(matchingSubsection);
+    matchingSubsection.activities = activities.map((activityInfo) => {
+      let label = activityInfo[6];
 
       // some of the problems start with a number followed by a colon or the string "Problem XX:",
       // instead of a number followed by a period, strip that off first, so it doesn't mess up the
