@@ -82,7 +82,7 @@ export function Subsection({ label, activities }) {
       <AccordionPanel pb={4}>
         {activities.map((activity) => {
           return (
-            <div key={activity.doenetId}>
+            <div key={activity.doenetId + label}>
               <Link
                 key={activity.label}
                 href={`https://www.doenet.org/courseactivityeditor/${activity.parentDoenetId}/${activity.doenetId}`}
@@ -159,16 +159,15 @@ export function Library() {
 
   for (const [subsectionKey, activities] of Object.entries(groupedActivities)) {
     let { numPart, alphaPart } = parseSectionKey(String(subsectionKey));
-    console.log(subsectionKey);
-    console.log(numPart);
-    console.log(alphaPart);
-    console.log(webworkSections);
-    console.log(webworkSections[Number(numPart) - 1]);
 
     let matchingSubsection = webworkSections[
       Number(numPart) - 1
     ].subsections.find((subSec) => subSec.subSecLetter == alphaPart);
-    console.log(matchingSubsection);
+    if (!matchingSubsection) {
+      console.log(webworkSections[Number(numPart) - 1]);
+      console.log("Bad section key:" + subsectionKey);
+      continue;
+    }
     matchingSubsection.activities = activities.map((activityInfo) => {
       let label = activityInfo[6];
 
