@@ -36,7 +36,7 @@ export async function loader() {
     dynamicTyping: true,
   }).data;
 
-  console.log(libraryContent);
+  //console.log(libraryContent);
 
   return {
     libraryContent,
@@ -104,8 +104,6 @@ export function Library() {
   // added a columns with URLs, strip off first column to make the indexes below still work
   libraryContent = libraryContent.map((row) => row.slice(1));
 
-  console.log(libraryContent);
-
   let parseSectionKey = (key) => {
     let numPart = key.match(/[0-9]+/)[0];
     let alphaPart = key.match(/[a-zA-Z]+/);
@@ -141,7 +139,6 @@ export function Library() {
   });
 
   libraryContent = libraryContent.flatMap((row) => {
-    console.log(row);
     return row[1].includes(",")
       ? row[1].split(",").map((val) => {
           let newRow = [...row];
