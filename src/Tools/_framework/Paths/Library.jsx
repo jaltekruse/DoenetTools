@@ -55,7 +55,8 @@ const PublicActivitiesSection = styled.div`
   margin: 0px;
   margin-top: 40px;
   justify-content: flex-start;
-  padding-left: 100px;
+  padding-left: 50px;
+  padding-right: 50px;
 
   background: #ffffff;
 `;
@@ -105,110 +106,115 @@ export function Library() {
   let { libraryContent, webworkTaxonomy } = useLoaderData();
   let [searchStr, setSearchStr] = useState("");
 
-  // added a columns with URLs, strip off first column to make the indexes below still work
-  libraryContent = libraryContent.map((row) => row.slice(1));
+  const libraryData = React.useMemo(() => {
+    // added a columns with URLs, strip off first column to make the indexes below still work
+    libraryContent = libraryContent.map((row) => row.slice(1));
 
-  let parseSectionKey = (key) => {
-    let numPart = key.match(/[0-9]+/)[0];
-    let alphaPart = key.match(/[a-zA-Z]+/);
-    if (alphaPart) alphaPart = alphaPart[0];
-    return { numPart, alphaPart };
-  };
+    let parseSectionKey = (key) => {
+      let numPart = key.match(/[0-9]+/)[0];
+      let alphaPart = key.match(/[a-zA-Z]+/);
+      if (alphaPart) alphaPart = alphaPart[0];
+      return { numPart, alphaPart };
+    };
 
-  webworkTaxonomy = webworkTaxonomy.filter((row) =>
-    String(row[1]).match(/^[0-9]+[a-zA-Z]*/),
-  );
+    webworkTaxonomy = webworkTaxonomy.filter((row) =>
+      String(row[1]).match(/^[0-9]+[a-zA-Z]*/),
+    );
 
-  let webworkSections = webworkTaxonomy.reduce((sections, sectionInfo) => {
-    let { numPart, alphaPart } = parseSectionKey(String(sectionInfo[1]));
-    let label = sectionInfo[0];
-    // If we hit a section that hasn't been added yet
-    let sectionDetails = sections.find((a) => a.sectionNumber == numPart);
-    if (!sectionDetails) {
-      sectionDetails = { sectionNumber: numPart, label, subsections: [] };
-      sections.push(sectionDetails);
-    }
-    if (alphaPart) {
-      sectionDetails.subsections.push({
-        label,
-        subSecLetter: alphaPart,
-        activities: [],
+    let webworkSections = webworkTaxonomy.reduce((sections, sectionInfo) => {
+      let { numPart, alphaPart } = parseSectionKey(String(sectionInfo[1]));
+      let label = sectionInfo[0];
+      // If we hit a section that hasn't been added yet
+      let sectionDetails = sections.find((a) => a.sectionNumber == numPart);
+      if (!sectionDetails) {
+        sectionDetails = { sectionNumber: numPart, label, subsections: [] };
+        sections.push(sectionDetails);
+      }
+      if (alphaPart) {
+        sectionDetails.subsections.push({
+          label,
+          subSecLetter: alphaPart,
+          activities: [],
+        });
+      }
+      return sections;
+    }, []);
+
+    libraryContent = libraryContent.filter((row) => {
+      return row[1] && String(row[1]).match(/^[0-9]+[a-zA-Z]*/);
+    });
+
+    if (searchStr) {
+      libraryContent = libraryContent.filter((row) => {
+        return (
+          row[6] && row[6].toUpperCase().indexOf(searchStr.toUpperCase()) !== -1
+        );
       });
     }
-    return sections;
-  }, []);
 
-  libraryContent = libraryContent.filter((row) => {
-    return row[1] && String(row[1]).match(/^[0-9]+[a-zA-Z]*/);
-  });
-
-  if (searchStr) {
-    libraryContent = libraryContent.filter((row) => {
-      return (
-        row[6] && row[6].toUpperCase().indexOf(searchStr.toUpperCase()) !== -1
-      );
+    libraryContent = libraryContent.flatMap((row) => {
+      return row[1].includes(",")
+        ? row[1].split(",").map((val) => {
+            let newRow = [...row];
+            newRow[1] = val.trim();
+            return newRow;
+          })
+        : [row];
     });
-  }
 
-  libraryContent = libraryContent.flatMap((row) => {
-    return row[1].includes(",")
-      ? row[1].split(",").map((val) => {
-          let newRow = [...row];
-          newRow[1] = val.trim();
-          return newRow;
-        })
-      : [row];
-  });
+    let groupedActivities = libraryContent.reduce((subsections, row) => {
+      if (!subsections[row[1]]) subsections[row[1]] = [];
+      subsections[row[1]].push(row);
+      return subsections;
+    }, {});
 
-  let groupedActivities = libraryContent.reduce((subsections, row) => {
-    if (!subsections[row[1]]) subsections[row[1]] = [];
-    subsections[row[1]].push(row);
-    return subsections;
-  }, {});
+    for (const [subsectionKey, activities] of Object.entries(
+      groupedActivities,
+    )) {
+      let { numPart, alphaPart } = parseSectionKey(String(subsectionKey));
 
-  for (const [subsectionKey, activities] of Object.entries(groupedActivities)) {
-    let { numPart, alphaPart } = parseSectionKey(String(subsectionKey));
+      let matchingSubsection = webworkSections[
+        Number(numPart) - 1
+      ].subsections.find((subSec) => subSec.subSecLetter == alphaPart);
+      if (!matchingSubsection) {
+        console.log(webworkSections[Number(numPart) - 1]);
+        console.log("Bad section key:" + subsectionKey);
+        continue;
+      }
+      matchingSubsection.activities = activities.map((activityInfo) => {
+        let label = activityInfo[6];
 
-    let matchingSubsection = webworkSections[
-      Number(numPart) - 1
-    ].subsections.find((subSec) => subSec.subSecLetter == alphaPart);
-    if (!matchingSubsection) {
-      console.log(webworkSections[Number(numPart) - 1]);
-      console.log("Bad section key:" + subsectionKey);
-      continue;
+        // some of the problems start with a number followed by a colon or the string "Problem XX:",
+        // instead of a number followed by a period, strip that off first, so it doesn't mess up the
+        // search for another colon later in the string
+        if (label.match(/^[0-9]+:/) || label.match(/^problem [0-9]+:/i)) {
+          label = label.substring(label.indexOf(":") + 1);
+        }
+        // most of the problems have the MOLS collection name as a prefix, some have it with a colon
+        // after the section name, others have a dash surrounded by spaces
+        if (label.includes(":")) {
+          label = label.substring(label.indexOf(":") + 1);
+        } else if (label.includes(" - ")) {
+          // Note the spaces around this dash are important, we want to preserve other uses of dash
+          label = label.substring(label.indexOf(" - ") + 3);
+        }
+        label = label.trim();
+        label = label.charAt(0).toUpperCase() + label.slice(1);
+        return {
+          doenetId: activityInfo[2],
+          parentDoenetId: activityInfo[3],
+          label,
+        };
+      });
     }
-    matchingSubsection.activities = activities.map((activityInfo) => {
-      let label = activityInfo[6];
 
-      // some of the problems start with a number followed by a colon or the string "Problem XX:",
-      // instead of a number followed by a period, strip that off first, so it doesn't mess up the
-      // search for another colon later in the string
-      if (label.match(/^[0-9]+:/) || label.match(/^problem [0-9]+:/i)) {
-        label = label.substring(label.indexOf(":") + 1);
-      }
-      // most of the problems have the MOLS collection name as a prefix, some have it with a colon
-      // after the section name, others have a dash surrounded by spaces
-      if (label.includes(":")) {
-        label = label.substring(label.indexOf(":") + 1);
-      } else if (label.includes(" - ")) {
-        // Note the spaces around this dash are important, we want to preserve other uses of dash
-        label = label.substring(label.indexOf(" - ") + 3);
-      }
-      label = label.trim();
-      label = label.charAt(0).toUpperCase() + label.slice(1);
-      return {
-        doenetId: activityInfo[2],
-        parentDoenetId: activityInfo[3],
-        label,
-      };
-    });
-  }
-
-  let libraryData = webworkSections.filter(
-    (section) =>
-      !searchStr ||
-      section.subsections.filter((sub) => sub.activities.length > 0).length > 0,
-  );
+    return webworkSections.filter(
+      (section) =>
+        !searchStr ||
+        section.subsections.filter((sub) => sub.activities.length > 0).length >
+          0,
+    );
+  }, [libraryContent, webworkTaxonomy, searchStr]);
 
   return (
     <>
@@ -244,7 +250,7 @@ export function Library() {
           </Box>
         </Box>
         <PublicActivitiesSection>
-          <SimpleGrid columns={3} spacing={10}>
+          <SimpleGrid minChildWidth="400px" spacing={5}>
             {libraryData.length < 1 ? (
               <Text fontSize="28px">
                 No Matching Library Activities Found
@@ -263,7 +269,7 @@ export function Library() {
                         border: "1px black",
                         padding: "10px",
                         margin: "10px",
-                        width: "400px",
+                        width: "100%",
                       }}
                       key={section.label}
                     >
