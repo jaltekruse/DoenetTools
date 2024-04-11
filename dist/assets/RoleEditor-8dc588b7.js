@@ -1,0 +1,3 @@
+import{e as r,s as t,G as e,a as m,j as i,h as n}from"./index-2f97b159.js";import{a,M as d}from"./SettingComponents-d75c28bd.js";import"./CourseToolHandler-92ee616d.js";import"./index-47ca4f11.js";import"./index.esm-2e13c3d3.js";/* empty css             */import"./CollapseSection-bb6bdf07.js";import"./DateTime-4f6221ec.js";import"./moment-19492473.js";import"./DropdownMenu-cdc00aa3.js";import"./RelatedItems-3fb9d252.js";import"./RoleDropdown-7cbbcf3c.js";import"./Textfield-d208bb42.js";const p=n.div`
+  padding: 10px;
+`;function C(){const o=r(t("courseId")),{isAdmin:s}=r(e(o));return s!=="1"?null:m(p,{children:[i("h2",{children:"Edit Role Permissions"}),i(a,{courseId:o}),i(d,{courseId:o})]})}export{C as default};

@@ -1,0 +1,1 @@
+import{o,k as t}from"./index-2f97b159.js";import{g as r,d as s}from"./CourseToolHandler-92ee616d.js";import"./index-47ca4f11.js";import"./index.esm-2e13c3d3.js";/* empty css             */function c(){return o(({set:e})=>()=>{e(t,""),e(r,[]),e(s,[])})(),null}export{c as default};
