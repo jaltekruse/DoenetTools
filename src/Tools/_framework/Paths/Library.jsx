@@ -10,6 +10,7 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Divider,
   Link,
   SimpleGrid,
   Flex,
@@ -55,8 +56,8 @@ const PublicActivitiesSection = styled.div`
   margin: 0px;
   margin-top: 40px;
   justify-content: flex-start;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 30px;
+  padding-right: 30px;
 
   background: #ffffff;
 `;
@@ -86,15 +87,15 @@ export function Subsection({ label, activities }) {
       <AccordionPanel pb={4}>
         {activities.map((activity) => {
           return (
-            <div key={activity.doenetId + label}>
+            <Box key={activity.doenetId + label}>
               <Link
                 key={activity.label}
                 href={`https://www.doenet.org/courseactivityeditor/${activity.parentDoenetId}/${activity.doenetId}`}
               >
                 {activity.label}
               </Link>
-              <br />
-            </div>
+              <Divider />
+            </Box>
           );
         })}
       </AccordionPanel>
@@ -238,7 +239,7 @@ export function Library() {
             Public Problem Library
           </Text>
           <Box maxW={400} minW={200}>
-            <Box w="400px" mt="20px">
+            <Box w={["300px", "300px", "400px"]} mt="20px">
               <Searchbar
                 defaultValue={searchStr}
                 dataTest="Search"
@@ -250,7 +251,7 @@ export function Library() {
           </Box>
         </Box>
         <PublicActivitiesSection>
-          <SimpleGrid minChildWidth="400px" spacing={5}>
+          <SimpleGrid columns={[1, 2, 2, 2, 3]} spacing="10px">
             {libraryData.length < 1 ? (
               <Text fontSize="28px">
                 No Matching Library Activities Found
