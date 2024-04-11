@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Box, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Papa from "papaparse";
@@ -106,11 +106,23 @@ export function Subsection({ label, activities }) {
 export function Section({ section, searchStr }) {
   const [index, setIndex] = useState([]);
 
-  console.log(section, searchStr, index);
-
   let filteredSubsections = section.subsections.filter(
     (subsection) => !searchStr || subsection.activities.length > 0,
   );
+
+  useEffect(() => {
+    let filteredSubsectionsInner = section.subsections.filter(
+      (subsection) => !searchStr || subsection.activities.length > 0,
+    );
+    setIndex(
+      !searchStr
+        ? []
+        : filteredSubsectionsInner.flatMap((sub, index) => {
+            return sub.activities.length > 0 ? index : null;
+          }),
+    );
+  }, [searchStr, section.subsections]);
+
   return (
     <Box
       style={{
