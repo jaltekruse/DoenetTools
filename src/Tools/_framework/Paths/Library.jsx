@@ -104,12 +104,14 @@ export function Subsection({ label, activities }) {
 }
 
 export function Library() {
-  let { libraryContent, webworkTaxonomy } = useLoaderData();
+  let loaderData = useLoaderData();
+  let libraryContentOrig = loaderData.libraryContent;
+  let webworkTaxonomyOrig = loaderData.webworkTaxonomy;
   let [searchStr, setSearchStr] = useState("");
 
   const libraryData = React.useMemo(() => {
     // added a columns with URLs, strip off first column to make the indexes below still work
-    libraryContent = libraryContent.map((row) => row.slice(1));
+    let libraryContent = libraryContentOrig.map((row) => row.slice(1));
 
     let parseSectionKey = (key) => {
       let numPart = key.match(/[0-9]+/)[0];
@@ -118,7 +120,7 @@ export function Library() {
       return { numPart, alphaPart };
     };
 
-    webworkTaxonomy = webworkTaxonomy.filter((row) =>
+    let webworkTaxonomy = webworkTaxonomyOrig.filter((row) =>
       String(row[1]).match(/^[0-9]+[a-zA-Z]*/),
     );
 
