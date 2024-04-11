@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Box, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Papa from "papaparse";
@@ -12,7 +12,10 @@ import {
   AccordionIcon,
   Link,
   SimpleGrid,
+  Flex,
 } from "@chakra-ui/react";
+import Searchbar from "../../../_reactComponents/PanelHeaderComponents/SearchBar";
+import { Form, useFetcher } from "react-router-dom";
 
 export async function loader() {
   let libraryContent = axios.get(`/media/library_content.csv`, {
@@ -50,6 +53,7 @@ const PublicActivitiesSection = styled.div`
   flex-direction: column;
   padding: 10px 10px 10px 10px;
   margin: 0px;
+  margin-top: 40px;
   justify-content: flex-start;
   padding-left: 100px;
 
@@ -99,6 +103,7 @@ export function Subsection({ label, activities }) {
 
 export function Library() {
   let { libraryContent, webworkTaxonomy } = useLoaderData();
+  let [searchStr, setSearchStr] = useState("");
 
   // added a columns with URLs, strip off first column to make the indexes below still work
   libraryContent = libraryContent.map((row) => row.slice(1));
@@ -136,6 +141,14 @@ export function Library() {
   libraryContent = libraryContent.filter((row) => {
     return row[1] && String(row[1]).match(/^[0-9]+[a-zA-Z]*/);
   });
+
+  if (searchStr) {
+    libraryContent = libraryContent.filter((row) => {
+      return (
+        row[6] && row[6].toUpperCase().indexOf(searchStr.toUpperCase()) !== -1
+      );
+    });
+  }
 
   libraryContent = libraryContent.flatMap((row) => {
     return row[1].includes(",")
@@ -190,7 +203,12 @@ export function Library() {
       };
     });
   }
-  let libraryData = webworkSections;
+
+  let libraryData = webworkSections.filter(
+    (section) =>
+      !searchStr ||
+      section.subsections.filter((sub) => sub.activities.length > 0).length > 0,
+  );
 
   return (
     <>
@@ -200,7 +218,7 @@ export function Library() {
           gridRow="1/2"
           backgroundColor="#fff"
           color="#000"
-          height="80px"
+          height="120px"
           position="fixed"
           width="100%"
           display="flex"
@@ -213,11 +231,29 @@ export function Library() {
           <Text fontSize="24px" fontWeight="700">
             Public Problem Library
           </Text>
+          <Box maxW={400} minW={200}>
+            <Box w="400px" mt="20px">
+              <Searchbar
+                defaultValue={searchStr}
+                dataTest="Search"
+                onChange={(evt) => {
+                  setSearchStr(evt.target.value);
+                }}
+              />
+            </Box>
+          </Box>
         </Box>
         <PublicActivitiesSection>
           <SimpleGrid columns={3} spacing={10}>
             {libraryData.length < 1 ? (
-              <div>No Public Activities</div>
+              <Text fontSize="28px">
+                No Matching Library Activities Found
+                <br />
+                <br />
+                <Link href="/Community">
+                  Consider searching the community contributed activites.
+                </Link>
+              </Text>
             ) : (
               <>
                 {libraryData.map((section) => {
@@ -245,9 +281,12 @@ export function Library() {
                       </Box>
                       <Accordion
                         allowMultiple
+                        // only show the accordions open by default after a search
                         defaultIndex={section.subsections.flatMap(
                           (sub, index) => {
-                            return sub.activities.length > 0 ? index : null;
+                            return searchStr && sub.activities.length > 0
+                              ? index
+                              : null;
                           },
                         )}
                       >
