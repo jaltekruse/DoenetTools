@@ -15,9 +15,6 @@ $userId = $jwtArray['userId'];
 
 $prevActivityDoenetId = mysqli_real_escape_string($conn,$_REQUEST["doenetId"]);
 
-// set when duplicating a single page from withing a collection/bank in a course
-$prevPageDoenetId = mysqli_real_escape_string($conn,$_REQUEST["pageId"]);
-
 try {
     if ($prevActivityDoenetId == ""){
         throw new Exception("Internal Error: missing doenetId");
@@ -39,18 +36,16 @@ try {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $isPublic = $row['isPublic'];
-        $isAssigned = $row['isAssigned'];
-        $prevCourseId = $row['courseId'];
+    $row = $result->fetch_assoc();
+    $isPublic = $row['isPublic'];
+    $isAssigned = $row['isAssigned'];
+    $prevCourseId = $row['courseId'];
 
-        if ($isPublic != '1'){
-            throw new Exception("Internal Error: Activity is not public");
-        } else if ($isAssigned != '1'){
-            throw new Exception("Internal Error: Activity is not public");
-        }
-    } else {
-        echo $sql;
+    if ($isPublic != '1'){
+        throw new Exception("Internal Error: Activity is not public");
+    }else if ($isAssigned != '1'){
+        throw new Exception("Internal Error: Activity is not public");
+    }}else{
         throw new Exception("Internal Error: Activity is not available");
     }
 
@@ -86,16 +81,13 @@ try {
     $sql = "
     SELECT 
     type,
-    case when cc.type = 'activity' then cc.label else pages.label end as label,
+    label,
     sortOrder,
     CAST(jsonDefinition as CHAR) AS json,
     imagePath,
     CAST(learningOutcomes as CHAR) AS learningOutcomes
-    FROM course_content cc
-    left join pages
-    on pages.containingDoenetId = cc.doenetId
-       and pages.doenetId = '$prevPageDoenetId'
-    WHERE cc.doenetId='$prevActivityDoenetId'
+    FROM course_content
+    WHERE doenetId='$prevActivityDoenetId'
     ";
 
     $result = $conn->query($sql);
@@ -122,88 +114,34 @@ try {
     $activityJSON = json_decode($previous_activity_content['jsonDefinition'], true);
     $assignedCid = $activityJSON["assignedCid"];
 
-    //echo print_r($previous_activity_content, true);
-    if ($previous_activity_content["type"] == "bank") {
-        $sql = "
-        SELECT
-        case when cc.type = 'activity' then cc.label else pages.label end as label,
-        cc.courseId,
-        cc.isBanned,
-        CAST(cc.jsonDefinition as CHAR) AS json,
-        c.portfolioCourseForUserId,
-        c.label as courseLabel,
-        c.image,
-        c.color,
-        u.firstName,
-        u.lastName,
-        u.profilePicture
-        FROM course_content AS cc
-        left join pages
-        on pages.containingDoenetId = cc.doenetId
-        and pages.doenetID = '$prevPageDoenetId'
-        and pages.isDeleted = '0'
-        LEFT JOIN course AS c
-            ON c.courseId = cc.courseId
-        LEFT JOIN user As u
-            ON u.userId = c.portfolioCourseForUserId
-        WHERE cc.doenetId = '$prevActivityDoenetId'
-        AND cc.isPublic = '1'
-        AND cc.isDeleted = '0'
-        ";
-        $result = $conn->query($sql);
-        $renamedPages = [];
-        $newPageDoenetIds = [];
-        if ($result && $result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $isBanned = $row['isBanned'];
-            $row['newPageId'] = include 'randomId.php';
-            array_push(
-                $newPageDoenetIds,
-                $row['newPageId']
-            );
-            $nextFirstPageDoenetId = $row['newPageId'];
-            if ($isBanned == '1'){
-                throw new Exception("Activity has been banned.");
-            }
-            $renamedPages["byPageId/$prevPageDoenetId"] = $row;
-        } else {
-            echo $db->error;
-        }
+    $assignedActivity = file_get_contents("../media/$assignedCid.doenet");
 
-        $nextActivityJsonDefinition = ["files" => [], "content" => $newPageDoenetIds];
-        $nextActivityJsonDefinition = json_encode($nextActivityJsonDefinition);
-
-    } else {
-        $assignedActivity = file_get_contents("../media/$assignedCid.doenet");
-
-        if($assignedActivity == FALSE) {
-            throw new Exception("Internal Error: Activity is not available");
-        }
-
-        $parse_results = parse_activity_definition_rename_pages($assignedActivity);
-
-        if(!$parse_results["success"]) {
-            $message = $parse_results["message"];
-            throw new Exception("Internal Error: $message");
-        }
-
-        $nextActivityJsonDefinition = $parse_results["activity_definition"];
-
-        $nextFirstPageDoenetId = $parse_results["first_page_id"];
-
-        // for now, just copy the list of files?
-        $nextActivityJsonDefinition["files"] = $activityJSON["files"];
-
-        $nextActivityJsonDefinition = json_encode($nextActivityJsonDefinition);
-        $renamedPages = $parse_results["renamed_pages"];
+    if($assignedActivity == FALSE) {
+        throw new Exception("Internal Error: Activity is not available");
     }
+
+    $parse_results = parse_activity_definition_rename_pages($assignedActivity);
+
+    if(!$parse_results["success"]) {
+        $message = $parse_results["message"];
+        throw new Exception("Internal Error: $message");
+    }
+
+    $nextActivityJsonDefinition = $parse_results["activity_definition"];
+
+    $nextFirstPageDoenetId = $parse_results["first_page_id"];
+
+    // for now, just copy the list of files?
+    $nextActivityJsonDefinition["files"] = $activityJSON["files"];
+
+    $nextActivityJsonDefinition = json_encode($nextActivityJsonDefinition);
 
     $insert_to_pages = [];
 
-    foreach($renamedPages as $oldPageFilename => $newPageInfo) {
+    foreach($parse_results["renamed_pages"] as $oldPageCid => $newPageInfo) {
         $newPageId = $newPageInfo["newPageId"];
         $label = $newPageInfo["label"];
-        $sourceFile = "../media/$oldPageFilename.doenet";
+        $sourceFile = "../media/$oldPageCid.doenet";
         $destinationFile = "../media/byPageId/$newPageId.doenet";
 
         $dirname = dirname($destinationFile);
@@ -241,10 +179,6 @@ try {
     $escapedLabel = mysqli_real_escape_string($conn, $previous_activity_content['label']);
     $imagePath = $previous_activity_content['imagePath'];
     $type = $previous_activity_content['type'];
-    if ($type == 'bank') {
-        $type = 'activity';
-    }
-
     $str_insert_to_course_content = "('$type','$nextCourseId','$nextActivityDoenetId','$nextCourseId','$escapedLabel',NOW(),'0','0','0','1','n','$nextActivityJsonDefinition','$imagePath','$learningOutcomes',CONVERT_TZ(NOW(), @@session.time_zone, '+00:00'))";
     
     //INSERT the new activity into course_content
