@@ -63,7 +63,6 @@ const PortfolioGrid = styled.div`
 `;
 
 export function Subsection({ label, activities }) {
-  activities = activities.filter((a) => a.label != "BA-Basics");
   return (
     <AccordionItem>
       <h2>
