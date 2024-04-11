@@ -103,6 +103,65 @@ export function Subsection({ label, activities }) {
   );
 }
 
+export function Section({ section, searchStr }) {
+  const [index, setIndex] = useState([]);
+
+  console.log(section, searchStr, index);
+
+  let filteredSubsections = section.subsections.filter(
+    (subsection) => !searchStr || subsection.activities.length > 0,
+  );
+  return (
+    <Box
+      style={{
+        border: "1px black",
+        padding: "10px",
+        margin: "10px",
+        width: "100%",
+      }}
+      key={section.label}
+    >
+      <Box
+        style={{
+          backgroundColor: "#2f76d9",
+          color: "white",
+          borderRadius: "5px",
+          padding: "10px",
+        }}
+      >
+        <Text fontSize="22px" fontWeight="700">
+          {section.label}
+        </Text>
+      </Box>
+      <Accordion
+        allowMultiple
+        // only show the accordions open by default after a search
+        // defaultIndex={filteredSubsections.flatMap(
+        //   (sub, index) => {
+        //     return searchStr && sub.activities.length > 0
+        //       ? index
+        //       : null;
+        //   },
+        // )}
+        index={index}
+        onChange={setIndex}
+        //   searchStr
+        //     ? [null]
+        //     : (sub, index) => {
+        //         return searchStr && sub.activities.length > 0
+        //           ? index
+        //           : null;
+        //       }
+        // }
+      >
+        {filteredSubsections.map((subsection) => {
+          return <Subsection key={subsection.label} {...subsection} />;
+        })}
+      </Accordion>
+    </Box>
+  );
+}
+
 export function Library() {
   let loaderData = useLoaderData();
   let libraryContentOrig = loaderData.libraryContent;
@@ -217,7 +276,7 @@ export function Library() {
         section.subsections.filter((sub) => sub.activities.length > 0).length >
           0,
     );
-  }, [libraryContent, webworkTaxonomy, searchStr]);
+  }, [libraryContentOrig, webworkTaxonomyOrig, searchStr]);
 
   return (
     <>
@@ -267,48 +326,11 @@ export function Library() {
               <>
                 {libraryData.map((section) => {
                   return (
-                    <Box
-                      style={{
-                        border: "1px black",
-                        padding: "10px",
-                        margin: "10px",
-                        width: "100%",
-                      }}
+                    <Section
+                      section={section}
+                      searchStr={searchStr}
                       key={section.label}
-                    >
-                      <Box
-                        style={{
-                          backgroundColor: "#2f76d9",
-                          color: "white",
-                          borderRadius: "5px",
-                          padding: "10px",
-                        }}
-                      >
-                        <Text fontSize="22px" fontWeight="700">
-                          {section.label}
-                        </Text>
-                      </Box>
-                      <Accordion
-                        allowMultiple
-                        // only show the accordions open by default after a search
-                        defaultIndex={section.subsections.flatMap(
-                          (sub, index) => {
-                            return searchStr && sub.activities.length > 0
-                              ? index
-                              : null;
-                          },
-                        )}
-                      >
-                        {section.subsections.map((subsection) => {
-                          return (
-                            <Subsection
-                              key={subsection.label}
-                              {...subsection}
-                            />
-                          );
-                        })}
-                      </Accordion>
-                    </Box>
+                    />
                   );
                 })}
                 {/*activity[4] ? (
