@@ -1,0 +1,1 @@
+import{R as r,u as i,a as l}from"./index-CrSqH__w.js";const f=r.memo(function(a){let{name:c,id:n,SVs:e,children:o}=i(a);if(e.hidden)return null;let s="<",t=">";return e.selfClosed?t="/>":e.closing&&(s="</"),l.jsxs("code",{id:n,style:{color:"var(--mainGreen)"},children:[l.jsx("a",{name:n}),s,o,t]})});export{f as default};
