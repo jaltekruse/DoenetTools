@@ -1,0 +1,1 @@
+import{R as s,u as l,a as n}from"./index-DVZ7nus4.js";const f=s.memo(function(r){let{name:o,id:e,SVs:a,children:t}=l(r);if(a.hidden)return null;if(t.length===0)return n.jsx(s.Fragment,{},e);let i=t.slice(1).reduce((m,u)=>[...m,", ",u],[t[0]]);return n.jsxs(s.Fragment,{children:[n.jsx("a",{name:e}),i]},e)});export{f as default};
