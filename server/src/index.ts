@@ -134,6 +134,11 @@ app.use(express.static("public"));
 //   res.send("Express + TypeScript Server");
 // });
 
+app.get("/lti13/launch", (req: Request, res: Response) => {
+  console.log(req);
+  return res.send("It's alive!");
+});
+
 app.get("/api/getQuickCheckSignedIn", (req: Request, res: Response) => {
   const signedIn = req.cookies.email ? true : false;
   res.send({ signedIn: signedIn });
