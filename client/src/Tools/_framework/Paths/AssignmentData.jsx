@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { redirect, useLoaderData } from "react-router";
 
 import {
@@ -13,7 +13,9 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { DoenetHeading as Heading } from "./Community";
-import { useFetcher } from "react-router-dom";
+import { useFetcher, Link } from "react-router-dom";
+
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Label } from "recharts";
 
 export async function action({ params, request }) {
   const formData = await request.formData();
@@ -48,6 +50,25 @@ export function AssignmentData() {
 
   const fetcher = useFetcher();
 
+  const [scoreData, setScoreData] = useState([]);
+
+  useEffect(() => {
+    const scores = assignmentData.assignmentScores.map((obj) => obj.score);
+    const minScore = 0;
+    const maxScore = 1;
+    const numBins = 11;
+    const size = 1 / (numBins - 1);
+
+    const hist = new Array(numBins).fill(0);
+    for (const item of assignmentData.assignmentScores) {
+      hist[Math.round((item.score - minScore) / size)]++;
+    }
+
+    setScoreData(
+      hist.map((v, i) => ({ count: v, score: Math.round(i * size * 10) / 10 })),
+    );
+  }, assignmentData);
+
   return (
     <>
       <Heading heading={assignmentData.name} />
@@ -64,6 +85,28 @@ export function AssignmentData() {
       >
         Some UI element for going back to assignment editor
       </Button>
+      <Heading subheading="Score summary" />
+      <BarChart
+        width={600}
+        height={300}
+        data={scoreData}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="score">
+          <Label value="Score" offset={0} position="insideBottom" />
+        </XAxis>
+        <YAxis>
+          <Label value="Number of students" angle="-90" position="insideLeft" />
+        </YAxis>
+        <Bar dataKey="count" fill="#8884d8" />
+      </BarChart>
+      <Heading subheading="Individual scores" />
       <TableContainer>
         <Table>
           <Thead>
@@ -75,8 +118,30 @@ export function AssignmentData() {
           <Tbody>
             {assignmentData.assignmentScores.map((assignmentScore) => (
               <Tr key={`user${assignmentScore.user.userId}`}>
-                <Td>{assignmentScore.user.name}</Td>
-                <Td>{Math.round(assignmentScore.score * 100) / 100}</Td>
+                <Td>
+                  <Link
+                    to={
+                      "/assignmentData/" +
+                      assignmentId +
+                      "/" +
+                      assignmentScore.user.userId
+                    }
+                  >
+                    {assignmentScore.user.name}
+                  </Link>
+                </Td>
+                <Td>
+                  <Link
+                    to={
+                      "/assignmentData/" +
+                      assignmentId +
+                      "/" +
+                      assignmentScore.user.userId
+                    }
+                  >
+                    {Math.round(assignmentScore.score * 100) / 100}
+                  </Link>
+                </Td>
               </Tr>
             ))}
           </Tbody>
