@@ -34,8 +34,8 @@ export default defineConfig((env) => ({
     proxy: {
       "/cyapi": "http://apache",
       //"/media": "http://apache",
-      "/api": "http://localhost:3000",
-      "/media": "http://localhost:3000",
+      "/api": "http://localhost",
+      "/media": "http://localhost",
       //"/api": "http://apache",
     },
   },
