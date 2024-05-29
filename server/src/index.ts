@@ -62,6 +62,7 @@ const db = new Database(
 // Setup provider
 lti.setup(
   process.env.LTI_KEY as string, // Key used to sign cookies and tokens
+  // "LTIKEY",
   {
     plugin: db,
   },
@@ -73,19 +74,46 @@ lti.setup(
       secure: false, // Set secure to true if the testing platform is in a different domain and https is being used
       sameSite: "", // Set sameSite to 'None' if the testing platform is in a different domain and https is being used
     },
-    // devMode: true  Set DevMode to false if running in a production environment with https
+    devMode: true, //Set DevMode to false if running in a production environment with https
     dynRegRoute: "/register", // Setting up dynamic registration route. Defaults to '/register'
     dynReg: {
       url: "http://tool.example.com", // Tool Provider URL. Required field.
       name: "Tool Provider", // Tool Provider name. Required field.
       logo: "http://tool.example.com/assets/logo.svg", // Tool Provider logo URL.
       description: "Tool Description", // Tool Provider description.
-      redirectUris: ["http://tool.example.com/launch"], // Additional redirection URLs. The main URL is added by default.
+      redirectUris: ["http://127.0.0.1/lti13/launch"], // Additional redirection URLs. The main URL is added by default.
       customParameters: { key: "value" }, // Custom parameters.
       autoActivate: false, // Whether or not dynamically registered Platforms should be automatically activated. Defaults to false.
     },
   } as any,
 );
+
+const setup = async () => {
+  await lti.deploy({ serverless: true } as any);
+  app.use("/lti13", lti.app);
+
+  // insert into lti13_issuers (id,  created_at, updated_at, host, client_id, auth_login_url, auth_token_url, key_set_url, private_key,  kid) values
+  //( 1, NULL, NULL, 'https://canvas.instructure.com', '112200000000000222', 'https://canvas.instructure.com/api/lti/authorize_redirect',
+  // 'https://canvas.instructure.com/login/oauth2/   token', 'https://canvas.instructure.com/api/lti/security/jwks', 'X509 SNIP SNIP SNIP', 'sig-1615993850')
+
+  // Register platform
+  await lti.registerPlatform({
+    url: "https://canvas.instructure.com",
+    name: "Platform Name",
+    clientId: "112200000000000234",
+    authenticationEndpoint:
+      "https://canvas.instructure.com/api/lti/authorize_redirect",
+    accesstokenEndpoint: "https://canvas.instructure.com/login/oauth2/",
+    authConfig: {
+      method: "JWK_SET",
+      key: "https://canvas.instructure.com/api/lti/security/jwks",
+    },
+  });
+
+  app.listen(port, () => {
+    console.log(`[server]: Server is running at http://localhost:${port}`);
+  });
+};
 
 // Set lti launch callback
 lti.onConnect((token, req, res) => {
@@ -94,7 +122,8 @@ lti.onConnect((token, req, res) => {
 });
 
 const app: Express = express();
-app.use(cookieParser());
+app.use(cookieParser(process.env.LTI_KEY as string));
+// app.use(cookieParser("LTIKEY"));
 app.use(express.json());
 
 const port = process.env.PORT || 3000;
@@ -568,35 +597,6 @@ app.get(
   },
 );
 
-const setup = async () => {
-  await lti.deploy({ serverless: true } as any);
-  app.use("/lti13", lti.app);
-
-  // insert into lti13_issuers (id,  created_at, updated_at, host, client_id, auth_login_url, auth_token_url, key_set_url, private_key,  kid) values
-  //( 1, NULL, NULL, 'https://canvas.instructure.com', '112200000000000222', 'https://canvas.instructure.com/api/lti/authorize_redirect',
-  // 'https://canvas.instructure.com/login/oauth2/   token', 'https://canvas.instructure.com/api/lti/security/jwks', 'X509 SNIP SNIP SNIP', 'sig-1615993850')
-
-  // Register platform
-  await lti.registerPlatform({
-    url: "https://canvas.instructure.com",
-    name: "Platform Name",
-    clientId: "112200000000000233",
-    authenticationEndpoint:
-      "https://canvas.instructure.com/api/lti/authorize_redirect",
-    accesstokenEndpoint: "https://canvas.instructure.com/login/oauth2/",
-    authConfig: {
-      method: "JWK_SET",
-      key: "https://canvas.instructure.com/api/lti/security/jwks",
-    },
-  });
-
-  app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
-  });
-};
-
-setup();
-
 app.get(
   "/api/getAssignmentStudentData/:assignmentId/:userId",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -620,3 +620,5 @@ app.get(
     }
   },
 );
+
+setup();
