@@ -108,7 +108,7 @@ export function Subsection({ label, activities }) {
             <Box key={activity.doenetId + label}>
               <Link
                 key={activity.label}
-                href={`https://www.doenet.org/portfolioviewer/${activity.doenetId}`}
+                href={`https://www.doenet.org/activityViewer/${activity.doenetId}`}
               >
                 {activity.label}
               </Link>
@@ -335,7 +335,7 @@ export function Library() {
           zIndex="1200"
         >
           <Text fontSize="24px" fontWeight="700">
-            Public Problem Library
+            Public Problem Library (hey, no aria parameters here!)
           </Text>
           <Box maxW={400} minW={200}>
             <Box w={["300px", "300px", "400px"]} mt="20px">

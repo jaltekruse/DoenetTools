@@ -9,7 +9,6 @@ import styled from "styled-components";
 import { DoenetML } from "@doenet/doenetml";
 
 import { checkIfUserClearedOut } from "../../../_utils/applicationUtils";
-import { Form } from "react-router-dom";
 import {
   Box,
   Button,
@@ -22,19 +21,32 @@ import {
 import axios from "axios";
 import VariantSelect from "../ChakraBasedComponents/VariantSelect";
 import ContributorsMenu from "../ChakraBasedComponents/ContributorsMenu";
+import { useFetcher } from "react-router-dom";
 
-export async function action({ params }) {
+export async function action({ params, request }) {
   // TODO: it is confusing that the one "action" of this viewer is to duplicate.
 
-  let { data } = await axios.post(`/api/duplicatePortfolioActivity`, {
-    docId: params.doenetId,
-  });
+  const formData = await request.formData();
+  let formObj = Object.fromEntries(formData);
 
-  const { newDocId } = data;
+  if (formObj._action == "copy to portfolio") {
+    let { data } = await axios.post(`/api/duplicateActivity`, {
+      activityId: Number(params.activityId),
+    });
 
-  // TODO: do not navigate to editor
-  // Instead, navigate to portfolio with newly created activity highlighted
-  return redirect(`/portfolioeditor/${newDocId}/${newDocId}`);
+    const { newActivityId } = data;
+
+    // TODO: do not navigate to editor
+    // Instead, navigate to portfolio with newly created activity highlighted
+    return redirect(`/activityEditor/${newActivityId}`);
+  } else if (formObj?._action == "create assignment") {
+    const { data } = await axios.post(`/api/assignActivity`, {
+      activityId: Number(params.activityId),
+    });
+    return redirect(`/assignments/${data.userId}`);
+  }
+
+  return null;
 }
 
 export async function loader({ params }) {
@@ -45,18 +57,29 @@ export async function loader({ params }) {
     signedIn = false;
   }
   try {
-    const { data } = await axios.get(
-      `/api/getPortfolioActivityView.php?doenetId=${params.doenetId}`,
+    const { data: activityData } = await axios.get(
+      `/api/getActivityView/${params.activityId}`,
     );
 
+    let activityId = Number(params.activityId);
+    let docId = Number(params.docId);
+    if (!docId) {
+      // If docId was not supplied in the url,
+      // then use the first docId from the activity.
+      // TODO: what happens if activity has no documents?
+      docId = activityData.activity.documents[0].docId;
+    }
+
+    const doenetML = activityData.activity.documents[0].content;
+
     return {
-      success: true,
-      doenetId: params.doenetId,
-      doenetML: data.content,
+      activityId,
+      doenetML,
       signedIn,
-      label: data.label,
-      contributors: data.contributors,
-      pageDoenetId: params.doenetId,
+      name: activityData.activity.name,
+      owner: activityData.activity.owner,
+      contributorHistory: activityData.doc.contributorHistory,
+      docId,
     };
   } catch (e) {
     return { success: false, message: e.response.data.message };
@@ -70,21 +93,18 @@ const HeaderSectionRight = styled.div`
   justify-content: flex-end;
 `;
 
-export function PortfolioActivityViewer() {
+export function ActivityViewer() {
   const {
-    success,
-    message,
     doenetML,
     signedIn,
-    label,
-    doenetId,
-    pageDoenetId,
-    contributors,
+    name,
+    activityId,
+    docId,
+    owner,
+    contributorHistory,
   } = useLoaderData();
 
-  if (!success) {
-    throw new Error(message);
-  }
+  const fetcher = useFetcher();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,8 +118,8 @@ export function PortfolioActivityViewer() {
   }
 
   useEffect(() => {
-    document.title = `${label} - Doenet`;
-  }, [label]);
+    document.title = `${name} - Doenet`;
+  }, [name]);
 
   const [variants, setVariants] = useState({
     index: 1,
@@ -153,10 +173,13 @@ export function PortfolioActivityViewer() {
                     textOverflow="ellipsis"
                     whiteSpace="nowrap"
                   >
-                    {label}
+                    {name}
                   </Text>
                   <Box mt="10px">
-                    <ContributorsMenu contributors={contributors} />
+                    <ContributorsMenu
+                      owner={owner}
+                      contributorHistory={contributorHistory}
+                    />
                   </Box>
                 </Flex>
                 <VStack mt="20px" alignItems="flex-end" spacing="4">
@@ -165,31 +188,52 @@ export function PortfolioActivityViewer() {
                     colorScheme="blue"
                     data-test="See Inside"
                     onClick={() => {
-                      navigate(`/publiceditor/${doenetId}/${pageDoenetId}`);
+                      navigate(`/publicEditor/${activityId}/${docId}`);
                     }}
                   >
                     See Inside
                   </Button>
                   {signedIn ? (
                     <HeaderSectionRight>
-                      <Form method="post">
-                        <Button
-                          data-test="Copy to Portfolio Button"
-                          size="xs"
-                          colorScheme="blue"
-                          type="submit"
-                        >
-                          Copy to Portfolio
-                        </Button>
-                      </Form>
+                      <Button
+                        data-test="Copy to Portfolio Button"
+                        size="xs"
+                        colorScheme="blue"
+                        onClick={() => {
+                          fetcher.submit(
+                            {
+                              _action: "copy to portfolio",
+                            },
+                            { method: "post" },
+                          );
+                        }}
+                      >
+                        Copy to Portfolio
+                      </Button>
+
+                      <Button
+                        data-test="Create Assignment"
+                        size="xs"
+                        colorScheme="blue"
+                        onClick={() => {
+                          fetcher.submit(
+                            {
+                              _action: "create assignment",
+                            },
+                            { method: "post" },
+                          );
+                        }}
+                      >
+                        Create Assignment
+                      </Button>
                     </HeaderSectionRight>
                   ) : (
                     <Button
-                      dataTest="Nav to signin"
+                      dataTest="Nav to signIn"
                       colorScheme="blue"
                       size="xs"
                       onClick={() => {
-                        navigateTo.current = "/signin";
+                        navigateTo.current = "/signIn";
                       }}
                     >
                       Sign In To Copy to Portfolio
@@ -284,7 +328,6 @@ export function PortfolioActivityViewer() {
                       allowSaveSubmissions: false,
                       allowSaveEvents: false,
                     }}
-                    // doenetId={doenetId}
                     attemptNumber={1}
                     idsIncludeActivityId={false}
                     generatedVariantCallback={setVariants}
@@ -293,8 +336,8 @@ export function PortfolioActivityViewer() {
                     location={location}
                     navigate={navigate}
                     linkSettings={{
-                      viewURL: "/portfolioviewer",
-                      editURL: "/publiceditor",
+                      viewURL: "/activityViewer",
+                      editURL: "/publicEditor",
                     }}
                   />
                 </Box>

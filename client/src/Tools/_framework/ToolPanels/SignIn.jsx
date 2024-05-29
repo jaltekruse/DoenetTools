@@ -68,17 +68,7 @@ export default function SignIn(props) {
     Object.keys(jwt).includes("JWT_JS") ||
     document.cookie.indexOf("email") !== -1
   ) {
-    axios
-      .get("/api/loadProfile.php", { params: {} })
-      .then((resp) => {
-        // if (resp.data.success === '1') {
-        localStorage.setItem("Profile", JSON.stringify(resp.data.profile));
-        location.href = "/";
-      })
-      .catch((error) => {
-        console.log(error);
-        //  Error currently does nothing
-      });
+    location.href = "/";
     return null;
   }
 
@@ -94,7 +84,7 @@ export default function SignIn(props) {
   //   let cookieSettingsObj = { path: '/', expires: 24000, sameSite: 'strict' };
   //   Cookies.set('Device', deviceName, cookieSettingsObj);
   //   Cookies.set('Stay', 1, cookieSettingsObj);
-  //   location.href = `/api/jwt.php?emailaddress=${encodeURIComponent(
+  //   location.href = `/api/jwt?emailaddress=${encodeURIComponent(
   //     emailaddress,
   //   )}&nineCode=${encodeURIComponent(
   //     '123456789',
@@ -110,7 +100,7 @@ export default function SignIn(props) {
   //   let cookieSettingsObj = { path: '/', expires: 24000, sameSite: 'strict' };
   //   Cookies.set('Device', deviceName, cookieSettingsObj);
   //   Cookies.set('Stay', 1, cookieSettingsObj);
-  //   location.href = `/api/jwt.php?emailaddress=${encodeURIComponent(
+  //   location.href = `/api/jwt?emailaddress=${encodeURIComponent(
   //     emailaddress,
   //   )}&nineCode=${encodeURIComponent(
   //     '123456789',
@@ -129,7 +119,7 @@ export default function SignIn(props) {
       params: data,
     };
     axios
-      .get("/api/checkCredentials.php", payload)
+      .get("/api/checkCredentials", payload)
       .then((resp) => {
         if (resp.data.success) {
           let newAccount = "1";
@@ -144,7 +134,7 @@ export default function SignIn(props) {
           if (resp.data.hasFullName == 0) {
             setSignInStage("Need Name Entered");
             setJwtLink(
-              `/api/jwt.php?emailaddress=${encodeURIComponent(
+              `/api/jwt?emailaddress=${encodeURIComponent(
                 email,
               )}&nineCode=${encodeURIComponent(
                 nineCode,
@@ -152,14 +142,14 @@ export default function SignIn(props) {
             );
           } else {
             //We have the user's name so sign them in
-            location.href = `/api/jwt.php?emailaddress=${encodeURIComponent(
+            location.href = `/api/jwt?emailaddress=${encodeURIComponent(
               email,
             )}&nineCode=${encodeURIComponent(
               nineCode,
             )}&deviceName=${deviceName}&newAccount=${newAccount}&stay=${stay}`;
           }
 
-          // // console.log(`/api/jwt.php?emailaddress=${encodeURIComponent(email)}&nineCode=${encodeURIComponent(nineCode)}&deviceName=${deviceName}&newAccount=${newAccount}&stay=${stay}`)
+          // // console.log(`/api/jwt?emailaddress=${encodeURIComponent(email)}&nineCode=${encodeURIComponent(nineCode)}&deviceName=${deviceName}&newAccount=${newAccount}&stay=${stay}`)
         } else {
           if (resp.data.reason === "Code expired") {
             setSignInStage("Code expired");
@@ -220,7 +210,7 @@ export default function SignIn(props) {
               value="Submit"
               onClick={() => {
                 axios
-                  .get("/api/saveUsersName.php", {
+                  .get("/api/saveUsersName", {
                     params: { firstName, lastName, email },
                   })
                   .then((resp) => {
@@ -266,7 +256,7 @@ export default function SignIn(props) {
         <h2 style={{ textAlign: "center" }}>Code Expired</h2>
         <Button
           onClick={() => {
-            location.href = "/signin";
+            location.href = "/signIn";
           }}
           value="Restart Signin"
         ></Button>
@@ -276,7 +266,7 @@ export default function SignIn(props) {
 
   if (signInStage === "enter code" || signInStage === "Invalid Code") {
     if (!isSentEmail) {
-      const phpUrl = "/api/sendSignInEmail.php";
+      const phpUrl = "/api/sendSignInEmail";
       const data = {
         emailaddress: email,
       };

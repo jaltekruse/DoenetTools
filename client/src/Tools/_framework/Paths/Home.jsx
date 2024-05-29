@@ -25,7 +25,7 @@ import { HiOutlineMail } from "react-icons/hi";
 import { BsGithub, BsDiscord } from "react-icons/bs";
 
 export async function loader() {
-  const response = await fetch("/api/loadPromotedContent.php");
+  const response = await fetch("/api/loadPromotedContent");
   const data = await response.json();
   return data;
 }
@@ -119,25 +119,38 @@ export function Home() {
             Enhance your classroom with great OER resources from Doenet and
             learn how we make it easy to create your own.
           </Text>
+          <Link href="/classCode">
+            <Button
+              mt="20px"
+              p="10px"
+              colorScheme="blue"
+              // these are out of order because on phones we chane the number of columns
+              w={["260px", "260px", "260px", "300px"]}
+              h={["40px", "40px", "40px", "50px", "60px"]}
+              fontSize={["18px", "18px", "18px", "22px", "26px"]}
+            >
+              Join with Class Code
+            </Button>
+          </Link>
           <Link href="/library">
             <Button
               mt="20px"
               p="10px"
               colorScheme="blue"
               // these are out of order because on phones we chane the number of columns
-              w={["260px", "200px", "260px", "300px"]}
+              w={["260px", "260px", "260px", "300px"]}
               h={["40px", "40px", "40px", "50px", "60px"]}
               fontSize={["18px", "18px", "18px", "22px", "26px"]}
             >
               Explore Activities
             </Button>
           </Link>
-          <Link href="https://www.doenet.org/portfolioviewer/_7OlapeBhtcfQaa5f7sOCH">
+          <Link href="https://www.doenet.org/activityViewer/_7OlapeBhtcfQaa5f7sOCH">
             <Button
               mt="20px"
               p="10px"
               colorScheme="blue"
-              w={["260px", "200px", "260px", "300px"]}
+              w={["260px", "260px", "260px", "300px"]}
               h={["40px", "40px", "40px", "50px", "60px"]}
               fontSize={["18px", "18px", "18px", "22px", "26px"]}
             >
@@ -497,8 +510,8 @@ export function Home() {
                 // setIsInErrorState={setIsInErrorState}
                 addBottomPadding={false}
                 linkSettings={{
-                  viewURL: "/portfolioviewer",
-                  editURL: "/publiceditor",
+                  viewURL: "/activityViewer",
+                  editURL: "/publicEditor",
                 }}
               />
             </Flex>

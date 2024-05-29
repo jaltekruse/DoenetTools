@@ -1,5 +1,7 @@
 import React from "react";
 
+import "@doenet/doenetml/style.css";
+
 import {
   createBrowserRouter,
   redirect,
@@ -38,20 +40,45 @@ import {
   PublicPortfolio,
 } from "./Tools/_framework/Paths/PublicPortfolio";
 import {
-  loader as portfolioActivityViewerLoader,
-  action as portfolioActivityViewerAction,
-  PortfolioActivityViewer,
-} from "./Tools/_framework/Paths/PortfolioActivityViewer";
+  loader as activityViewerLoader,
+  action as activityViewerAction,
+  ActivityViewer,
+} from "./Tools/_framework/Paths/ActivityViewer";
+import {
+  loader as assignmentsLoader,
+  action as assignmentsAction,
+  Assignments,
+} from "./Tools/_framework/Paths/Assignments";
+import {
+  loader as assignmentEditorLoader,
+  action as assignmentEditorAction,
+  AssignmentEditor,
+} from "./Tools/_framework/Paths/AssignmentEditor";
+import {
+  loader as assignmentDataLoader,
+  action as assignmentDataAction,
+  AssignmentData,
+} from "./Tools/_framework/Paths/AssignmentData";
+import {
+  loader as enterClassCodeLoader,
+  action as enterClassCodeAction,
+  EnterClassCode,
+} from "./Tools/_framework/Paths/EnterClassCode";
+import {
+  loader as assignmentViewerLoader,
+  action as assignmentViewerAction,
+  AssignmentViewer,
+} from "./Tools/_framework/Paths/AssignmentViewer";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 import ErrorPage from "./Tools/_framework/Paths/ErrorPage";
 
 import "@fontsource/jost";
 import {
-  PortfolioActivityEditor,
-  loader as portfolioEditorLoader,
-  action as portfolioEditorAction,
-} from "./Tools/_framework/Paths/PortfolioActivityEditor";
+  ActivityEditor,
+  loader as activityEditorLoader,
+  action as activityEditorAction,
+} from "./Tools/_framework/Paths/ActivityEditor";
 import {
   PublicEditor,
   loader as publicEditorLoader,
@@ -125,6 +152,11 @@ const router = createBrowserRouter([
         </ChakraProvider>
       </>
     ),
+    errorElement: (
+      <ChakraProvider theme={theme}>
+        <ErrorPage />
+      </ChakraProvider>
+    ),
     children: [
       {
         path: "/",
@@ -161,6 +193,11 @@ const router = createBrowserRouter([
             <Library />
           </ChakraProvider>
         ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
       },
       {
         path: "community",
@@ -170,6 +207,11 @@ const router = createBrowserRouter([
         element: (
           <ChakraProvider theme={theme}>
             <Community />
+          </ChakraProvider>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
           </ChakraProvider>
         ),
       },
@@ -187,9 +229,14 @@ const router = createBrowserRouter([
             <Admin />
           </ChakraProvider>
         ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
       },
       {
-        path: "portfolio/:courseId",
+        path: "portfolio/:userId",
         loader: portfolioLoader,
         action: portfolioAction,
         element: (
@@ -197,9 +244,14 @@ const router = createBrowserRouter([
             <Portfolio />
           </ChakraProvider>
         ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
       },
       {
-        path: "publicportfolio/:courseId",
+        path: "publicPortfolio/:userId",
         loader: publicPortfolioLoader,
         errorElement: (
           <ChakraProvider theme={theme}>
@@ -213,9 +265,9 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "portfolioviewer/:doenetId",
-        loader: portfolioActivityViewerLoader,
-        action: portfolioActivityViewerAction,
+        path: "activityViewer/:activityId",
+        loader: activityViewerLoader,
+        action: activityViewerAction,
         errorElement: (
           <ChakraProvider theme={theme}>
             <ErrorPage />
@@ -228,27 +280,34 @@ const router = createBrowserRouter([
             onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
           >
             <ChakraProvider theme={theme}>
-              <PortfolioActivityViewer />
+              <ActivityViewer />
             </ChakraProvider>
           </MathJaxContext>
         ),
       },
       {
-        path: "portfolioeditor/:doenetId",
-        loader: async ({ params }) => {
-          //This leaves a location in history
-          //this is because redirect creates a standard Response object and
-          //Response objects has no way to set replace: true
-
-          //Redirect as an activity can have no pageids
-          return redirect(`/portfolioeditor/${params.doenetId}/_`);
-        },
-        element: <div>Loading...</div>,
+        path: "activityEditor/:activityId",
+        loader: activityEditorLoader,
+        action: activityEditorAction,
+        element: (
+          <MathJaxContext
+            version={2}
+            config={mathjaxConfig}
+            onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
+          >
+            <ActivityEditor />
+          </MathJaxContext>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
       },
       {
-        path: "portfolioeditor/:doenetId/:pageId",
-        loader: portfolioEditorLoader,
-        action: portfolioEditorAction,
+        path: "activityEditor/:activityId/:docId",
+        loader: activityEditorLoader,
+        action: activityEditorAction,
         // errorElement: <div>Error!</div>,
         element: (
           <MathJaxContext
@@ -256,25 +315,17 @@ const router = createBrowserRouter([
             config={mathjaxConfig}
             onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
           >
-            <PortfolioActivityEditor />
-            {/* <ToolRoot /> */}
+            <ActivityEditor />
           </MathJaxContext>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
         ),
       },
       {
-        path: "publiceditor/:doenetId",
-        loader: async ({ params }) => {
-          //This leaves a location in history
-          //this is because redirect creates a standard Response object and
-          //Response objects has no way to set replace: true
-
-          //Redirect as an activity can have no pageids
-          return redirect(`/publiceditor/${params.doenetId}/_`);
-        },
-        element: <div>Loading...</div>,
-      },
-      {
-        path: "publiceditor/:doenetId/:pageId",
+        path: "publicEditor/:activityId",
         loader: publicEditorLoader,
         errorElement: (
           <ChakraProvider theme={theme}>
@@ -292,7 +343,116 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "signin",
+        path: "publicEditor/:activityId/:docId",
+        loader: publicEditorLoader,
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
+        element: (
+          <MathJaxContext
+            version={2}
+            config={mathjaxConfig}
+            onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
+          >
+            <PublicEditor />
+          </MathJaxContext>
+        ),
+      },
+      {
+        path: "assignments/:userId",
+        loader: assignmentsLoader,
+        action: assignmentsAction,
+        element: (
+          <ChakraProvider theme={theme}>
+            <Assignments />
+          </ChakraProvider>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
+      },
+      {
+        path: "assignmentEditor/:assignmentId",
+        loader: assignmentEditorLoader,
+        action: assignmentEditorAction,
+        element: (
+          <MathJaxContext
+            version={2}
+            config={mathjaxConfig}
+            onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
+          >
+            <AssignmentEditor />
+          </MathJaxContext>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
+      },
+      {
+        path: "assignmentData/:assignmentId",
+        loader: assignmentDataLoader,
+        action: assignmentDataAction,
+        element: (
+          <MathJaxContext
+            version={2}
+            config={mathjaxConfig}
+            onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
+          >
+            <AssignmentData />
+          </MathJaxContext>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
+      },
+      {
+        path: "classCode",
+        loader: enterClassCodeLoader,
+        action: enterClassCodeAction,
+        element: (
+          <MathJaxContext
+            version={2}
+            config={mathjaxConfig}
+            onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
+          >
+            <EnterClassCode />
+          </MathJaxContext>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
+      },
+      {
+        path: "classCode/:classCode",
+        loader: assignmentViewerLoader,
+        action: assignmentViewerAction,
+        element: (
+          <MathJaxContext
+            version={2}
+            config={mathjaxConfig}
+            onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
+          >
+            <AssignmentViewer />
+          </MathJaxContext>
+        ),
+        errorElement: (
+          <ChakraProvider theme={theme}>
+            <ErrorPage />
+          </ChakraProvider>
+        ),
+      },
+      {
+        path: "signIn",
         errorElement: (
           <ChakraProvider theme={theme}>
             <ErrorPage />
@@ -301,7 +461,7 @@ const router = createBrowserRouter([
         element: <SignIn />,
       },
       {
-        path: "signout",
+        path: "signOut",
         errorElement: (
           <ChakraProvider theme={theme}>
             <ErrorPage />

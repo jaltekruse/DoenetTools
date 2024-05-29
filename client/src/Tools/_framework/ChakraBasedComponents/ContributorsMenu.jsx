@@ -12,64 +12,39 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-export default function ContributorsMenu({ contributors }) {
-  const deduppedContributors = contributors.reduce((acc, current) => {
-    const isDuplicate = acc.find((item) => item.courseId === current.courseId);
-    if (!isDuplicate) {
-      acc.push(current);
-    }
-    return acc;
-  }, []);
-  let byLine = `by ${contributors[0].firstName} ${contributors[0].lastName}`;
-  if (contributors[0].isUserPortfolio == "0") {
-    byLine = `in ${contributors[0].courseLabel}`;
-  }
+export default function ContributorsMenu({ contributorHistory, owner }) {
+  // TODO: add name once have it in database
+  let byLine = `by ${owner.name}`;
+
   let recentByLine = "";
-  if (contributors.length > 1) {
-    recentByLine = `remixed from ${contributors[1].firstName} ${contributors[1].lastName}`;
-    if (contributors[1].isUserPortfolio == "0") {
-      recentByLine = `remixed from  ${contributors[1].courseLabel}`;
-    }
+  if (contributorHistory.length > 0) {
+    let prevActivity = contributorHistory[0].prevDoc.document.activity;
+    recentByLine = `remixed from ${prevActivity.name} by ${prevActivity.owner.name}`;
   }
 
-  const avatars = deduppedContributors.map((contributor, i) => {
-    const fullName = `${contributor.firstName} ${contributor.lastName}`;
-    let avatar = (
+  const avatars = [
+    <Avatar
+      key={`avatarauthor`}
+      m={0}
+      border="0"
+      size="sm"
+      name={owner.name}
+      mr="4px"
+    />,
+  ];
+
+  avatars.push(
+    ...contributorHistory.map((contrib_hist, i) => (
       <Avatar
         key={`avatar${i}`}
         m={0}
         border="0"
         size="sm"
-        name={fullName}
+        name={contrib_hist.prevDoc.document.activity.owner.name}
         mr="4px"
       />
-    );
-    if (contributor.isUserPortfolio == "0") {
-      if (contributor.courseColor == "none") {
-        avatar = (
-          <Avatar
-            key={`avatar${i}`}
-            size="sm"
-            border="0"
-            borderRadius="md"
-            src={`/drive_pictures/${contributor.courseImage}`}
-          />
-        );
-      } else {
-        avatar = (
-          <Avatar
-            key={`avatar${i}`}
-            size="sm"
-            border="0"
-            borderRadius="md"
-            bg={`#${contributor.courseColor}`}
-            icon={<></>}
-          />
-        );
-      }
-    }
-    return avatar;
-  });
+    )),
+  );
 
   return (
     <Flex>
@@ -85,12 +60,19 @@ export default function ContributorsMenu({ contributors }) {
           </Flex>
         </MenuButton>
         <MenuList maxHeight="40vh" overflowY="auto">
-          {deduppedContributors.map((contributor, i) => {
-            let label = `${contributor.firstName} ${contributor.lastName}`;
-            const href = `/publicportfolio/${contributor.courseId}`;
-            if (contributor.isUserPortfolio == "0") {
-              label = contributor.courseLabel;
-            }
+          <MenuItem
+            key={"miauthor"}
+            data-test={"contributors menu item author"}
+            as={Link}
+            to={`/publicPortfolio/${owner.userId}`}
+          >
+            {avatars[0]} <Text ml="4px">{owner.name}</Text>
+          </MenuItem>
+          {contributorHistory.map((contrib_hist, i) => {
+            let prevActivity = contrib_hist.prevDoc.document.activity;
+            let label = `${prevActivity.name} by ${prevActivity.owner.name}`;
+            const href = `/activityViewer/${prevActivity.activityId}`;
+
             return (
               <MenuItem
                 key={`mi${i}`}
@@ -98,7 +80,7 @@ export default function ContributorsMenu({ contributors }) {
                 to={href}
                 data-test={`contributors menu item ${i}`}
               >
-                {avatars[i]} <Text ml="4px">{label}</Text>
+                {avatars[i + 1]} <Text ml="4px">{label}</Text>
               </MenuItem>
             );
           })}
@@ -110,7 +92,7 @@ export default function ContributorsMenu({ contributors }) {
         </Text>
         <Text fontSize="12px" ml="4px" mt="0px">
           {recentByLine}
-          {contributors.length > 2 && ", ..."}
+          {contributorHistory.length > 2 && ", ..."}
         </Text>
       </Flex>
     </Flex>

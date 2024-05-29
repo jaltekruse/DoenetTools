@@ -1,4 +1,4 @@
-// import axios from 'axios';
+import axios from "axios";
 import { Box, Text, Wrap } from "@chakra-ui/react";
 import React from "react";
 import { useLoaderData } from "react-router-dom";
@@ -7,22 +7,21 @@ import ActivityCard from "../../../_reactComponents/PanelHeaderComponents/Activi
 import { MoveToGroupMenuItem } from "./Community";
 
 export async function loader() {
-  const response = await fetch(`/api/getAllRecentPublicActivites.php`);
-  const data = await response.json();
-  const isAdminResponse = await fetch(`/api/checkForCommunityAdmin.php`);
-  const { isAdmin } = await isAdminResponse.json();
+  const { data: recentActivities } = await axios.get(
+    `/api/getAllRecentPublicActivities`,
+  );
+  const { data: isAdminData } = await axios.get(`/api/checkForCommunityAdmin`);
+  const isAdmin = isAdminData.isAdmin;
+
   let carouselGroups = [];
   if (isAdmin) {
-    const carouselDataGroups = await fetch(
-      `/api/loadPromotedContentGroups.php`,
-    );
+    const carouselDataGroups = await fetch(`/api/loadPromotedContentGroups`);
     const responseGroups = await carouselDataGroups.json();
     carouselGroups = responseGroups.carouselGroups;
   }
 
   return {
-    fullName: data.fullName,
-    publicActivities: data.searchResults.activities,
+    publicActivities: recentActivities,
     isAdmin,
     carouselGroups,
   };
@@ -79,21 +78,20 @@ export function Admin() {
             ) : (
               <>
                 {publicActivities.map((activity) => {
-                  const { doenetId, label, imagePath } = activity;
-                  const imageLink = `/portfolioviewer/${doenetId}`;
+                  const imageLink = `/activityViewer/${activity.activityId}`;
 
                   return (
                     <ActivityCard
-                      key={`ActivityCard${activity.doenetId}`}
+                      key={`ActivityCard${activity.activityId}`}
                       imageLink={imageLink}
-                      label={label}
-                      imagePath={imagePath}
-                      fullName={activity.fullName}
+                      label={activity.name}
+                      imagePath={activity.imagePath}
+                      fullName={activity.owner.email}
                       menuItems={
                         isAdmin ? (
                           <>
                             <MoveToGroupMenuItem
-                              doenetId={doenetId}
+                              activityId={activity.activityId}
                               carouselGroups={carouselGroups}
                             />
                           </>

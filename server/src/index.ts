@@ -1,72 +1,96 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import { DateTime } from "luxon";
 import {
-  copyPublicDocumentToPortfolio,
-  createDocument,
-  deleteDocument,
+  copyPublicActivityToPortfolio,
+  createActivity,
+  deleteActivity,
   findOrCreateUser,
   getAllDoenetmlVersions,
+  getActivityEditorData,
+  getActivityViewerData,
+  getAllRecentPublicActivities,
+  getIsAdmin,
+  getUserInfo,
+  listUserActivities,
+  updateDoc,
+  searchPublicActivities,
+  updateActivity,
   getDoc,
-  getDocEditorData,
-  getDocViewerData,
-  listUserDocs,
-  saveDoc,
-  searchPublicDocs,
+  assignActivity,
+  listUserAssignments,
+  deleteAssignment,
+  getAssignmentEditorData,
+  updateAssignment,
+  getAssignmentDataFromCode,
+  openAssignmentWithCode,
+  closeAssignmentWithCode,
+  updateUser,
+  saveScoreAndState,
+  getAssignmentScoreData,
+  loadState,
 } from "./model";
-import path from 'path';
-import { Provider as lti } from 'ltijs';
-import Database from 'ltijs-sequelize';
+import path from "path";
+import { Provider as lti } from "ltijs";
+import Database from "ltijs-sequelize";
 import pg from "pg";
+import { Prisma } from "@prisma/client";
 
 dotenv.config();
 
-const db = new Database(process.env.DATABASE_NAME,
-                        process.env.DATABASE_USER,
-                        process.env.DATABASE_PASS,
-                        { dialect: 'postgres',
-                          dialectModule: pg,
-                          dialectOptions: {
-                            ssl: true
-                          },
-                          host: process.env.DATABASE_HOST,
-                          ssl: {
-                            require: true,
-                            native: true,
-                            rejectUnauthorized: false
-                          }
-                        });
+const db = new Database(
+  process.env.DATABASE_NAME,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASS,
+  {
+    dialect: "postgres",
+    dialectModule: pg,
+    dialectOptions: {
+      ssl: true,
+    },
+    host: process.env.DATABASE_HOST,
+    ssl: {
+      require: true,
+      native: true,
+      rejectUnauthorized: false,
+    },
+  },
+);
 
 // Setup provider
-lti.setup(process.env.LTI_KEY as string, // Key used to sign cookies and tokens
-          { 
-            plugin: db
-          },
-          { // Options
-            // appRoute: '/', loginRoute: '/login',
-            cookies: {
-              secure: false, // Set secure to true if the testing platform is in a different domain and https is being used
-              sameSite: '' // Set sameSite to 'None' if the testing platform is in a different domain and https is being used
-            },
-            // devMode: true  Set DevMode to false if running in a production environment with https
-            dynRegRoute: '/register', // Setting up dynamic registration route. Defaults to '/register'
-            dynReg: {
-              url: 'http://tool.example.com', // Tool Provider URL. Required field.
-              name: 'Tool Provider', // Tool Provider name. Required field.
-              logo: 'http://tool.example.com/assets/logo.svg', // Tool Provider logo URL.
-              description: 'Tool Description', // Tool Provider description.
-              redirectUris: ['http://tool.example.com/launch'], // Additional redirection URLs. The main URL is added by default.
-              customParameters: { key: 'value' }, // Custom parameters.
-              autoActivate: false // Whether or not dynamically registered Platforms should be automatically activated. Defaults to false.
-            }
-          } as any
-         );
+lti.setup(
+  process.env.LTI_KEY as string, // Key used to sign cookies and tokens
+  {
+    plugin: db,
+  },
+  {
+    // Options
+    appRoute: "/",
+    loginRoute: "/login",
+    cookies: {
+      secure: false, // Set secure to true if the testing platform is in a different domain and https is being used
+      sameSite: "", // Set sameSite to 'None' if the testing platform is in a different domain and https is being used
+    },
+    // devMode: true  Set DevMode to false if running in a production environment with https
+    dynRegRoute: "/register", // Setting up dynamic registration route. Defaults to '/register'
+    dynReg: {
+      url: "http://tool.example.com", // Tool Provider URL. Required field.
+      name: "Tool Provider", // Tool Provider name. Required field.
+      logo: "http://tool.example.com/assets/logo.svg", // Tool Provider logo URL.
+      description: "Tool Description", // Tool Provider description.
+      redirectUris: ["http://tool.example.com/launch"], // Additional redirection URLs. The main URL is added by default.
+      customParameters: { key: "value" }, // Custom parameters.
+      autoActivate: false, // Whether or not dynamically registered Platforms should be automatically activated. Defaults to false.
+    },
+  } as any,
+);
 
 // Set lti launch callback
 lti.onConnect((token, req, res) => {
-  console.log(token)
-  return res.send('It\'s alive!')
-})
+  console.log(token);
+  return res.send("It's alive!");
+});
 
 const app: Express = express();
 app.use(cookieParser());
@@ -74,133 +98,194 @@ app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+app.use(express.static("public"));
 
-app.get("/api/getQuickCheckSignedIn.php", (req: Request, res: Response) => {
+// app.get("/", (req: Request, res: Response) => {
+//   res.send("Express + TypeScript Server");
+// });
+
+app.get("/api/getQuickCheckSignedIn", (req: Request, res: Response) => {
   const signedIn = req.cookies.email ? true : false;
   res.send({ signedIn: signedIn });
 });
 
-app.get("/api/getPortfolioCourseId.php", (req: Request, res: Response) => {
-  res.send({});
-});
-
-app.get("/api/checkForCommunityAdmin.php", (req: Request, res: Response) => {
-  res.send({});
-});
-
-app.get("/api/loadProfile.php", (req: Request, res: Response) => {
-  const loggedInEmail = req.cookies.email;
-  res.send({
-    profile: {
-      screenName: "",
-      email: loggedInEmail,
-      firstName: "",
-      lastName: "",
-      profilePicture: "anonymous",
-      trackingConsent: true,
-      signedIn: "0",
-      userId: "",
-      canUpload: "0",
-    },
-  });
-});
-
-app.get("/api/getPortfolio.php", async (req: Request, res: Response) => {
-  const loggedInEmail = req.cookies.email;
-  const loggedInUserId = Number(req.cookies.userId);
-  const ret = await listUserDocs(loggedInUserId);
-  res.send(ret);
-});
-
-app.get("/api/sendSignInEmail.php", async (req: Request, res: Response) => {
-  const email: string = req.query.emailaddress as string;
-  const userId = await findOrCreateUser(email);
-  res.cookie("email", email);
-  res.cookie("userId", String(userId));
-  res.send({ success: true });
-});
-
-app.get(
-  "/api/deletePortfolioActivity.php",
-  async (req: Request, res: Response) => {
-    const doenetId = Number(req.query.doenetId as string);
-    const docId = await deleteDocument(doenetId);
-    res.send({ success: true, docId });
-  },
-);
-
-app.get(
-  "/api/createPortfolioActivity.php",
-  async (req: Request, res: Response) => {
-    const loggedInUserId = Number(req.cookies.userId);
-    const docId = await createDocument(loggedInUserId);
-    res.send({ success: true, docId, doenetId: docId, pageDoenetId: docId });
-  },
-);
-
-app.get(
-  "/api/updatePortfolioActivityLabel.php",
-  (req: Request, res: Response) => {
-    const doenetId = Number(req.query.doenetId as string);
-    const label = req.query.label as string;
-    saveDoc({ docId: doenetId, name: label });
-    res.send({ success: true });
-  },
-);
-
-app.get("/api/updateIsPublicActivity.php", (req: Request, res: Response) => {
-  const doenetId = Number(req.query.doenetId as string);
-  // figure out a definite strategy for representing booleans and transmitting them
-  const isPublicRaw = req.query.isPublic as string;
-  let isPublic = false;
-  if (isPublicRaw == "1") {
-    isPublic = true;
+app.get("/api/getUser", async (req: Request, res: Response) => {
+  const signedIn = req.cookies.email ? true : false;
+  if (signedIn) {
+    let userInfo = await getUserInfo(req.cookies.email);
+    res.send(userInfo);
+  } else {
+    res.send({});
   }
-  saveDoc({ docId: doenetId, isPublic });
-  res.send({ success: true });
 });
 
-app.get("/api/loadSupportingFileInfo.php", (req: Request, res: Response) => {
-  const doenetId = Number(req.query.doenetId as string);
+app.post("/api/updateUser", async (req: Request, res: Response) => {
+  const signedIn = req.cookies.email ? true : false;
+  if (signedIn) {
+    const body = req.body;
+    const name = body.name;
+    await updateUser({ userId: Number(req.cookies.userId), name });
+    res.cookie("name", name);
+    res.send({ name });
+  } else {
+    res.send({});
+  }
+});
+
+app.get("/api/checkForCommunityAdmin", async (req: Request, res: Response) => {
+  const userEmail = req.cookies.email;
+  const isAdmin = await getIsAdmin(userEmail);
   res.send({
-    success: true,
-    supportingFiles: [],
-    canUpload: true,
-    userQuotaBytesAvailable: 1000000,
-    quotaBytes: 9000000,
+    isAdmin,
   });
 });
 
-app.get("/api/checkCredentials.php", (req: Request, res: Response) => {
+app.get(
+  "/api/getAllRecentPublicActivities",
+  async (req: Request, res: Response) => {
+    const docs = await getAllRecentPublicActivities();
+    res.send(docs);
+  },
+);
+
+app.get(
+  "/api/getPortfolio/:userId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const loggedInUserId = Number(req.cookies.userId);
+    const userId = Number(req.params.userId);
+    try {
+      const activityLists = await listUserActivities(userId, loggedInUserId);
+      const allDoenetmlVersions = await getAllDoenetmlVersions();
+
+      res.send({ allDoenetmlVersions, ...activityLists });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        res.sendStatus(404);
+      } else {
+        next(e);
+      }
+    }
+  },
+);
+
+app.get(
+  "/api/getPublicPortfolio/:userId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = Number(req.params.userId);
+    try {
+      const activityLists = await listUserActivities(userId, 0);
+
+      res.send(activityLists);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        res.sendStatus(404);
+      } else {
+        next(e);
+      }
+    }
+  },
+);
+
+app.get(
+  "/api/getAssignments/:userId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const loggedInUserId = Number(req.cookies.userId);
+    const userId = Number(req.params.userId);
+    try {
+      const assignmentList = await listUserAssignments(userId, loggedInUserId);
+
+      res.send(assignmentList);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        res.sendStatus(404);
+      } else {
+        next(e);
+      }
+    }
+  },
+);
+
+app.get("/api/sendSignInEmail", async (req: Request, res: Response) => {
+  const email: string = req.query.emailaddress as string;
+  // TODO: add the ability to give a name after logging in or creating an account
+  const user = await findOrCreateUser(email, email);
+  res.cookie("email", email);
+  res.cookie("userId", String(user.userId));
+  res.cookie("name", String(user.name));
+  res.send({});
+});
+
+app.post("/api/deleteActivity", async (req: Request, res: Response) => {
+  const body = req.body;
+  const activityId = Number(body.activityId);
+  await deleteActivity(activityId);
+  res.send({});
+});
+
+app.post("/api/deleteAssignment", async (req: Request, res: Response) => {
+  const body = req.body;
+  const assignmentId = Number(body.assignmentId);
+  await deleteAssignment(assignmentId);
+  res.send({});
+});
+
+app.post("/api/createActivity", async (req: Request, res: Response) => {
+  const loggedInUserId = Number(req.cookies.userId);
+  const { activityId, docId } = await createActivity(loggedInUserId);
+  res.send({ activityId, docId });
+});
+
+app.post("/api/updateActivityName", (req: Request, res: Response) => {
+  const body = req.body;
+  const activityId = Number(body.activityId);
+  const name = body.name;
+  updateActivity({ activityId, name });
+  res.send({});
+});
+
+app.post("/api/updateIsPublicActivity", (req: Request, res: Response) => {
+  const body = req.body;
+  const activityId = Number(body.activityId);
+  const isPublic = body.isPublic;
+  updateActivity({ activityId, isPublic });
+  res.send({});
+});
+
+app.get(
+  "/api/loadSupportingFileInfo/:activityId",
+  (req: Request, res: Response) => {
+    const activityId = Number(req.params.activityId as string);
+    res.send({
+      success: true,
+      supportingFiles: [],
+      canUpload: true,
+      userQuotaBytesAvailable: 1000000,
+      quotaBytes: 9000000,
+    });
+  },
+);
+
+app.get("/api/checkCredentials", (req: Request, res: Response) => {
   const loggedIn = req.cookies.email ? true : false;
   res.send({ loggedIn });
 });
 
 app.get(
-  "/api/getCoursePermissionsAndSettings.php",
+  "/api/getCoursePermissionsAndSettings",
   (req: Request, res: Response) => {
     res.send({});
   },
 );
 
-app.get(
-  "/api/searchPublicActivities.php",
-  async (req: Request, res: Response) => {
-    const query = req.query.q as string;
-    res.send({
-      success: true,
-      searchResults: {
-        users: [], // TODO - this
-        activities: await searchPublicDocs(query),
-      },
-    });
-  },
-);
+app.get("/api/searchPublicActivities", async (req: Request, res: Response) => {
+  const query = req.query.q as string;
+  res.send({
+    users: [], // TODO - this
+    activities: await searchPublicActivities(query),
+  });
+});
 
-app.get("/api/loadPromotedContent.php", (req: Request, res: Response) => {
+app.get("/api/loadPromotedContent", (req: Request, res: Response) => {
   res.send({
     success: true,
     carouselData: {},
@@ -208,94 +293,287 @@ app.get("/api/loadPromotedContent.php", (req: Request, res: Response) => {
 });
 
 app.get(
-  "/api/getPortfolioEditorData/:doenetId",
-  async (req: Request, res: Response) => {
-    const doenetId = Number(req.params.doenetId);
-    const editorData = await getDocEditorData(doenetId);
-    res.send(editorData);
+  "/api/getActivityEditorData/:activityId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const activityId = Number(req.params.activityId);
+    try {
+      const editorData = await getActivityEditorData(activityId);
+      res.send(editorData);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        res.sendStatus(404);
+      } else {
+        next(e);
+      }
+    }
+  },
+);
+
+app.get("/api/getAllDoenetmlVersions", async (req: Request, res: Response) => {
+  const allDoenetmlVersions = await getAllDoenetmlVersions();
+
+  res.send(allDoenetmlVersions);
+});
+
+app.get(
+  "/api/getActivityView/:docId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const docId = Number(req.params.docId);
+
+    try {
+      const viewerData = await getActivityViewerData(docId);
+      res.send(viewerData);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        res.sendStatus(404);
+      } else {
+        next(e);
+      }
+    }
   },
 );
 
 app.get(
-  "/api/getAllDoenetmlVersions.php",
-  async (req: Request, res: Response) => {
-    const allDoenetmlVersions = await getAllDoenetmlVersions();
-
-    res.send(allDoenetmlVersions);
+  "/api/getAssignmentEditorData/:assignmentId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const assignmentId = Number(req.params.assignmentId);
+    try {
+      const editorData = await getAssignmentEditorData(assignmentId);
+      res.send(editorData);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        res.sendStatus(404);
+      } else {
+        next(e);
+      }
+    }
   },
 );
 
 app.get(
-  "/api/getPortfolioActivityView.php",
+  "/api/getAssignmentDataFromCode/:code",
   async (req: Request, res: Response) => {
-    const doenetId = Number(req.query.doenetId as string);
+    const code = req.params.code;
+    const signedIn = req.cookies.email ? true : false;
 
-    const viewerData = await getDocViewerData(doenetId);
-    res.send(viewerData);
+    let assignmentData = await getAssignmentDataFromCode(code, signedIn);
+
+    let name: string;
+    if (assignmentData.newAnonymousUser) {
+      const anonymousUser = assignmentData.newAnonymousUser;
+      // create a user with random name and email
+      res.cookie("email", anonymousUser.email);
+      res.cookie("userId", String(anonymousUser.userId));
+      res.cookie("name", String(anonymousUser.name));
+      name = anonymousUser.name;
+    } else {
+      name = req.cookies.name;
+    }
+
+    res.send({ name, ...assignmentData });
   },
 );
 
-app.get("/api/getPortfolioCourseId.php", (req: Request, res: Response) => {
+app.get("/api/loadPromotedContentGroups", (req: Request, res: Response) => {
   res.send({});
 });
 
-app.get("/api/loadPromotedContentGroups.php", (req: Request, res: Response) => {
-  res.send({});
-});
-
-app.post("/api/saveDoenetML.php", (req: Request, res: Response) => {
+app.post("/api/saveDoenetML", (req: Request, res: Response) => {
   const body = req.body;
   const doenetML = body.doenetML;
-  const docId = Number(body.pageId);
-  saveDoc({ docId, content: doenetML });
-  res.send({ success: true });
+  const docId = Number(body.docId);
+  updateDoc({ docId, content: doenetML });
+  res.send({});
+});
+
+app.post("/api/updateActivitySettings", (req: Request, res: Response) => {
+  const body = req.body;
+  const activityId = Number(body.activityId);
+  const imagePath = body.imagePath;
+  const name = body.name;
+  // TODO - deal with learning outcomes
+  const learningOutcomes = body.learningOutcomes;
+  const isPublic = body.isPublic;
+  updateActivity({
+    activityId,
+    imagePath,
+    name,
+    isPublic,
+  });
+  res.send({});
+});
+
+app.post("/api/updateDocumentSettings", (req: Request, res: Response) => {
+  const body = req.body;
+  const docId = Number(body.docId);
+  const name = body.name;
+  // TODO - deal with learning outcomes
+  const learningOutcomes = body.learningOutcomes;
+  const doenetmlVersionId = Number(body.doenetmlVersionId);
+  updateDoc({
+    docId,
+    name,
+    doenetmlVersionId,
+  });
+  res.send({});
+});
+
+app.post("/api/duplicateActivity", async (req: Request, res: Response) => {
+  const targetActivityId = Number(req.body.activityId);
+  const loggedInUserId = Number(req.cookies.userId);
+
+  let newActivityId = await copyPublicActivityToPortfolio(
+    targetActivityId,
+    loggedInUserId,
+  );
+
+  res.send({ newActivityId });
+});
+
+app.post("/api/assignActivity", async (req: Request, res: Response) => {
+  const activityId = Number(req.body.activityId);
+  const loggedInUserId = Number(req.cookies.userId);
+
+  let assignmentId = await assignActivity(activityId, loggedInUserId);
+
+  res.send({ assignmentId, userId: loggedInUserId });
+});
+
+app.post("/api/updateAssignmentName", (req: Request, res: Response) => {
+  const body = req.body;
+  const assignmentId = Number(body.assignmentId);
+  const name = body.name;
+  updateAssignment({ assignmentId, name });
+  res.send({});
+});
+
+app.post("/api/updateAssignmentSettings", (req: Request, res: Response) => {
+  const body = req.body;
+  const assignmentId = Number(body.assignmentId);
+  const imagePath = body.imagePath;
+  const name = body.name;
+  updateAssignment({
+    assignmentId,
+    imagePath,
+    name,
+  });
+  res.send({});
+});
+
+app.post("/api/openAssignmentWithCode", async (req: Request, res: Response) => {
+  const body = req.body;
+  const assignmentId = Number(body.assignmentId);
+  const closeAt = DateTime.fromISO(body.closeAt);
+
+  const { classCode, codeValidUntil } = await openAssignmentWithCode(
+    assignmentId,
+    closeAt,
+  );
+  res.send({ classCode, codeValidUntil });
 });
 
 app.post(
-  "/api/updatePortfolioActivitySettings.php",
-  (req: Request, res: Response) => {
+  "/api/closeAssignmentWithCode",
+  async (req: Request, res: Response) => {
     const body = req.body;
-    const docId = Number(body.doenetId);
-    const imagePath = body.imagePath;
-    const label = body.label;
-    // TODO - deal with learning outcomes
-    const learningOutcomes = body.learningOutcomes;
-    const isPublic = body.public === "true";
-    const doenetmlVersionId = Number(body.doenetmlVersionId);
-    saveDoc({ docId, imagePath, name: label, isPublic, doenetmlVersionId });
-    res.send({ success: true });
+    const assignmentId = Number(body.assignmentId);
+
+    await closeAssignmentWithCode(assignmentId);
+    res.send({});
   },
 );
 
-app.post(
-  "/api/duplicatePortfolioActivity",
-  async (req: Request, res: Response) => {
-    const targetDocId = Number(req.body.docId);
+app.post("/api/saveScoreAndState", async (req: Request, res: Response) => {
+  const body = req.body;
+  const assignmentId = Number(body.assignmentId);
+  const docId = Number(body.docId);
+  const docVersionId = Number(body.docVersionId);
+  const loggedInUserId = Number(req.cookies.userId);
+  const score = Number(body.score);
+  const state = body.state;
+
+  await saveScoreAndState({
+    assignmentId,
+    docId,
+    docVersionId,
+    userId: loggedInUserId,
+    score,
+    state,
+  });
+  res.send({});
+});
+
+app.get(
+  "/api/loadState",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const assignmentId = Number(req.query.assignmentId);
+    const docId = Number(req.query.docId);
+    const docVersionId = Number(req.query.docVersionId);
+    const requestedUserId = Number(req.query.userId || req.cookies.userId);
     const loggedInUserId = Number(req.cookies.userId);
 
-    let newDocId = await copyPublicDocumentToPortfolio(
-      targetDocId,
-      loggedInUserId,
-    );
-
-    res.send({ newDocId });
+    try {
+      const state = await loadState({
+        assignmentId,
+        docId,
+        docVersionId,
+        requestedUserId,
+        userId: loggedInUserId,
+      });
+      res.send({ state });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        res.status(204).send({});
+      } else {
+        next(e);
+      }
+    }
   },
 );
 
 app.get(
-  "/media/byPageId/:doenetId.doenet",
-  async (req: Request, res: Response) => {
-    const doenetId = Number(req.params.doenetId);
-    const doc = await getDoc(doenetId);
-    res.send(doc.contentLocation);
+  "/api/getAssignmentScoreData/:assignmentId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const assignmentId = Number(req.params.assignmentId);
+    const loggedInUserId = Number(req.cookies.userId);
+
+    try {
+      const assignmentWithData = await getAssignmentScoreData({
+        assignmentId,
+        ownerId: loggedInUserId,
+      });
+      res.send(assignmentWithData);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        res.sendStatus(404);
+      } else {
+        next(e);
+      }
+    }
   },
 );
 
-
-
 const setup = async () => {
-  await lti.deploy({ serverless: true } as any)
-  app.use('/lti', lti.app)
+  await lti.deploy({ serverless: true } as any);
+  app.use("/lti13", lti.app);
+
+  // insert into lti13_issuers (id,  created_at, updated_at, host, client_id, auth_login_url, auth_token_url, key_set_url, private_key,  kid) values
+  //( 1, NULL, NULL, 'https://canvas.instructure.com', '112200000000000222', 'https://canvas.instructure.com/api/lti/authorize_redirect',
+  // 'https://canvas.instructure.com/login/oauth2/   token', 'https://canvas.instructure.com/api/lti/security/jwks', 'X509 SNIP SNIP SNIP', 'sig-1615993850')
+
+  // Register platform
+  await lti.registerPlatform({
+    url: "https://canvas.instructure.com",
+    name: "Platform Name",
+    clientId: "112200000000000233",
+    authenticationEndpoint:
+      "https://canvas.instructure.com/api/lti/authorize_redirect",
+    accesstokenEndpoint: "https://canvas.instructure.com/login/oauth2/",
+    authConfig: {
+      method: "JWK_SET",
+      key: "https://canvas.instructure.com/api/lti/security/jwks",
+    },
+  });
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
@@ -303,5 +581,3 @@ const setup = async () => {
 };
 
 setup();
-
-
