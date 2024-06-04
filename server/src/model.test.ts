@@ -27,8 +27,6 @@ import {
   getAssignmentScoreData,
   loadState,
   getAssignmentStudentData,
-<<<<<<< HEAD
-=======
   recordSubmittedEvent,
   getDocumentSubmittedResponses,
   getAnswersThatHaveSubmittedResponses,
@@ -36,7 +34,6 @@ import {
   updateAssignment,
   getAssignmentEditorData,
   listUserAssignments,
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 } from "./model";
 import { DateTime } from "luxon";
 
@@ -184,13 +181,6 @@ test("deleteActivity marks a activity and document as deleted and prevents its r
 
   // activity can be retrieved
   await getActivity(activityId);
-<<<<<<< HEAD
-  await getActivityViewerData(activityId);
-  await getActivityEditorData(activityId);
-  await getDoc(docId);
-
-  const deleteResult = await deleteActivity(activityId);
-=======
   await getActivityViewerData(activityId, userId);
   await getActivityEditorData(activityId, userId);
   await getDoc(docId);
@@ -221,7 +211,6 @@ test("only owner can delete an activity", async () => {
   );
 
   const deleteResult = await deleteActivity(activityId, ownerId);
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
   expect(deleteResult.isDeleted).toBe(true);
 
   // cannot retrieve activity
@@ -547,11 +536,7 @@ test("open and close assignment with code", async () => {
   // Open with past date.
   // Currently, says assignment is not found
   // TODO: if we want students who have previously joined the assignment to be able to reload the page,
-<<<<<<< HEAD
-  // then this should still retrieve data those students.
-=======
   // then this should still retrieve data for those students.
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
   closeAt = DateTime.now().plus({ seconds: -7 });
   await openAssignmentWithCode(assignmentId, closeAt, ownerId);
   assignmentData = await getAssignmentDataFromCode(classCode, true);
@@ -564,33 +549,22 @@ test("open and delete assignment with code", async () => {
   const ownerId = owner.userId;
   const { activityId } = await createActivity(ownerId);
   const activity = await getActivity(activityId);
-<<<<<<< HEAD
-  await updateActivity({ activityId, name: "Activity 1" });
-  await updateDoc({
-    docId: activity.documents[0].docId,
-    content: "Some content",
-=======
   await updateActivity({ activityId, name: "Activity 1", ownerId });
   await updateDoc({
     docId: activity.documents[0].docId,
     content: "Some content",
     ownerId,
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
   });
 
   const assignmentId = await assignActivity(activityId, ownerId);
 
   // open assignment generates code
   let closeAt = DateTime.now().plus({ days: 1 });
-<<<<<<< HEAD
-  const { classCode } = await openAssignmentWithCode(assignmentId, closeAt);
-=======
   const { classCode } = await openAssignmentWithCode(
     assignmentId,
     closeAt,
     ownerId,
   );
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 
   let assignmentData = await getAssignmentDataFromCode(classCode, true);
   expect(assignmentData.assignmentFound).eq(true);
@@ -599,11 +573,7 @@ test("open and delete assignment with code", async () => {
   expect(assignmentData.assignment!.codeValidUntil).eqls(closeAt.toJSDate());
 
   // Delete assignment.
-<<<<<<< HEAD
-  await deleteAssignment(assignmentId);
-=======
   await deleteAssignment(assignmentId, ownerId);
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
   await expect(getAssignment(assignmentId, ownerId)).rejects.toThrow(
     "No assignments found",
   );
@@ -614,8 +584,6 @@ test("open and delete assignment with code", async () => {
   expect(assignmentData.assignment).eq(null);
 });
 
-<<<<<<< HEAD
-=======
 test("only owner can open, close, modify, or delete assignment", async () => {
   const owner = await createTestUser();
   const ownerId = owner.userId;
@@ -687,7 +655,6 @@ test("only owner can open, close, modify, or delete assignment", async () => {
   await deleteAssignment(assignmentId, ownerId);
 });
 
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 test("create anonymous users", async () => {
   // create an anonymous user
   const user1 = await createAnonymousUser();
@@ -751,33 +718,22 @@ test(
     const owner = await createTestUser();
     const ownerId = owner.userId;
     const { activityId, docId } = await createActivity(ownerId);
-<<<<<<< HEAD
-    await updateActivity({ activityId, name: "Activity 1" });
-    await updateDoc({
-      docId,
-      content: "Some content",
-=======
     await updateActivity({ activityId, name: "Activity 1", ownerId });
     await updateDoc({
       docId,
       content: "Some content",
       ownerId,
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
     });
 
     const assignmentId = await assignActivity(activityId, ownerId);
 
     // open assignment generates code
     let closeAt = DateTime.now().plus({ days: 1 });
-<<<<<<< HEAD
-    const { classCode } = await openAssignmentWithCode(assignmentId, closeAt);
-=======
     const { classCode } = await openAssignmentWithCode(
       assignmentId,
       closeAt,
       ownerId,
     );
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 
     let assignmentData = await getAssignmentDataFromCode(classCode, false);
     let newUser1 = assignmentData.newAnonymousUser;
@@ -827,8 +783,6 @@ test(
         ],
       },
       user: { name: "Zoe Zaborowski" },
-<<<<<<< HEAD
-=======
       documentScores: [
         {
           docId,
@@ -837,7 +791,6 @@ test(
           score: 0.5,
         },
       ],
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
     });
 
     // new lower score ignored
@@ -879,8 +832,6 @@ test(
         ],
       },
       user: { name: "Zoe Zaborowski" },
-<<<<<<< HEAD
-=======
       documentScores: [
         {
           docId,
@@ -895,7 +846,6 @@ test(
           score: 0.5,
         },
       ],
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
     });
 
     // new higher score used
@@ -937,8 +887,6 @@ test(
         ],
       },
       user: { name: "Zoe Zaborowski" },
-<<<<<<< HEAD
-=======
       documentScores: [
         {
           docId,
@@ -947,7 +895,6 @@ test(
           score: 0.7,
         },
       ],
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
     });
 
     // second user opens assignment
@@ -1014,8 +961,6 @@ test(
         ],
       },
       user: { name: "Arya Abbas" },
-<<<<<<< HEAD
-=======
       documentScores: [
         {
           docId,
@@ -1024,7 +969,6 @@ test(
           score: 0.3,
         },
       ],
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
     });
   },
 );
@@ -1038,15 +982,11 @@ test("can't get assignment data if other user", async () => {
   const assignmentId = await assignActivity(activityId, ownerId);
 
   let closeAt = DateTime.now().plus({ days: 1 });
-<<<<<<< HEAD
-  const { classCode } = await openAssignmentWithCode(assignmentId, closeAt);
-=======
   const { classCode } = await openAssignmentWithCode(
     assignmentId,
     closeAt,
     ownerId,
   );
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 
   let assignmentData = await getAssignmentDataFromCode(classCode, false);
   let newUser1 = assignmentData.newAnonymousUser;
@@ -1098,15 +1038,11 @@ test("can't get assignment data if deleted", async () => {
   const assignmentId = await assignActivity(activityId, ownerId);
 
   let closeAt = DateTime.now().plus({ days: 1 });
-<<<<<<< HEAD
-  const { classCode } = await openAssignmentWithCode(assignmentId, closeAt);
-=======
   const { classCode } = await openAssignmentWithCode(
     assignmentId,
     closeAt,
     ownerId,
   );
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 
   let assignmentData = await getAssignmentDataFromCode(classCode, false);
   let newUser1 = assignmentData.newAnonymousUser;
@@ -1135,11 +1071,7 @@ test("can't get assignment data if deleted", async () => {
     userId: newUser1!.userId,
   });
 
-<<<<<<< HEAD
-  await deleteAssignment(assignmentId);
-=======
   await deleteAssignment(assignmentId, ownerId);
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 
   await expect(
     getAssignmentScoreData({
@@ -1157,8 +1089,6 @@ test("can't get assignment data if deleted", async () => {
   ).rejects.toThrow("No assignmentScores found");
 });
 
-<<<<<<< HEAD
-=======
 test("get assignment editor data only if owner", async () => {
   const owner = await createTestUser();
   const ownerId = owner.userId;
@@ -1175,7 +1105,6 @@ test("get assignment editor data only if owner", async () => {
   ).rejects.toThrow("No assignments found");
 });
 
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 test("only user and assignment owner can load document state", async () => {
   const owner = await createTestUser();
   const ownerId = owner.userId;
@@ -1184,15 +1113,11 @@ test("only user and assignment owner can load document state", async () => {
 
   // open assignment generates code
   let closeAt = DateTime.now().plus({ days: 1 });
-<<<<<<< HEAD
-  const { classCode } = await openAssignmentWithCode(assignmentId, closeAt);
-=======
   const { classCode } = await openAssignmentWithCode(
     assignmentId,
     closeAt,
     ownerId,
   );
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
 
   // create new anonymous user
   let assignmentData = await getAssignmentDataFromCode(classCode, false);
@@ -1214,10 +1139,7 @@ test("only user and assignment owner can load document state", async () => {
     docVersionId: 1,
     requestedUserId: newUser!.userId,
     userId: newUser!.userId,
-<<<<<<< HEAD
-=======
     withMaxScore: false,
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
   });
 
   expect(retrievedState).eq("document state 1");
@@ -1229,10 +1151,7 @@ test("only user and assignment owner can load document state", async () => {
     docVersionId: 1,
     requestedUserId: newUser!.userId,
     userId: ownerId,
-<<<<<<< HEAD
-=======
     withMaxScore: false,
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
   });
 
   expect(retrievedState2).eq("document state 1");
@@ -1247,11 +1166,6 @@ test("only user and assignment owner can load document state", async () => {
       docVersionId: 1,
       requestedUserId: newUser!.userId,
       userId: user2.userId,
-<<<<<<< HEAD
-    }),
-  ).rejects.toThrow("No assignments found");
-});
-=======
       withMaxScore: false,
     }),
   ).rejects.toThrow("No assignments found");
@@ -1957,4 +1871,3 @@ test("list assignments gets instructor and student activities", async () => {
   assignmentList = await listUserAssignments(user1Id);
   expect(assignmentList.assignments).eqls([]);
 });
->>>>>>> 54a6a93560e5b14c6e47b2a870f0ee16916f802a
