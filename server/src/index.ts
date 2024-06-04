@@ -117,7 +117,8 @@ const setup = async () => {
 
 // Set lti launch callback
 lti.onConnect((token, req, res) => {
-  console.log(token);
+  //console.log(token);
+  console.log("JASON onConnect");
   return res.send("It's alive!");
 });
 
@@ -136,7 +137,8 @@ app.use(express.static("public"));
 
 app.get("/lti13/launch", (req: Request, res: Response) => {
   console.log(req);
-  return res.send("It's alive!");
+  console.log(req.query);
+  return res.send("It's alive! with a code - " + req.query.code);
 });
 
 app.get("/api/getQuickCheckSignedIn", (req: Request, res: Response) => {
