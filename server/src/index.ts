@@ -1,4 +1,10 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import express, {
+  Express,
+  NextFunction,
+  Request,
+  Response,
+  response,
+} from "express";
 import bodyParser from "body-parser";
 
 import dotenv from "dotenv";
@@ -111,7 +117,7 @@ const setup = async () => {
     clientId: "112200000000000234",
     authenticationEndpoint:
       "https://canvas.instructure.com/api/lti/authorize_redirect",
-    accesstokenEndpoint: "https://canvas.instructure.com/login/oauth2/",
+    accesstokenEndpoint: "https://canvas.instructure.com/login/oauth2/token",
     authConfig: {
       method: "JWK_SET",
       key: "https://canvas.instructure.com/api/lti/security/jwks",
@@ -149,17 +155,71 @@ const port = process.env.PORT || 3000;
 app.use(express.static("public"));
 
 lti.app.get("/launch", async (req: Request, res: Response) => {
-  console.log(req);
+  //console.log(req);
   console.log(req.query);
-  console.log(res.locals.token);
-  let grade = {
-    scoreGiven: 50,
-    activityProgress: "Completed",
-    gradingProgress: "FullyGraded",
-  };
+  // TODO - see if I can fix types for ltijs
+  const idtoken = res.locals.token as any;
+  console.log(idtoken);
+  if (!idtoken) {
+    return res.status(500).send({
+      err:
+        "LTI launch did not complete successfully, " +
+        "make sure to get to Doenet by clicking a link from your LMS",
+    });
+  }
+  console.log("before the try");
+  try {
+    const idtoken = res.locals.token; // IdToken
+    const score = req.body.grade; // User numeric score sent in the body
+    // Creating Grade object
+    const gradeObj = {
+      /* @ts-ignore*/
+      userId: idtoken.user,
+      scoreGiven: score,
+      scoreMaximum: 100,
+      activityProgress: "Completed",
+      gradingProgress: "FullyGraded",
+    };
 
-  // Using lti object to access Grade Service in another file
-  return res.send("It's alive! with a code - " + req.query.code);
+    // Selecting linetItem ID
+
+    /* @ts-ignore*/
+    let lineItemId = idtoken.platformContext.endpoint.lineitem; // Attempting to retrieve it from idtoken
+    // if (!lineItemId) {
+    //   const response = await lti.Grade.getLineItems(idtoken, {
+    //     resourceLinkId: true,
+    //   });
+    //   const lineItems = response.lineItems;
+    //   if (lineItems.length === 0) {
+    //     // Creating line item if there is none
+    //     console.log("Creating new line item");
+    //     const newLineItem = {
+    //       scoreMaximum: 100,
+    //       label: "Grade",
+    //       tag: "grade",
+    //       resourceLinkId: idtoken.platformContext.resource.id,
+    //     };
+    //     const lineItem = await lti.Grade.createLineItem(idtoken, newLineItem);
+    //     lineItemId = lineItem.id;
+    //   } else lineItemId = lineItems[0].id;
+    // }
+
+    console.log("About to send grade");
+    // Sending Grade
+    const responseGrade = await lti.Grade.scorePublish(
+      idtoken,
+      lineItemId,
+      /* @ts-ignore*/
+      gradeObj,
+    );
+    return res.send(responseGrade);
+  } catch (err) {
+    console.log("caught an error", err);
+    /* @ts-ignore*/
+    console.log("caught an error", err.response);
+    /* @ts-ignore*/
+    return res.status(500).send({ err: err.message });
+  }
 });
 
 app.get("/", (req: Request, res: Response) => {
