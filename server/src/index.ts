@@ -127,7 +127,9 @@ const setup = async () => {
 lti.onConnect((token, req, res) => {
   //console.log(token);
   console.log("JASON onConnect");
-  return res.send("It's alive!");
+  return res.send(
+    "This does not appear to be called, but it is redirecting... It's alive!",
+  );
 });
 
 const app: Express = express();
@@ -146,9 +148,17 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
 
-app.get("/lti13/launch", (req: Request, res: Response) => {
+lti.app.get("/launch", async (req: Request, res: Response) => {
   console.log(req);
   console.log(req.query);
+  console.log(res.locals.token);
+  let grade = {
+    scoreGiven: 50,
+    activityProgress: "Completed",
+    gradingProgress: "FullyGraded",
+  };
+
+  // Using lti object to access Grade Service in another file
   return res.send("It's alive! with a code - " + req.query.code);
 });
 
