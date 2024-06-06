@@ -75,6 +75,7 @@ const db = new Database(
 
 // Setup provider
 lti.setup(
+  // TODO - MUST CHANGE THIS, SHOULD NOT BE THE KEY FOR AN LTI PLATFORM
   process.env.LTI_KEY as string, // Key used to sign cookies and tokens
   // "LTIKEY",
   {
@@ -111,18 +112,24 @@ const setup = async () => {
   // 'https://canvas.instructure.com/login/oauth2/   token', 'https://canvas.instructure.com/api/lti/security/jwks', 'X509 SNIP SNIP SNIP', 'sig-1615993850')
 
   // Register platform
-  await lti.registerPlatform({
-    url: "https://canvas.instructure.com",
-    name: "Platform Name",
-    clientId: "112200000000000234",
-    authenticationEndpoint:
-      "https://canvas.instructure.com/api/lti/authorize_redirect",
-    accesstokenEndpoint: "https://canvas.instructure.com/login/oauth2/token",
-    authConfig: {
-      method: "JWK_SET",
-      key: "https://canvas.instructure.com/api/lti/security/jwks",
+  await lti.registerPlatform(
+    {
+      url: "https://canvas.instructure.com",
+      name: "Platform Name",
+      clientId: "112200000000000234",
+      authenticationEndpoint:
+        "https://canvas.instructure.com/api/lti/authorize_redirect",
+      accesstokenEndpoint: "https://canvas.instructure.com/login/oauth2/token",
+      authConfig: {
+        method: "JWK_SET",
+        key: "https://canvas.instructure.com/api/lti/security/jwks",
+      },
     },
-  });
+    /* @ts-ignore */
+    null,
+    /* @ts-ignore */
+    process.env.LTI_KEY as string,
+  );
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
@@ -174,7 +181,7 @@ lti.app.get("/launch", async (req: Request, res: Response) => {
     // Creating Grade object
     const gradeObj = {
       /* @ts-ignore*/
-      userId: idtoken.user,
+      //userId: idtoken.user,
       scoreGiven: score,
       scoreMaximum: 100,
       activityProgress: "Completed",
@@ -206,11 +213,21 @@ lti.app.get("/launch", async (req: Request, res: Response) => {
 
     console.log("About to send grade");
     // Sending Grade
-    const responseGrade = await lti.Grade.scorePublish(
+    /* @ts-ignore*/
+    const responseGrade = await lti.Grade.submitScore(
+      /* @ts-ignore*/
       idtoken,
       lineItemId,
-      /* @ts-ignore*/
-      gradeObj,
+      {
+        /* @ts-ignore*/
+        userId: idtoken.user,
+        scoreGiven: 7,
+        activityProgress: "Completed",
+        gradingProgress: "FullyGraded",
+      },
+      // lineItemId,
+      // /* @ts-ignore*/
+      // gradeObj,
     );
     return res.send(responseGrade);
   } catch (err) {
