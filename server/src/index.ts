@@ -76,8 +76,8 @@ const db = new Database(
 // Setup provider
 lti.setup(
   // TODO - MUST CHANGE THIS, SHOULD NOT BE THE KEY FOR AN LTI PLATFORM
-  process.env.LTI_KEY as string, // Key used to sign cookies and tokens
-  // "LTIKEY",
+  // process.env.LTI_KEY as string, // Key used to sign cookies and tokens
+  "LTIKEY",
   {
     plugin: db,
   },
@@ -128,8 +128,21 @@ const setup = async () => {
     /* @ts-ignore */
     null,
     /* @ts-ignore */
-    process.env.LTI_KEY as string,
+    // process.env.LTI_KEY as string,
+    "LTIKEY",
   );
+
+  // let result = await prisma.$queryRaw<
+  //   {
+  //     docId: number;
+  //     docVersionId: number;
+  //     answerId: string;
+  //     answerNumber: number | null;
+  //     count: number;
+  //   }[]
+  // >(Prisma.sql`
+  //  sql goes here
+  //   `);
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
@@ -146,7 +159,8 @@ lti.onConnect((token, req, res) => {
 });
 
 const app: Express = express();
-app.use(cookieParser(process.env.LTI_KEY as string));
+// app.use(cookieParser(process.env.LTI_KEY as string));
+app.use(cookieParser("LTIKEY"));
 // app.use(cookieParser("LTIKEY"));
 
 app.use(bodyParser.json({ limit: "50mb" }));
