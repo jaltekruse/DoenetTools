@@ -235,7 +235,7 @@ lti.app.get("/launch", async (req: Request, res: Response) => {
       {
         /* @ts-ignore*/
         userId: idtoken.user,
-        scoreGiven: 7,
+        scoreGiven: 6,
         activityProgress: "Completed",
         gradingProgress: "FullyGraded",
       },

@@ -30,14 +30,16 @@ export default defineConfig((env) => ({
     }),
   ],
   server: {
-    port: 8000,
+    port: 80,
     proxy: {
       "/cyapi": "http://apache",
       //"/media": "http://apache",
-      "/api": "http://localhost",
-      "/media": "http://localhost",
+      "/lti13": "http://localhost:3000",
+      "/api": "http://localhost:3000",
+      "/media": "http://localhost:3000",
       //"/api": "http://apache",
     },
+    host: "127.0.0.1",
   },
   resolve: {
     alias: [
