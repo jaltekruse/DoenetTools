@@ -51,6 +51,7 @@ import { Provider as lti } from "ltijs";
 import Database from "ltijs-sequelize";
 import pg from "pg";
 import { Prisma } from "@prisma/client";
+import { error } from "console";
 
 dotenv.config();
 
@@ -175,34 +176,41 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
 
-lti.app.get("/launch", async (req: Request, res: Response) => {
-  //console.log(req);
-  console.log(req.query);
-  // TODO - see if I can fix types for ltijs
-  const idtoken = res.locals.token as any;
-  console.log(idtoken);
-  if (!idtoken) {
-    return res.status(500).send({
-      err:
-        "LTI launch did not complete successfully, " +
-        "make sure to get to Doenet by clicking a link from your LMS",
-    });
-  }
+lti.app.get(
+  "/launch",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //console.log(req);
+      console.log(req.query);
+      // TODO - see if I can fix types for ltijs
+      const idtoken = res.locals.token as any;
+      console.log(idtoken);
+      if (!idtoken) {
+        return res.status(500).send({
+          err:
+            "LTI launch did not complete successfully, " +
+            "make sure to get to Doenet by clicking a link from your LMS",
+        });
+      }
 
-  const user = await loginOrRegisterUser(idtoken.userInfo.email, res);
+      const user = await loginOrRegisterUser(idtoken.userInfo.email, res);
 
-  await updateUser({
-    userId: user.userId,
-    name: idtoken.userInfo.name,
-  });
+      await updateUser({
+        userId: user.userId,
+        name: idtoken.userInfo.name,
+      });
 
-  return res.redirect(
-    "/classCode/" +
-      (req.query.code as string).trim() +
-      "?ltik=" +
-      req.query.ltik,
-  );
-});
+      return res.redirect(
+        "/classCode/" +
+          (req.query.code as string).trim() +
+          "?ltik=" +
+          req.query.ltik,
+      );
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 async function saveCanvasGrade(score: number, req: Request, res: Response) {
   const idtoken = res.locals.token; // IdToken
@@ -264,7 +272,10 @@ async function saveCanvasGrade(score: number, req: Request, res: Response) {
     console.log("caught an error", err);
     /* @ts-ignore*/
     console.log("caught an error", err.response);
-    throw err;
+    /* @ts-ignore*/
+    console.log("caught an error", JSON.parse(err.response.body).errors);
+    /* @ts-ignore*/
+    throw Error(JSON.stringify(JSON.parse(err.response.body).errors));
   }
 }
 
@@ -805,43 +816,51 @@ app.post(
   },
 );
 
-lti.app.post(
-  "/saveScoreAndState",
-  async (req: Request, res: Response, next: NextFunction) => {
-    const body = req.body;
-    const assignmentId = Number(body.assignmentId);
-    const docId = Number(body.docId);
-    const docVersionId = Number(body.docVersionId);
-    const loggedInUserId = Number(req.cookies.userId);
-    const score = Number(body.score);
-    const onSubmission = body.onSubmission as boolean;
-    const state = body.state;
+app.post("/api/saveScoreAndState", saveScoreAndStateHandler);
 
-    await saveCanvasGrade(score, req, res);
+lti.app.post("/saveScoreAndState", saveScoreAndStateHandler);
 
-    try {
-      await saveScoreAndState({
-        assignmentId,
-        docId,
-        docVersionId,
-        userId: loggedInUserId,
-        score,
-        onSubmission,
-        state,
-      });
-      res.send({});
-    } catch (e) {
-      if (
-        e instanceof Prisma.PrismaClientValidationError ||
-        e instanceof Prisma.PrismaClientKnownRequestError
-      ) {
-        res.status(400).send({});
-      } else {
-        next(e);
-      }
+async function saveScoreAndStateHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const body = req.body;
+  const assignmentId = Number(body.assignmentId);
+  const docId = Number(body.docId);
+  const docVersionId = Number(body.docVersionId);
+  const loggedInUserId = Number(req.cookies.userId);
+  const score = Number(body.score);
+  const onSubmission = body.onSubmission as boolean;
+  const state = body.state;
+
+  try {
+    // if we have and LTI session
+    if (res.locals.token) {
+      await saveCanvasGrade(score, req, res);
     }
-  },
-);
+
+    await saveScoreAndState({
+      assignmentId,
+      docId,
+      docVersionId,
+      userId: loggedInUserId,
+      score,
+      onSubmission,
+      state,
+    });
+    res.send({});
+  } catch (e) {
+    if (
+      e instanceof Prisma.PrismaClientValidationError ||
+      e instanceof Prisma.PrismaClientKnownRequestError
+    ) {
+      res.status(400).send({});
+    } else {
+      next(e);
+    }
+  }
+}
 
 app.get(
   "/api/loadState",
@@ -1032,5 +1051,20 @@ app.get(
     }
   },
 );
+
+function errorHandler(
+  err: Error,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+): any {
+  console.error(err.stack);
+  res.status(500).json({ error: err.message });
+}
+
+lti.app.use(errorHandler);
+
+// generic error handler
+app.use(errorHandler);
 
 setup();

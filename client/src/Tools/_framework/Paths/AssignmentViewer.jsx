@@ -114,14 +114,35 @@ export function AssignmentViewer() {
     let messageListener = async function (event) {
       if (event.data.subject == "SPLICE.reportScoreAndState") {
         // TODO: generalize to multiple documents. For now, assume just have one.
-        await axios.post("/lti13/saveScoreAndState?ltik=" + ltik, {
-          assignmentId: assignment.assignmentId,
-          docId: assignment.assignmentDocuments[0].docId,
-          docVersionId: assignment.assignmentDocuments[0].docVersionId,
-          score: event.data.score,
-          state: JSON.stringify(event.data.state),
-          onSubmission: event.data.state.onSubmission,
-        });
+        const urlPrefix = ltik ? "/lti13/" : "/api/";
+        try {
+          await axios.post(urlPrefix + "saveScoreAndState?ltik=" + ltik, {
+            assignmentId: assignment.assignmentId,
+            docId: assignment.assignmentDocuments[0].docId,
+            docVersionId: assignment.assignmentDocuments[0].docVersionId,
+            score: event.data.score,
+            state: JSON.stringify(event.data.state),
+            onSubmission: event.data.state.onSubmission,
+          });
+        } catch (e) {
+          console.log(e);
+          let message = "";
+          try {
+            const errors = JSON.parse(e?.response?.data?.error);
+            console.log(errors);
+            if (errors instanceof Array) {
+              message = errors.reduce(
+                (message, err) => message + "\n\n" + err.message,
+                "",
+              );
+            } else {
+              message = e.message;
+            }
+          } catch {
+            message = e.message;
+          }
+          window.alert(message);
+        }
       } else if (event.data.subject == "SPLICE.sendEvent") {
         const data = event.data.data;
         if (data.verb === "submitted") {
