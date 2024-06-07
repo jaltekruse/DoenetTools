@@ -884,7 +884,9 @@ export async function saveScoreAndState({
         score: averageScore,
       },
     });
+    return { hasMaxScore: true, score: averageScore };
   }
+  return { hasMaxScore: false, score: 0 };
 }
 
 export async function loadState({

@@ -835,12 +835,7 @@ async function saveScoreAndStateHandler(
   const state = body.state;
 
   try {
-    // if we have and LTI session
-    if (res.locals.token) {
-      await saveCanvasGrade(score, req, res);
-    }
-
-    await saveScoreAndState({
+    const { hasMaxScore, score: calculatedScore } = await saveScoreAndState({
       assignmentId,
       docId,
       docVersionId,
@@ -849,6 +844,12 @@ async function saveScoreAndStateHandler(
       onSubmission,
       state,
     });
+
+    // if we have and LTI session
+    if (res.locals.token && hasMaxScore) {
+      await saveCanvasGrade(calculatedScore, req, res);
+    }
+
     res.send({});
   } catch (e) {
     if (
