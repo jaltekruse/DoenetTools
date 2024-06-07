@@ -87,7 +87,7 @@ lti.setup(
     loginRoute: "/login",
     cookies: {
       secure: false, // Set secure to true if the testing platform is in a different domain and https is being used
-      sameSite: "", // Set sameSite to 'None' if the testing platform is in a different domain and https is being used
+      sameSite: "None", // Set sameSite to 'None' if the testing platform is in a different domain and https is being used
     },
     devMode: true, //Set DevMode to false if running in a production environment with https
     dynRegRoute: "/register", // Setting up dynamic registration route. Defaults to '/register'
@@ -188,45 +188,62 @@ lti.app.get("/launch", async (req: Request, res: Response) => {
         "make sure to get to Doenet by clicking a link from your LMS",
     });
   }
-  console.log("before the try");
-  try {
-    const idtoken = res.locals.token; // IdToken
-    const score = req.body.grade; // User numeric score sent in the body
-    // Creating Grade object
-    const gradeObj = {
-      /* @ts-ignore*/
-      //userId: idtoken.user,
-      scoreGiven: score,
-      scoreMaximum: 100,
-      activityProgress: "Completed",
-      gradingProgress: "FullyGraded",
-    };
 
-    // Selecting linetItem ID
+  const user = await loginOrRegisterUser(idtoken.userInfo.email, res);
 
+  await updateUser({
+    userId: user.userId,
+    name: idtoken.userInfo.name,
+  });
+
+  return res.redirect(
+    "/classCode/" +
+      (req.query.code as string).trim() +
+      "?ltik=" +
+      req.query.ltik,
+  );
+});
+
+async function saveCanvasGrade(score: number, req: Request, res: Response) {
+  const idtoken = res.locals.token; // IdToken
+  // Creating Grade object
+  const gradeObj = {
     /* @ts-ignore*/
-    let lineItemId = idtoken.platformContext.endpoint.lineitem; // Attempting to retrieve it from idtoken
-    // if (!lineItemId) {
-    //   const response = await lti.Grade.getLineItems(idtoken, {
-    //     resourceLinkId: true,
-    //   });
-    //   const lineItems = response.lineItems;
-    //   if (lineItems.length === 0) {
-    //     // Creating line item if there is none
-    //     console.log("Creating new line item");
-    //     const newLineItem = {
-    //       scoreMaximum: 100,
-    //       label: "Grade",
-    //       tag: "grade",
-    //       resourceLinkId: idtoken.platformContext.resource.id,
-    //     };
-    //     const lineItem = await lti.Grade.createLineItem(idtoken, newLineItem);
-    //     lineItemId = lineItem.id;
-    //   } else lineItemId = lineItems[0].id;
-    // }
+    //userId: idtoken.user,
+    scoreGiven: score,
+    scoreMaximum: 100,
+    activityProgress: "Completed",
+    gradingProgress: "FullyGraded",
+  };
 
-    console.log("About to send grade");
-    // Sending Grade
+  // Selecting linetItem ID
+
+  /* @ts-ignore*/
+  let lineItemId = idtoken.platformContext.endpoint.lineitem; // Attempting to retrieve it from idtoken
+  console.log("^^^^^^^^^^^^^^^^^^^^^^^^");
+  console.log(lineItemId);
+  // if (!lineItemId) {
+  //   const response = await lti.Grade.getLineItems(idtoken, {
+  //     resourceLinkId: true,
+  //   });
+  //   const lineItems = response.lineItems;
+  //   if (lineItems.length === 0) {
+  //     // Creating line item if there is none
+  //     console.log("Creating new line item");
+  //     const newLineItem = {
+  //       scoreMaximum: 100,
+  //       label: "Grade",
+  //       tag: "grade",
+  //       resourceLinkId: idtoken.platformContext.resource.id,
+  //     };
+  //     const lineItem = await lti.Grade.createLineItem(idtoken, newLineItem);
+  //     lineItemId = lineItem.id;
+  //   } else lineItemId = lineItems[0].id;
+  // }
+
+  console.log("About to send grade");
+  // Sending Grade
+  try {
     /* @ts-ignore*/
     const responseGrade = await lti.Grade.submitScore(
       /* @ts-ignore*/
@@ -235,7 +252,7 @@ lti.app.get("/launch", async (req: Request, res: Response) => {
       {
         /* @ts-ignore*/
         userId: idtoken.user,
-        scoreGiven: 6,
+        scoreGiven: score * 10,
         activityProgress: "Completed",
         gradingProgress: "FullyGraded",
       },
@@ -243,15 +260,13 @@ lti.app.get("/launch", async (req: Request, res: Response) => {
       // /* @ts-ignore*/
       // gradeObj,
     );
-    return res.send(responseGrade);
   } catch (err) {
     console.log("caught an error", err);
     /* @ts-ignore*/
     console.log("caught an error", err.response);
-    /* @ts-ignore*/
-    return res.status(500).send({ err: err.message });
+    throw err;
   }
-});
+}
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
@@ -362,13 +377,19 @@ app.get(
   },
 );
 
+async function loginOrRegisterUser(email: string, res: Response) {
+  // TODO: add the ability to give a name after logging in or creating an account
+  const user = await findOrCreateUser(email, email);
+  res.cookie("email", email, { sameSite: "none", secure: true });
+  res.cookie("userId", String(user.userId), { sameSite: "none", secure: true });
+  res.cookie("name", String(user.name), { sameSite: "none", secure: true });
+  return user;
+}
+
 app.get("/api/sendSignInEmail", async (req: Request, res: Response) => {
   const email: string = req.query.emailaddress as string;
   // TODO: add the ability to give a name after logging in or creating an account
-  const user = await findOrCreateUser(email, email);
-  res.cookie("email", email);
-  res.cookie("userId", String(user.userId));
-  res.cookie("name", String(user.name));
+  await loginOrRegisterUser(email, res);
   res.send({});
 });
 
@@ -784,8 +805,8 @@ app.post(
   },
 );
 
-app.post(
-  "/api/saveScoreAndState",
+lti.app.post(
+  "/saveScoreAndState",
   async (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;
     const assignmentId = Number(body.assignmentId);
@@ -795,6 +816,8 @@ app.post(
     const score = Number(body.score);
     const onSubmission = body.onSubmission as boolean;
     const state = body.state;
+
+    await saveCanvasGrade(score, req, res);
 
     try {
       await saveScoreAndState({

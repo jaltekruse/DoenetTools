@@ -34,7 +34,11 @@ export async function action({ params, request }) {
   return null;
 }
 
-export async function loader({ params }) {
+export async function loader({ params, request }) {
+  const url = new URL(request.url);
+  const ltik = url.searchParams.get("ltik");
+  console.log(ltik);
+
   let assignment;
   let userName;
 
@@ -76,6 +80,7 @@ export async function loader({ params }) {
     doenetML,
     assignmentId,
     userName,
+    ltik,
   };
 }
 
@@ -87,6 +92,7 @@ export function AssignmentViewer() {
     userName,
     docId,
     docVersionId,
+    ltik,
   } = useLoaderData();
 
   let navigate = useNavigate();
@@ -108,7 +114,7 @@ export function AssignmentViewer() {
     let messageListener = async function (event) {
       if (event.data.subject == "SPLICE.reportScoreAndState") {
         // TODO: generalize to multiple documents. For now, assume just have one.
-        await axios.post("/api/saveScoreAndState", {
+        await axios.post("/lti13/saveScoreAndState?ltik=" + ltik, {
           assignmentId: assignment.assignmentId,
           docId: assignment.assignmentDocuments[0].docId,
           docVersionId: assignment.assignmentDocuments[0].docVersionId,

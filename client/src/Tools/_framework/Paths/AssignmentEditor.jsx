@@ -15,6 +15,8 @@ import { useFetcher } from "react-router-dom";
 import axios from "axios";
 import { DoenetHeading as Heading } from "./Community";
 import AssignmentPreview from "../ToolPanels/AssignmentPreview";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { BsClipboardPlus } from "react-icons/bs";
 
 export async function action({ params, request }) {
   const formData = await request.formData();
@@ -158,6 +160,24 @@ export function AssignmentEditor() {
               >
                 Close assignment
               </Button>
+              <CopyToClipboard
+                onCopy={() => {}}
+                text={
+                  "http://127.0.0.1/lti13/launch?code=" +
+                  assignmentData.classCode
+                }
+              >
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  mt="8px"
+                  mr="12px"
+                  size="xs"
+                  leftIcon={<BsClipboardPlus />}
+                >
+                  Copy LTI Link
+                </Button>
+              </CopyToClipboard>
             </Box>
           ) : (
             <Box>
