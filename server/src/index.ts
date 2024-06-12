@@ -68,22 +68,22 @@ app.get("/api/getQuickCheckSignedIn", (req: Request, res: Response) => {
   res.send({ signedIn: signedIn });
 });
 
-app.get(
-  "/api/getUser",
-  async (req: Request, res: Response, next: NextFunction) => {
-    const signedIn = req.cookies.email ? true : false;
-    if (signedIn) {
-      try {
-        let userInfo = await getUserInfo(req.cookies.email);
-        res.send(userInfo);
-      } catch (e) {
-        next(e);
-      }
-    } else {
-      res.send({});
-    }
-  },
-);
+function catchErrors(action: (req: Request, res: Response) => any) {
+  return (req: Request, res: Response, next: NextFunction) =>
+    action(req, res).catch(next);
+}
+
+app.get("/api/getUser", catchErrors(getUser));
+
+async function getUser(req: Request, res: Response) {
+  const signedIn = req.cookies.email ? true : false;
+  if (signedIn) {
+    let userInfo = await getUserInfo(req.cookies.email);
+    res.send(userInfo);
+  } else {
+    res.send({});
+  }
+}
 
 app.post("/api/updateUser", async (req: Request, res: Response) => {
   const signedIn = req.cookies.email ? true : false;
@@ -815,6 +815,19 @@ app.get(
     }
   },
 );
+
+function errorHandler(
+  err: Error,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+): any {
+  console.error(err.stack);
+  res.status(500).json({ error: err.message });
+}
+
+// generic error handler
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
