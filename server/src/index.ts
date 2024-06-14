@@ -59,6 +59,11 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
 
+function catchErrors(action: (req: Request, res: Response) => any) {
+  return (req: Request, res: Response, next: NextFunction) =>
+    action(req, res).catch(next);
+}
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
@@ -67,11 +72,6 @@ app.get("/api/getQuickCheckSignedIn", (req: Request, res: Response) => {
   const signedIn = req.cookies.email ? true : false;
   res.send({ signedIn: signedIn });
 });
-
-function catchErrors(action: (req: Request, res: Response) => any) {
-  return (req: Request, res: Response, next: NextFunction) =>
-    action(req, res).catch(next);
-}
 
 app.get("/api/getUser", catchErrors(getUser));
 
@@ -817,13 +817,19 @@ app.get(
 );
 
 function errorHandler(
-  err: Error,
+  e: Error,
   _req: Request,
   res: Response,
   _next: NextFunction,
 ): any {
-  console.error(err.stack);
-  res.status(500).json({ error: err.message });
+  console.error(e.stack);
+
+  if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    if (e.code == "P2001") {
+      res.status(404).send({ error: e.message });
+    }
+  }
+  res.status(500).send({ error: e.message });
 }
 
 // generic error handler
