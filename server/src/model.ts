@@ -2,14 +2,22 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import { cidFromText } from "./utils/cid";
 import { DateTime } from "luxon";
 
-const prisma = new PrismaClient();
+let _prisma: PrismaClient;
+
+export function setPrismaClient(prisma: PrismaClient) {
+  _prisma = prisma;
+}
+
+const prisma = () => _prisma;
 
 export async function createActivity(ownerId: number) {
-  let defaultDoenetmlVersion = await prisma.doenetmlVersions.findFirstOrThrow({
-    where: { default: true },
-  });
+  let defaultDoenetmlVersion = await prisma().doenetmlVersions.findFirstOrThrow(
+    {
+      where: { default: true },
+    },
+  );
 
-  const activity = await prisma.activities.create({
+  const activity = await prisma().activities.create({
     data: {
       ownerId,
       name: "Untitled Activity",
@@ -28,7 +36,7 @@ export async function createActivity(ownerId: number) {
 
   let activityId = activity.activityId;
 
-  const activityWithDoc = await prisma.activities.findUniqueOrThrow({
+  const activityWithDoc = await prisma().activities.findUniqueOrThrow({
     where: { activityId },
     select: { documents: { select: { docId: true } } },
   });
@@ -39,7 +47,7 @@ export async function createActivity(ownerId: number) {
 }
 
 export async function deleteActivity(activityId: number, ownerId: number) {
-  return await prisma.activities.update({
+  return await prisma().activities.update({
     where: { activityId, ownerId },
     data: {
       isDeleted: true,
@@ -57,14 +65,14 @@ export async function deleteActivity(activityId: number, ownerId: number) {
 
 // Note: currently (June 4, 2024) unused and untested
 export async function deleteDocument(docId: number, ownerId: number) {
-  return await prisma.documents.update({
+  return await prisma().documents.update({
     where: { docId, activity: { ownerId } },
     data: { isDeleted: true },
   });
 }
 
 export async function deleteAssignment(assignmentId: number, ownerId: number) {
-  return await prisma.assignments.update({
+  return await prisma().assignments.update({
     where: { assignmentId, ownerId },
     data: {
       isDeleted: true,
@@ -85,7 +93,7 @@ export async function updateActivity({
   isPublic?: boolean;
   ownerId: number;
 }) {
-  return await prisma.activities.update({
+  return await prisma().activities.update({
     where: { activityId, ownerId },
     data: {
       name,
@@ -108,7 +116,7 @@ export async function updateDoc({
   doenetmlVersionId?: number;
   ownerId: number;
 }) {
-  return await prisma.documents.update({
+  return await prisma().documents.update({
     where: { docId, activity: { ownerId } },
     data: {
       content: content,
@@ -129,7 +137,7 @@ export async function updateAssignment({
   imagePath?: string;
   ownerId: number;
 }) {
-  return await prisma.assignments.update({
+  return await prisma().assignments.update({
     where: { assignmentId, ownerId },
     data: {
       name,
@@ -141,7 +149,7 @@ export async function updateAssignment({
 // Note: getActivity does not currently incorporate access control,
 // by relies on calling functions to determine access
 export async function getActivity(activityId: number) {
-  return await prisma.activities.findUniqueOrThrow({
+  return await prisma().activities.findUniqueOrThrow({
     where: { activityId, isDeleted: false },
     include: {
       documents: {
@@ -154,7 +162,7 @@ export async function getActivity(activityId: number) {
 // Note: getDoc does not currently incorporate access control,
 // by relies on calling functions to determine access
 export async function getDoc(docId: number) {
-  return await prisma.documents.findUniqueOrThrow({
+  return await prisma().documents.findUniqueOrThrow({
     where: { docId, isDeleted: false },
   });
 }
@@ -169,7 +177,7 @@ export async function copyPublicActivityToPortfolio(
     throw Error("Cannot copy a non-public activity to portfolio");
   }
 
-  let newActivity = await prisma.activities.create({
+  let newActivity = await prisma().activities.create({
     data: {
       name: origActivity.name,
       imagePath: origActivity.imagePath,
@@ -198,15 +206,15 @@ export async function copyPublicActivityToPortfolio(
   );
 
   // TODO: When createManyAndReturn is rolled out,
-  // (see: https://github.com/prisma/prisma/pull/24064#issuecomment-2093331715)
+  // (see: https://github.com/prisma()/prisma()/pull/24064#issuecomment-2093331715)
   // use that to give a list of the newly created docIds.
-  await prisma.documents.createMany({
+  await prisma().documents.createMany({
     data: documentsToAdd.map((x) => x.docInfo),
   });
 
   // In lieu of createManyAndReturn, get a list of the docIds of the newly created documents.
   const newDocIds = (
-    await prisma.activities.findUniqueOrThrow({
+    await prisma().activities.findUniqueOrThrow({
       where: { activityId: newActivity.activityId },
       select: {
         documents: { select: { docId: true }, orderBy: { docId: "asc" } },
@@ -221,7 +229,7 @@ export async function copyPublicActivityToPortfolio(
     prevDocId: origActivity.documents[i].docId,
     prevDocVersion: documentsToAdd[i].originalDocVersion.version,
   }));
-  await prisma.contributorHistory.createMany({
+  await prisma().contributorHistory.createMany({
     data: contribHistoryInfo,
   });
 
@@ -230,14 +238,14 @@ export async function copyPublicActivityToPortfolio(
   // Note: we copy all history rather than using a linked list
   // due to inefficient queries necessary to traverse link lists.
   for (let [i, origDoc] of origActivity.documents.entries()) {
-    const previousHistory = await prisma.contributorHistory.findMany({
+    const previousHistory = await prisma().contributorHistory.findMany({
       where: {
         docId: origDoc.docId,
       },
       orderBy: { timestamp: "desc" },
     });
 
-    await prisma.contributorHistory.createMany({
+    await prisma().contributorHistory.createMany({
       data: previousHistory.map((hist) => ({
         docId: newDocIds[i],
         prevDocId: hist.prevDocId,
@@ -260,7 +268,7 @@ async function createDocumentVersion(docId: number): Promise<{
   createdAt: Date | null;
   doenetmlVersionId: number;
 }> {
-  const doc = await prisma.documents.findUniqueOrThrow({
+  const doc = await prisma().documents.findUniqueOrThrow({
     where: { docId, isDeleted: false },
     include: {
       activity: { select: { name: true } },
@@ -270,7 +278,7 @@ async function createDocumentVersion(docId: number): Promise<{
   // TODO: cid should really include the doenetmlVersion
   const cid = await cidFromText(doc.content || "");
 
-  let docVersion = await prisma.documentVersions.findUnique({
+  let docVersion = await prisma().documentVersions.findUnique({
     where: { docId_cid: { docId, cid } },
   });
 
@@ -278,14 +286,14 @@ async function createDocumentVersion(docId: number): Promise<{
     // TODO: not sure how to make an atomic operation of this with the ORM.
     // Should we write a raw SQL query to accomplish this in one query?
 
-    const aggregations = await prisma.documentVersions.aggregate({
+    const aggregations = await prisma().documentVersions.aggregate({
       _max: { version: true },
       where: { docId },
     });
     const lastVersion = aggregations._max.version;
     const newVersion = lastVersion ? lastVersion + 1 : 1;
 
-    docVersion = await prisma.documentVersions.create({
+    docVersion = await prisma().documentVersions.create({
       data: {
         version: newVersion,
         docId,
@@ -306,7 +314,7 @@ export async function getActivityEditorData(
   ownerId: number,
 ) {
   // TODO: add pagination or a hard limit in the number of documents one can add to an activity
-  let activity = await prisma.activities.findUniqueOrThrow({
+  let activity = await prisma().activities.findUniqueOrThrow({
     where: { activityId, isDeleted: false, ownerId },
     include: {
       documents: {
@@ -327,7 +335,7 @@ export async function getActivityViewerData(
   activityId: number,
   userId: number,
 ) {
-  const activity = await prisma.activities.findUniqueOrThrow({
+  const activity = await prisma().activities.findUniqueOrThrow({
     where: {
       activityId,
       isDeleted: false,
@@ -343,7 +351,7 @@ export async function getActivityViewerData(
   });
   const docId = activity.documents[0].docId;
 
-  let doc = await prisma.documents.findUniqueOrThrow({
+  let doc = await prisma().documents.findUniqueOrThrow({
     where: { docId, isDeleted: false },
     include: {
       contributorHistory: {
@@ -381,7 +389,7 @@ export async function getAssignmentEditorData(
   ownerId: number,
 ) {
   // TODO: add pagination or a hard limit in the number of documents one can add to an activity
-  let assignment = await prisma.assignments.findUniqueOrThrow({
+  let assignment = await prisma().assignments.findUniqueOrThrow({
     where: { assignmentId, isDeleted: false, ownerId },
     include: {
       assignmentDocuments: {
@@ -417,7 +425,7 @@ export async function getAssignmentDataFromCode(
   let assignment;
 
   try {
-    assignment = await prisma.assignments.findFirstOrThrow({
+    assignment = await prisma().assignments.findFirstOrThrow({
       where: {
         classCode: code,
         codeValidUntil: {
@@ -461,7 +469,7 @@ export async function getAssignmentDataFromCode(
 
 export async function searchPublicActivities(query: string) {
   let query_words = query.split(" ");
-  let activities = await prisma.activities.findMany({
+  let activities = await prisma().activities.findMany({
     where: {
       AND: query_words.map((qw) => ({ name: { contains: "%" + qw + "%" } })),
       isPublic: true,
@@ -481,7 +489,7 @@ export async function listUserActivities(
 ) {
   const notMe = ownerId !== loggedInUserId;
 
-  const activities = await prisma.activities.findMany({
+  const activities = await prisma().activities.findMany({
     where: { ownerId, isDeleted: false, isPublic: notMe ? true : undefined },
     include: { documents: { select: { docId: true, doenetmlVersion: true } } },
   });
@@ -491,7 +499,7 @@ export async function listUserActivities(
     (activity) => !activity.isPublic && !notMe,
   );
 
-  const user = await prisma.users.findUniqueOrThrow({
+  const user = await prisma().users.findUniqueOrThrow({
     where: { userId: ownerId },
     select: { name: true },
   });
@@ -505,14 +513,14 @@ export async function listUserActivities(
 }
 
 export async function listUserAssignments(userId: number) {
-  const assignments = await prisma.assignments.findMany({
+  const assignments = await prisma().assignments.findMany({
     where: {
       isDeleted: false,
       OR: [{ ownerId: userId }, { assignmentScores: { some: { userId } } }],
     },
   });
 
-  const user = await prisma.users.findUniqueOrThrow({
+  const user = await prisma().users.findUniqueOrThrow({
     where: { userId },
     select: { userId: true, name: true },
   });
@@ -524,7 +532,7 @@ export async function listUserAssignments(userId: number) {
 }
 
 export async function findOrCreateUser(email: string, name: string) {
-  const user = await prisma.users.findUnique({ where: { email } });
+  const user = await prisma().users.findUnique({ where: { email } });
   if (user) {
     return user;
   } else {
@@ -533,7 +541,7 @@ export async function findOrCreateUser(email: string, name: string) {
 }
 
 export async function createUser(email: string, name: string) {
-  const result = await prisma.users.create({ data: { email, name } });
+  const result = await prisma().users.create({ data: { email, name } });
   return result;
 }
 
@@ -543,7 +551,7 @@ export async function createAnonymousUser() {
   const random_number = array[0];
   const name = ``;
   const email = `anonymous${random_number}@example.com`;
-  const result = await prisma.users.create({
+  const result = await prisma().users.create({
     data: { email, name, anonymous: true },
   });
 
@@ -551,7 +559,7 @@ export async function createAnonymousUser() {
 }
 
 export async function getUserInfo(email: string) {
-  const user = await prisma.users.findUniqueOrThrow({
+  const user = await prisma().users.findUniqueOrThrow({
     where: { email },
     select: { userId: true, email: true, name: true, anonymous: true },
   });
@@ -565,7 +573,7 @@ export async function updateUser({
   userId: number;
   name: string;
 }) {
-  const user = await prisma.users.update({
+  const user = await prisma().users.update({
     where: { userId },
     data: { name },
   });
@@ -573,7 +581,7 @@ export async function updateUser({
 }
 
 export async function getAllDoenetmlVersions() {
-  const allDoenetmlVersions = await prisma.doenetmlVersions.findMany({
+  const allDoenetmlVersions = await prisma().doenetmlVersions.findMany({
     where: {
       removed: false,
     },
@@ -585,7 +593,7 @@ export async function getAllDoenetmlVersions() {
 }
 
 export async function getIsAdmin(userId: number) {
-  const user = await prisma.users.findUnique({ where: { userId } });
+  const user = await prisma().users.findUnique({ where: { userId } });
   let isAdmin = false;
   if (user) {
     isAdmin = user.isAdmin;
@@ -594,7 +602,7 @@ export async function getIsAdmin(userId: number) {
 }
 
 export async function getAllRecentPublicActivities() {
-  const docs = await prisma.activities.findMany({
+  const docs = await prisma().activities.findMany({
     where: { isPublic: true, isDeleted: false },
     orderBy: { lastEdited: "desc" },
     take: 100,
@@ -624,7 +632,7 @@ export async function assignActivity(activityId: number, userId: number) {
     }),
   );
 
-  let newAssignment = await prisma.assignments.create({
+  let newAssignment = await prisma().assignments.create({
     data: {
       name: origActivity.name,
       activityId: origActivity.activityId,
@@ -658,7 +666,7 @@ export async function openAssignmentWithCode(
   ownerId: number,
 ) {
   let classCode = (
-    await prisma.assignments.findUniqueOrThrow({
+    await prisma().assignments.findUniqueOrThrow({
       where: { assignmentId, ownerId },
       select: { classCode: true },
     })
@@ -670,7 +678,7 @@ export async function openAssignmentWithCode(
 
   const codeValidUntil = closeAt.toJSDate();
 
-  await prisma.assignments.update({
+  await prisma().assignments.update({
     where: { assignmentId, ownerId },
     data: {
       classCode,
@@ -684,7 +692,7 @@ export async function closeAssignmentWithCode(
   assignmentId: number,
   ownerId: number,
 ) {
-  await prisma.assignments.update({
+  await prisma().assignments.update({
     where: { assignmentId, ownerId },
     data: {
       codeValidUntil: null,
@@ -693,7 +701,7 @@ export async function closeAssignmentWithCode(
 }
 
 export async function getAssignment(assignmentId: number, ownerId: number) {
-  let assignment = await prisma.assignments.findUniqueOrThrow({
+  let assignment = await prisma().assignments.findUniqueOrThrow({
     where: {
       assignmentId,
       ownerId,
@@ -731,13 +739,13 @@ export async function saveScoreAndState({
 }) {
   // make sure have an assignmentScores record
   // so that can satisfy foreign key constraints on documentState
-  await prisma.assignmentScores.upsert({
+  await prisma().assignmentScores.upsert({
     where: { assignmentId_userId: { assignmentId, userId } },
     update: {},
     create: { assignmentId, userId },
   });
 
-  const stateWithMaxScore = await prisma.documentState.findUnique({
+  const stateWithMaxScore = await prisma().documentState.findUnique({
     where: {
       assignmentId_docId_docVersionId_userId_hasMaxScore: {
         assignmentId,
@@ -765,7 +773,7 @@ export async function saveScoreAndState({
     // if there is a non-latest document state record,
     // delete it as latest is now maxScore as well
     try {
-      await prisma.documentState.delete({
+      await prisma().documentState.delete({
         where: {
           assignmentId_docId_docVersionId_userId_isLatest: {
             assignmentId,
@@ -789,7 +797,7 @@ export async function saveScoreAndState({
     // since the latest is not with max score,
     // mark the record with hasMaxScore as not the latest
     try {
-      await prisma.documentState.update({
+      await prisma().documentState.update({
         where: {
           assignmentId_docId_docVersionId_userId_hasMaxScore: {
             assignmentId,
@@ -815,7 +823,7 @@ export async function saveScoreAndState({
   }
 
   // add/update the latest document state and maxScore
-  await prisma.documentState.upsert({
+  await prisma().documentState.upsert({
     where: {
       assignmentId_docId_docVersionId_userId_isLatest: {
         assignmentId,
@@ -848,7 +856,7 @@ export async function saveScoreAndState({
 
   if (hasStrictMaxScore) {
     // recalculate the score using the new maximum scores from each document
-    const documentStates = await prisma.documentState.findMany({
+    const documentStates = await prisma().documentState.findMany({
       where: {
         assignmentScore: {
           assignmentId,
@@ -865,7 +873,7 @@ export async function saveScoreAndState({
     // since some document might not have a score recorded yet,
     // count the number of actual documents for the assignment
     const assignmentDocumentsAggregation =
-      await prisma.assignmentDocuments.aggregate({
+      await prisma().assignmentDocuments.aggregate({
         _count: {
           docId: true,
         },
@@ -878,7 +886,7 @@ export async function saveScoreAndState({
     const averageScore =
       documentMaxScores.reduce((a, c) => a + c) / numDocuments;
 
-    await prisma.assignmentScores.update({
+    await prisma().assignmentScores.update({
       where: { assignmentId_userId: { assignmentId, userId } },
       data: {
         score: averageScore,
@@ -906,7 +914,7 @@ export async function loadState({
     // If user isn't the requested user, then user is allowed to load requested users state
     // only if they are the owner of the assignment.
     // If not user is not owner, then it will throw an error.
-    await prisma.assignments.findUniqueOrThrow({
+    await prisma().assignments.findUniqueOrThrow({
       where: {
         assignmentId,
         ownerId: userId,
@@ -917,7 +925,7 @@ export async function loadState({
   let documentState;
 
   if (withMaxScore) {
-    documentState = await prisma.documentState.findUniqueOrThrow({
+    documentState = await prisma().documentState.findUniqueOrThrow({
       where: {
         assignmentId_docId_docVersionId_userId_hasMaxScore: {
           assignmentId,
@@ -930,7 +938,7 @@ export async function loadState({
       select: { state: true },
     });
   } else {
-    documentState = await prisma.documentState.findUniqueOrThrow({
+    documentState = await prisma().documentState.findUniqueOrThrow({
       where: {
         assignmentId_docId_docVersionId_userId_isLatest: {
           assignmentId,
@@ -953,7 +961,7 @@ export async function getAssignmentScoreData({
   assignmentId: number;
   ownerId: number;
 }) {
-  const assignment = await prisma.assignments.findUniqueOrThrow({
+  const assignment = await prisma().assignments.findUniqueOrThrow({
     where: { assignmentId, ownerId, isDeleted: false },
     select: {
       name: true,
@@ -981,7 +989,7 @@ export async function getAssignmentStudentData({
   ownerId: number;
   userId: number;
 }) {
-  const assignmentData = await prisma.assignmentScores.findUniqueOrThrow({
+  const assignmentData = await prisma().assignmentScores.findUniqueOrThrow({
     where: {
       assignmentId_userId: { assignmentId, userId },
       assignment: { ownerId, isDeleted: false },
@@ -1003,7 +1011,7 @@ export async function getAssignmentStudentData({
     },
   });
 
-  const documentScores = await prisma.documentState.findMany({
+  const documentScores = await prisma().documentState.findMany({
     where: { assignmentId, userId },
     select: {
       docId: true,
@@ -1026,7 +1034,7 @@ export async function getAssignmentContent({
   assignmentId: number;
   ownerId: number;
 }) {
-  const assignmentData = await prisma.assignmentDocuments.findMany({
+  const assignmentData = await prisma().assignmentDocuments.findMany({
     where: {
       assignmentId,
       assignment: { ownerId, isDeleted: false },
@@ -1069,7 +1077,7 @@ export async function recordSubmittedEvent({
   itemCreditAchieved: number;
   documentCreditAchieved: number;
 }) {
-  await prisma.documentSubmittedResponses.create({
+  await prisma().documentSubmittedResponses.create({
     data: {
       assignmentId,
       docVersionId,
@@ -1093,10 +1101,10 @@ export async function getAnswersThatHaveSubmittedResponses({
   assignmentId: number;
   ownerId: number;
 }) {
-  // Using raw query as it seems prisma does not support distinct in count.
-  // https://github.com/prisma/prisma/issues/4228
+  // Using raw query as it seems prisma() does not support distinct in count.
+  // https://github.com/prisma()/prisma()/issues/4228
 
-  let submittedResponses = await prisma.$queryRaw<
+  let submittedResponses = await prisma().$queryRaw<
     {
       docId: number;
       docVersionId: number;
@@ -1145,7 +1153,7 @@ export async function getDocumentSubmittedResponses({
   // TODO: gave up figuring out to do find the best response and the latest response in a SQL query,
   // so just create in via JS based on this one query.
   // Can we come up with a better solution?
-  let rawResponses = await prisma.$queryRaw<
+  let rawResponses = await prisma().$queryRaw<
     {
       userId: number;
       userName: string;
@@ -1219,7 +1227,7 @@ export async function getDocumentSubmittedResponseHistory({
 }) {
   // for each combination of ["assignmentId", "docId", "docVersionId", "answerId", "userId"],
   // find the latest submitted response
-  let submittedResponses = await prisma.documentSubmittedResponses.findMany({
+  let submittedResponses = await prisma().documentSubmittedResponses.findMany({
     where: {
       assignmentId,
       docVersionId,

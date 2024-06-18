@@ -39,10 +39,22 @@ import {
   getAssignment,
   getAssignmentContent,
   getDocumentSubmittedResponseHistory,
+  setPrismaClient,
 } from "./model";
-import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 dotenv.config();
+
+// https://github.com/prisma/prisma/issues/11986
+let _prisma = new PrismaClient<
+  Prisma.PrismaClientOptions,
+  "query" | "info" | "warn" | "error"
+>();
+
+console.log("register query log");
+_prisma.$on("query", (event) => console.log(event));
+
+setPrismaClient(_prisma);
 
 const app: Express = express();
 app.use(cookieParser());
