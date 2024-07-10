@@ -1,7 +1,7 @@
 version: "3"
 services:
   mongo:
-    container_name: mongo-mern-docker-boilerplate
+    container_name: mongo-doenet
     image: mongo
     restart: always
     ports:
@@ -9,54 +9,54 @@ services:
     networks:
       - default
     volumes:
-      - ./backend/docker-setup/mongo/db-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./backend/docker-setup/mongo/mongo-volume:/data/db
+      - ./server/docker-setup/mongo/db-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./server/docker-setup/mongo/mongo-volume:/data/db
     environment:
       - MONGO_INITDB_DATABASE=mern_docker_starter
       - MONGO_INITDB_USER=local_user
       - MONGO_INITDB_PASSWORD=Password123
 
   backend:
-    container_name: node-mern-docker-boilerplate
+    container_name: node-doenet
     build:
-      context: ./backend
+      context: ./server
       dockerfile: docker-setup/node/development/Dockerfile
     networks:
       - default
       - frontend
     volumes:
-      - ./backend:/home/node/app
+      - ./server:/home/node/app
     environment:
       - NODE_ENV=development
     env_file:
-      - ./backend/.env.development
+      - ./server/.env.development
     tty: true
     stdin_open: true
     depends_on:
       - mongo
     ports:
-      - "5000:4000"
+      - "3000:3000"
 
   frontend:
-    container_name: react-mern-docker-boilerplate
+    container_name: react-doenet
     build:
-      context: ./frontend
+      context: ./client
       dockerfile: docker-setup/react/development/Dockerfile
     networks:
       - frontend
     environment:
       - NODE_ENV=development
     volumes:
-      - ./frontend:/frontend
+      - ./client:/frontend
     depends_on:
       - backend
     tty: true
     stdin_open: true
     ports:
-      - "3000:3000"
+      - "8000:8000"
 
 networks:
   default:
-    name: backend-network-mern-docker-boilerplate
+    name: backend-network-doenet
   frontend:
-    name: frontend-network-mern-docker-boilerplate
+    name: frontend-network-doenet

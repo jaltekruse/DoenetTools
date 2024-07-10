@@ -1,7 +1,7 @@
 FROM node:16
 
 # Create app directory
-WORKDIR /backend
+WORKDIR /server
 
 RUN apt-get update && apt-get install -y vim
 
@@ -16,4 +16,10 @@ RUN npm i --location=global nodemon
 # Copy source directory
 COPY . .
 
-CMD [ "nodemon" ]
+RUN ls
+RUN npx prisma migrate dev
+
+# Copy source directory
+COPY . .
+
+CMD [ "npm", "run", "dev" ]

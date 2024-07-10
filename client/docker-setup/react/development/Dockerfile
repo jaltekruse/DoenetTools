@@ -1,15 +1,17 @@
-FROM node:16-slim
+#FROM node:16-slim
+# temporarily removing "slim" so I can debug in the container
+FROM node:16
 
 # Create app directory
-WORKDIR /frontend
+WORKDIR /client
 
 # Install app dependencies
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 
 COPY . .
 
-RUN yarn install
+RUN npm install
 
 ENV NODE_ENV=development
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "run", "dev"]

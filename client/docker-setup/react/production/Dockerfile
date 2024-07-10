@@ -4,10 +4,10 @@
 FROM node:16-slim as frontend
 
 # Create app directory
-WORKDIR /frontend
+WORKDIR /client
 
 # Install app dependencies
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 
 RUN yarn install
 
@@ -36,10 +36,10 @@ RUN rm /etc/nginx/conf.d/*
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy static assets from builder stage
-COPY --from=frontend /frontend/build .
+COPY --from=frontend /client/build .
 
 # Update the nginx config with our own config file
-COPY --from=frontend /frontend/docker-setup/nginx/mern-template.conf /etc/nginx/conf.d/
+COPY --from=frontend /client/docker-setup/nginx/mern-template.conf /etc/nginx/conf.d/
 
 EXPOSE 80
 

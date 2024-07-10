@@ -1,7 +1,7 @@
 version: "3"
 services:
   mongo:
-    container_name: mongo-mern-docker-boilerplate
+    container_name: mongo-doenet
     image: mongo
     restart: always
     ports:
@@ -9,17 +9,17 @@ services:
     networks:
       - default
     volumes:
-      - ./backend/docker-setup/mongo/db-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./backend/docker-setup/mongo/mongo-volume:/data/db
+      - ./server/docker-setup/mongo/db-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./server/docker-setup/mongo/mongo-volume:/data/db
     environment:
       - MONGO_INITDB_DATABASE=mern_docker_starter
       - MONGO_INITDB_USER=local_user
       - MONGO_INITDB_PASSWORD=Password123
 
   backend:
-    container_name: node-mern-docker-boilerplate
+    container_name: node-doenet
     build:
-      context: ./backend
+      context: ./server
       dockerfile: docker-setup/node/production/Dockerfile
     networks:
       - default
@@ -27,7 +27,7 @@ services:
     environment:
       - NODE_ENV=production
     env_file:
-      - ./backend/.env.production
+      - ./server/.env.production
     tty: true
     stdin_open: true
     depends_on:
@@ -36,7 +36,7 @@ services:
       - "4000"
 
   frontend:
-    container_name: react-mern-docker-boilerplate
+    container_name: react-doenet
     build:
       context: ./frontend
       dockerfile: docker-setup/react/production/Dockerfile
@@ -54,6 +54,6 @@ services:
 
 networks:
   default:
-    name: backend-network-mern-docker-boilerplate
+    name: backend-network-doenet
   frontend:
-    name: frontend-network-mern-docker-boilerplate
+    name: frontend-network-doenet
